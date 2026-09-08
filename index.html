@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlobalSkill — Платформа подготовки к ЕНТ</title>
+    <title>GlobalSkill - Платформа подготовки к ЕНТ</title>
     <style>
         :root {
             --primary: #6366f1;
@@ -32,361 +32,369 @@
             width: 100%;
             max-width: 480px;
         }
-        .header {
+        header {
             text-align: center;
             margin-bottom: 24px;
-            margin-top: 10px;
         }
         h1 {
-            font-size: 26px;
-            margin: 0 0 6px 0;
-            background: linear-gradient(135deg, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
+            font-size: 24px;
+            margin: 0 0 4px 0;
+            color: var(--primary);
         }
-        p.subtitle {
+        .subtitle {
+            font-size: 13px;
             color: var(--text-secondary);
-            font-size: 14px;
-            margin: 0;
         }
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
             margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-        h3 {
-            margin-top: 0;
-            font-size: 18px;
-            margin-bottom: 16px;
-            color: #f1f5f9;
-        }
-        button {
+        .btn {
+            display: block;
             width: 100%;
+            padding: 14px;
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 14px 18px;
             border-radius: 12px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 12px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            text-align: center;
+            margin-bottom: 12px;
+            transition: background 0.2s;
+            box-sizing: border-box;
         }
-        button:hover {
+        .btn:hover {
             background-color: var(--primary-hover);
         }
-        button:active {
-            transform: scale(0.98);
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
         }
-        input[type="number"] {
+        .btn-secondary:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+        .btn-success {
+            background-color: var(--accent);
+        }
+        .formulas {
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        .formulas strong {
+            color: var(--text);
+            display: block;
+            margin-bottom: 4px;
+        }
+        input[type="number"], input[type="text"] {
             width: 100%;
             padding: 14px;
-            border-radius: 12px;
+            background-color: var(--bg);
             border: 1px solid var(--border);
-            background-color: #0b1120;
-            color: white;
+            border-radius: 12px;
+            color: var(--text);
             font-size: 16px;
-            margin-top: 12px;
+            margin-bottom: 12px;
             box-sizing: border-box;
-            outline: none;
         }
-        input[type="number"]:focus {
+        input:focus {
+            outline: none;
             border-color: var(--primary);
         }
-        .section-box {
-            background: #1e293b;
-            padding: 16px;
-            border-radius: 14px;
-            margin-bottom: 16px;
-            font-size: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .formula-list {
-            color: #38bdf8;
-            font-size: 14px;
-            margin-top: 8px;
-            line-height: 1.6;
-            font-family: monospace;
-        }
-        .menu-btn {
-            background-color: #1e293b;
-            color: var(--text);
-            text-align: left;
-            padding: 16px;
-            border-radius: 14px;
+        .task-condition {
             font-size: 15px;
-            margin-top: 10px;
-            font-weight: 500;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.2s ease;
+            line-height: 1.5;
+            margin-bottom: 16px;
         }
-        .menu-btn:hover {
-            background-color: #273548;
-            border-color: #475569;
-        }
-        .menu-btn::after {
-            content: "›";
-            font-size: 20px;
-            color: var(--text-secondary);
-        }
-        .hidden { display: none; }
         .feedback {
-            margin-top: 14px;
-            font-weight: 600;
-            text-align: center;
-            font-size: 14px;
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 12px;
+            line-height: 1.4;
         }
-        .correct-text { background-color: rgba(16, 185, 129, 0.15); color: var(--accent); }
-        .wrong-text { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); }
-        .back-btn {
-            background-color: transparent;
-            color: var(--text-secondary);
-            box-shadow: none;
-            border: 1px solid var(--border);
-            margin-top: 16px;
+        .feedback.error {
+            background-color: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
         }
-        .back-btn:hover {
-            background-color: #1e293b;
-            color: white;
+        .feedback.success {
+            background-color: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--accent);
+            color: #6ee7b7;
+        }
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
+    <header>
         <h1>GlobalSkill ⚡</h1>
-        <p class="subtitle">Интерактивный тренажер для сотки на ЕНТ</p>
-    </div>
+        <div class="subtitle">Интерактивный тренажер для сотки на ЕНТ</div>
+    </header>
 
-    <!-- Экран 1: Выбор предметов -->
+    <!-- Главная страница -->
     <div id="screen-home" class="card">
-        <h3>Выбери предмет:</h3>
-        <button class="menu-btn" onclick="openPhysicsMenu()" style="border-left: 4px solid #6366f1;">Физика</button>
-        <button class="menu-btn" onclick="alert('Математика в разработке')" style="border-left: 4px solid #38bdf8;">Математика</button>
-        <button class="menu-btn" onclick="alert('История Казахстана в разработке')" style="border-left: 4px solid #f59e0b;">История Казахстана</button>
-        <button class="menu-btn" onclick="alert('Мат. грамотность в разработке')" style="border-left: 4px solid #10b981;">Мат. грамотность</button>
-        <button class="menu-btn" onclick="alert('Чтение в разработке')" style="border-left: 4px solid #ec4899;">Чтение</button>
+        <h2 style="margin-top:0; font-size:18px;">Выбери предмет</h2>
+        <button class="btn" onclick="showScreen('screen-physics-topics')">Физика</button>
+        <button class="btn btn-secondary" onclick="alert('Математика появится в следующем обновлении!')">Математика</button>
     </div>
 
-    <!-- Экран 2: Меню разделов Физики -->
-    <div id="screen-physics-menu" class="card hidden">
-        <h3>Физика: Выбери раздел</h3>
-        <button class="menu-btn" onclick="openSection('kinematics')">Кинематика</button>
-        <button class="menu-btn" onclick="openSection('dynamics')">Динамика</button>
-        <button class="menu-btn" onclick="openSection('thermo')">Термодинамика</button>
-        <button class="back-btn" onclick="goHome()">← На главную</button>
+    <!-- Список разделов физики -->
+    <div id="screen-physics-topics" class="card hidden">
+        <h2 style="margin-top:0; font-size:18px;">Физика: Выбери раздел</h2>
+        <button class="btn btn-secondary" onclick="openTopic('kinematics')">Кинематика</button>
+        <button class="btn btn-secondary" onclick="openTopic('dynamics')">Динамика</button>
+        <button class="btn btn-secondary" onclick="openTopic('conservation')">Законы сохранения</button>
+        <button class="btn btn-secondary" onclick="openTopic('statics')">Статика</button>
+        <button class="btn btn-secondary" onclick="openTopic('mkt')">МКТ и Термодинамика</button>
+        <button class="btn btn-secondary" onclick="openTopic('electrostatics')">Электростатика</button>
+        <button class="btn btn-secondary" onclick="openTopic('electro')">Электродинамика</button>
+        <button class="btn btn-secondary" onclick="openTopic('magnetism')">Магнетизм и индукция</button>
+        <button class="btn btn-secondary" onclick="openTopic('waves')">Колебания и волны</button>
+        <button class="btn btn-secondary" onclick="openTopic('optics')">Оптика</button>
+        <button class="btn btn-secondary" onclick="openTopic('quantum')">Квантовая и ядерная физика</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-home')">← На главную</button>
     </div>
 
-    <!-- Экран 3: Меню конкретного раздела -->
-    <div id="screen-section" class="card hidden">
-        <h3 id="section-title" style="color: #818cf8;">Раздел</h3>
+    <!-- Страница теории и запуска тренажера -->
+    <div id="screen-topic-view" class="card hidden">
+        <h2 id="topic-title" style="margin-top:0; font-size:18px;">Раздел</h2>
+        <div class="formulas" id="topic-formulas"></div>
+        <button class="btn" onclick="startTrainer()">🚀 Запустить тренажер задач</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-physics-topics')">← К разделам физики</button>
+    </div>
+
+    <!-- Экран тренажера -->
+    <div id="screen-trainer" class="card hidden">
+        <h2 id="trainer-title" style="margin-top:0; font-size:18px;">Тренажер</h2>
+        <div class="task-condition" id="task-text">Загрузка задачи...</div>
         
-        <div class="section-box">
-            <div style="color: var(--text-secondary); font-size: 12px; text-transform: uppercase;">Основные формулы:</div>
-            <div class="formula-list" id="section-formulas"></div>
+        <div id="feedback-container"></div>
+
+        <div id="answer-area">
+            <input type="number" id="user-answer" placeholder="Введи числовой ответ" step="any">
+            <button class="btn btn-success" onclick="checkAnswer()">Проверить ответ</button>
         </div>
 
-        <button onclick="startTrainer()" style="background-color: var(--accent); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">🚀 Запустить тренажер задач</button>
-        <button class="back-btn" onclick="openPhysicsMenu()">← К разделам физики</button>
-    </div>
-
-    <!-- Экран 4: Тренажер задач -->
-    <div id="screen-trainer" class="card hidden">
-        <h3 id="trainer-title" style="color: #818cf8; font-size: 16px; margin-bottom: 10px;">Тренажер</h3>
-        <p id="task-condition" style="font-size: 15px; line-height: 1.5; margin-bottom: 20px;"></p>
-        <input type="number" id="user-answer" placeholder="Введи числовой ответ">
-        <button onclick="checkAnswer()">Проверить ответ</button>
-        <div id="feedback" class="feedback hidden"></div>
-        <button class="back-btn" onclick="openSection(currentSectionKey)">← Назад к формулам</button>
+        <button class="btn btn-secondary" id="next-task-btn" onclick="generateTask()" style="display:none;">Следующая задача</button>
+        <button class="btn btn-secondary" onclick="openTopic(currentTopic)">← Назад к формулам</button>
     </div>
 </div>
 
 <script>
-    const physicsSections = {
+    let currentTopic = '';
+    let correctAnswer = 0;
+
+    const topicsData = {
         kinematics: {
             title: "Кинематика",
-            formulas: "• S = v0 * t + (a * t^2) / 2<br>• v = v0 + a * t<br>• S = v * t",
-            generators: [
-                () => {
-                    let a = Math.floor(Math.random() * 4) + 2;
-                    let t = Math.floor(Math.random() * 5) + 2;
-                    let ans = (a * t * t) / 2;
-                    return {
-                        text: `Тело стартует из состояния покоя с ускорением <b>${a} м/с²</b>. Какой путь оно пройдет за <b>${t} с</b>?`,
-                        ans: ans,
-                        explanation: `S = (a * t^2) / 2 = (${a} * ${t}^2) / 2 = ${ans} м.`
-                    };
-                },
-                () => {
-                    let v = Math.floor(Math.random() * 10) + 5;
-                    let t = Math.floor(Math.random() * 6) + 3;
-                    let ans = v * t;
-                    return {
-                        text: `Автомобиль движется равномерно со скоростью <b>${v} м/с</b>. Какой путь он преодолеет за <b>${t} с</b>?`,
-                        ans: ans,
-                        explanation: `S = v * t = ${v} * ${t} = ${ans} м.`
-                    };
-                },
-                () => {
-                    let v0 = Math.floor(Math.random() * 5) + 2;
-                    let a = 2;
-                    let t = 4;
-                    let ans = v0 + a * t;
-                    return {
-                        text: `Тело движется с начальной скоростью <b>${v0} м/с</b> и ускорением <b>${a} м/с²</b>. Найдите скорость через <b>${t} с</b>.`,
-                        ans: ans,
-                        explanation: `v = v0 + a * t = ${v0} + ${a} * ${t} = ${ans} м/с.`
-                    };
-                }
-            ]
+            formulas: "<strong>Формулы:</strong><br>• S = v0*t + at^2/2<br>• v = v0 + at<br>• t = (v - v0)/a"
         },
         dynamics: {
             title: "Динамика",
-            formulas: "• F = m * a<br>• F_тяж = m * g<br>• F_тр = mu * m * g",
-            generators: [
-                () => {
-                    let m = Math.floor(Math.random() * 8) + 2;
-                    let a = Math.floor(Math.random() * 5) + 2;
-                    let ans = m * a;
-                    return {
-                        text: `Тело массой <b>${m} кг</b> движется с ускорением <b>${a} м/с²</b>. Найдите равнодействующую силу.`,
-                        ans: ans,
-                        explanation: `F = m * a = ${m} * ${a} = ${ans} Н.`
-                    };
-                },
-                () => {
-                    let m = Math.floor(Math.random() * 10) + 3;
-                    let g = 10;
-                    let ans = m * g;
-                    return {
-                        text: `Чему равна сила тяжести, действующая на тело массой <b>${m} кг</b>? (g = 10 м/с²)`,
-                        ans: ans,
-                        explanation: `F_тяж = m * g = ${m} * 10 = ${ans} Н.`
-                    };
-                },
-                () => {
-                    let mu = 0.2;
-                    let m = 5;
-                    let g = 10;
-                    let ans = mu * m * g;
-                    return {
-                        text: `Брусок массой <b>${m} кг</b> скользит по полу. Коэффициент трения <b>${mu}</b>. Найдите силу трения. (g = 10 м/с²)`,
-                        ans: ans,
-                        explanation: `F_тр = mu * m * g = ${mu} * ${m} * 10 = ${ans} Н.`
-                    };
-                }
-            ]
+            formulas: "<strong>Формулы:</strong><br>• F = m * a<br>• F_тр = mu * m * g<br>• a = (F2 - F1) / m"
         },
-        thermo: {
-            title: "Термодинамика",
-            formulas: "• A = P * dV<br>• Q = c * m * dT<br>• Q = lambda * m",
-            generators: [
-                () => {
-                    let p = 100000;
-                    let dv = Math.floor(Math.random() * 3) + 2;
-                    let ans = p * dv;
-                    return {
-                        text: `Газ под постоянным давлением <b>100 000 Па</b> расширился на <b>${dv} м³</b>. Найдите работу газа.`,
-                        ans: ans,
-                        explanation: `A = P * dV = 100000 * ${dv} = ${ans} Дж.`
-                    };
-                },
-                () => {
-                    let m = 2;
-                    let q = 330000;
-                    let ans = q * m;
-                    return {
-                        text: `Сколько теплоты требуется для плавления <b>${m} кг</b> льда при температуре плавления? (уд. теплота плавления = 330 000 Дж/кг)`,
-                        ans: ans,
-                        explanation: `Q = lambda * m = 330000 * ${m} = ${ans} Дж.`
-                    };
-                }
-            ]
+        conservation: {
+            title: "Законы сохранения",
+            formulas: "<strong>Формулы:</strong><br>• E_k = (m * v^2) / 2<br>• E_p = m * g * h<br>• p = m * v"
+        },
+        statics: {
+            title: "Статика",
+            formulas: "<strong>Формулы:</strong><br>• Момент силы: M = F * d<br>• Закон Гука: F = k * x"
+        },
+        mkt: {
+            title: "МКТ и Термодинамика",
+            formulas: "<strong>Формулы:</strong><br>• PV = (m/M)RT<br>• Q = c * m * ΔT<br>• Работа газа: A = P * ΔV"
+        },
+        electrostatics: {
+            title: "Электростатика",
+            formulas: "<strong>Формулы:</strong><br>• Закон Кулона: F = k * q1 * q2 / r^2<br>• C = q / U"
+        },
+        electro: {
+            title: "Электродинамика",
+            formulas: "<strong>Формулы:</strong><br>• Закон Ома: I = U / R<br>• Работа тока: A = U * I * t"
+        },
+        magnetism: {
+            title: "Магнетизм и индукция",
+            formulas: "<strong>Формулы:</strong><br>• Сила Ампера: F = I * B * l<br>• Сила Лоренца: F = q * v * B"
+        },
+        waves: {
+            title: "Колебания и волны",
+            formulas: "<strong>Формулы:</strong><br>• T = 2 * pi * sqrt(m / k)<br>• v = lambda * v_freq"
+        },
+        optics: {
+            title: "Оптика",
+            formulas: "<strong>Формулы:</strong><br>• Оптическая сила: D = 1 / F<br>• 1/F = 1/d + 1/f"
+        },
+        quantum: {
+            title: "Квантовая и ядерная физика",
+            formulas: "<strong>Формулы:</strong><br>• E = h * v<br>• h * v = A_вых + E_кин"
         }
     };
 
-    let currentSectionKey = null;
-    let currentTask = null;
-
-    function goHome() {
-        document.getElementById('screen-physics-menu').classList.add('hidden');
-        document.getElementById('screen-home').classList.remove('hidden');
+    function showScreen(screenId) {
+        document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
+        document.getElementById(screenId).classList.remove('hidden');
     }
 
-    function openPhysicsMenu() {
-        document.getElementById('screen-home').classList.add('hidden');
-        document.getElementById('screen-section').classList.add('hidden');
-        document.getElementById('screen-physics-menu').classList.remove('hidden');
-    }
-
-    function openSection(key) {
-        currentSectionKey = key;
-        let sec = physicsSections[key];
-
-        document.getElementById('screen-physics-menu').classList.add('hidden');
-        document.getElementById('screen-trainer').classList.add('hidden');
-        document.getElementById('screen-section').classList.remove('hidden');
-
-        document.getElementById('section-title').innerText = sec.title;
-        document.getElementById('section-formulas').innerHTML = sec.formulas;
+    function openTopic(topicKey) {
+        currentTopic = topicKey;
+        const data = topicsData[topicKey];
+        document.getElementById('topic-title').innerText = data.title;
+        document.getElementById('topic-formulas').innerHTML = data.formulas;
+        showScreen('screen-topic-view');
     }
 
     function startTrainer() {
-        let sec = physicsSections[currentSectionKey];
-        document.getElementById('screen-section').classList.add('hidden');
-        document.getElementById('screen-trainer').classList.remove('hidden');
-        document.getElementById('trainer-title').innerText = sec.title + " (Тренажер)";
-        generateNewTask();
+        document.getElementById('trainer-title').innerText = topicsData[currentTopic].title + " (Тренажер)";
+        showScreen('screen-trainer');
+        generateTask();
     }
 
-    function generateNewTask() {
-        let sec = physicsSections[currentSectionKey];
-        let randIndex = Math.floor(Math.random() * sec.generators.length);
-        currentTask = sec.generators[randIndex]();
-
-        document.getElementById('task-condition').innerHTML = currentTask.text;
+    function generateTask() {
+        document.getElementById('feedback-container').innerHTML = '';
         document.getElementById('user-answer').value = '';
-        let fb = document.getElementById('feedback');
-        fb.classList.add('hidden');
-        fb.innerHTML = '';
+        document.getElementById('user-answer').style.display = 'block';
+        document.querySelector('#answer-area .btn-success').style.display = 'block';
+        document.getElementById('next-task-btn').style.display = 'none';
+
+        if (currentTopic === 'kinematics') {
+            const subType = Math.floor(Math.random() * 3);
+            if (subType === 0) {
+                const v0 = Math.floor(Math.random() * 5), a = Math.floor(Math.random() * 3) + 1, t = Math.floor(Math.random() * 4) + 2;
+                correctAnswer = v0 * t + (a * t * t) / 2;
+                document.getElementById('task-text').innerHTML = `Тело движется с v0 = <b>${v0} м/с</b> и ускорением a = <b>${a} м/с²</b> за t = <b>${t} с</b>. Найдите перемещение (в м).`;
+            } else if (subType === 1) {
+                const v0 = Math.floor(Math.random() * 5), a = Math.floor(Math.random() * 3) + 1, t = Math.floor(Math.random() * 4) + 2;
+                correctAnswer = v0 + a * t;
+                document.getElementById('task-text').innerHTML = `Тело разгоняется с v0 = <b>${v0} м/с</b>, a = <b>${a} м/с²</b> за t = <b>${t} с</b>. Найдите конечную скорость (в м/с).`;
+            } else {
+                correctAnswer = 5;
+                document.getElementById('task-text').innerHTML = `Тело движется равноускорено с a = 2 м/с² и изменяет скорость с 2 м/с до 12 м/с. Найдите время движения (в с).`;
+                correctAnswer = 5;
+            }
+        } 
+        else if (currentTopic === 'dynamics') {
+            const subType = Math.floor(Math.random() * 2);
+            if (subType === 0) {
+                const m = Math.floor(Math.random() * 4) + 2, a = Math.floor(Math.random() * 5) + 1;
+                correctAnswer = m * a;
+                document.getElementById('task-text').innerHTML = `Тело массой <b>${m} кг</b> движется с ускорением <b>${a} м/с²</b>. Найдите силу (в Н).`;
+            } else {
+                const m = 5, mu = 0.2, g = 10;
+                correctAnswer = mu * m * g;
+                document.getElementById('task-text').innerHTML = `Тело массой <b>${m} кг</b> скользит по поверхности с коэффициентом трения μ = <b>${mu}</b> (g = 10 м/с²). Найдите силу трения (в Н).`;
+            }
+        }
+        else if (currentTopic === 'conservation') {
+            const subType = Math.floor(Math.random() * 3);
+            if (subType === 0) {
+                const m = 2, v = 6;
+                correctAnswer = (m * v * v) / 2;
+                document.getElementById('task-text').innerHTML = `Найдите кинетическую энергию (в Дж) тела массой <b>${m} кг</b> при скорости <b>${v} м/с</b>.`;
+            } else if (subType === 1) {
+                const m = 3, h = 4, g = 10;
+                correctAnswer = m * g * h;
+                document.getElementById('task-text').innerHTML = `Найдите потенциальную энергию (в Дж) тела массой <b>${m} кг</b> на высоте <b>${h} м</b> (g = 10).`;
+            } else {
+                const m = 4, v = 3;
+                correctAnswer = m * v;
+                document.getElementById('task-text').innerHTML = `Найдите импульс (в кг·м/с) тела массой <b>${m} кг</b>, движущегося со скоростью <b>${v} м/с</b>.`;
+            }
+        }
+        else if (currentTopic === 'statics') {
+            const subType = Math.floor(Math.random() * 2);
+            if (subType === 0) {
+                const F = 10, d1 = 0.2, d2 = 0.4;
+                correctAnswer = (F * d1) / d2;
+                document.getElementById('task-text').innerHTML = `Сила <b>${F} Н</b> действует на плече <b>${d1} м</b>. Какая сила уравновесит ее на плече <b>${d2} м</b> (в Н)?`;
+            } else {
+                const k = 200, x = 0.04;
+                correctAnswer = k * x;
+                document.getElementById('task-text').innerHTML = `Пружина жесткостью <b>${k} Н/м</b> растянута на <b>${x} м</b>. Найдите силу упругости (в Н).`;
+            }
+        }
+        else if (currentTopic === 'mkt') {
+            const subType = Math.floor(Math.random() * 2);
+            if (subType === 0) {
+                const m = 2, c = 4200, dt = 10;
+                correctAnswer = c * m * dt;
+                document.getElementById('task-text').innerHTML = `Найдите количество теплоты (в Дж) для нагрева воды (c = 4200) массой <b>${m} кг</b> на <b>${dt} °C</b>.`;
+            } else {
+                const P = 100000, dV = 0.02;
+                correctAnswer = P * dV;
+                document.getElementById('task-text').innerHTML = `Газ при постоянном давлении <b>100 кПа</b> (100000 Па) расширился на <b>0.02 м³</b>. Найдите работу газа (в Дж).`;
+            }
+        }
+        else if (currentTopic === 'electrostatics') {
+            const q = 0.0002, U = 100;
+            correctAnswer = Number((q / U).toFixed(6));
+            document.getElementById('task-text').innerHTML = `Конденсатор с зарядом <b>0.0002 Кл</b> под напряжением <b>100 В</b>. Найдите электроемкость (в Ф).`;
+        }
+        else if (currentTopic === 'electro') {
+            const U = 220, R = 44;
+            correctAnswer = U / R;
+            document.getElementById('task-text').innerHTML = `Напряжение <b>${U} В</b>, сопротивление <b>${R} Ом</b>. Найдите силу тока (в А).`;
+        }
+        else if (currentTopic === 'magnetism') {
+            const I = 4, B = 0.5, l = 0.2;
+            correctAnswer = I * B * l;
+            document.getElementById('task-text').innerHTML = `Ток <b>${I} А</b> в проводнике длиной <b>${l} м</b> в поле с индукцией <b>${B} Тл</b>. Найдите силу Ампера (в Н).`;
+        }
+        else if (currentTopic === 'waves') {
+            const lambda = 4, freq = 5;
+            correctAnswer = lambda * freq;
+            document.getElementById('task-text').innerHTML = `Длина волны <b>${lambda} м</b>, частота <b>${freq} Гц</b>. Найдите скорость волны (в м/с).`;
+        }
+        else if (currentTopic === 'optics') {
+            const F = 0.25;
+            correctAnswer = 1 / F;
+            document.getElementById('task-text').innerHTML = `Фокусное расстояние линзы равно <b>0.25 м</b>. Найдите оптическую силу (в дптр).`;
+        }
+        else if (currentTopic === 'quantum') {
+            const N0 = 200, n = 3;
+            correctAnswer = N0 / Math.pow(2, n);
+            document.getElementById('task-text').innerHTML = `Было <b>${N0}</b> ядер. Сколько ядер останется спустя <b>${n}</b> периода полураспада?`;
+        }
     }
 
     function checkAnswer() {
-        let userVal = parseFloat(document.getElementById('user-answer').value);
-        let fb = document.getElementById('feedback');
-        fb.classList.remove('hidden');
+        const userVal = parseFloat(document.getElementById('user-answer').value);
+        const feedbackContainer = document.getElementById('feedback-container');
 
         if (isNaN(userVal)) {
-            fb.innerHTML = "Введи числовой ответ!";
-            fb.className = "feedback wrong-text";
+            feedbackContainer.innerHTML = `<div class="feedback error">Введите числовой ответ!</div>`;
             return;
         }
 
-        if (Math.abs(userVal - currentTask.ans) < 0.1) {
-            fb.innerHTML = "Красавчик! Ответ верный. Следующая...";
-            fb.className = "feedback correct-text";
-            setTimeout(generateNewTask, 1800);
+        if (Math.abs(userVal - correctAnswer) < 0.05) {
+            feedbackContainer.innerHTML = `<div class="feedback success">🎉 Верно! Отлично идешь к сотке.</div>`;
         } else {
-            fb.innerHTML = `Ошибка! Правильно: ${currentTask.ans}.<br><span style="font-weight:normal; font-size:13px;">Решение: ${currentTask.explanation}</span>`;
-            fb.className = "feedback wrong-text";
+            feedbackContainer.innerHTML = `<div class="feedback error">❌ Ошибка! Правильно: <b>${correctAnswer}</b>.</div>`;
         }
+
+        document.getElementById('user-answer').style.display = 'none';
+        document.querySelector('#answer-area .btn-success').style.display = 'none';
+        document.getElementById('next-task-btn').style.display = 'block';
     }
 </script>
 
 </body>
 </html>
+
 
