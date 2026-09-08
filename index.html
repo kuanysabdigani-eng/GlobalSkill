@@ -83,19 +83,35 @@
         .btn-success {
             background-color: var(--accent);
         }
-        .formulas {
-            font-size: 13px;
-            color: var(--text-secondary);
+        .section-block {
             background: rgba(0,0,0,0.2);
-            padding: 12px;
-            border-radius: 8px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
             margin-bottom: 16px;
-            line-height: 1.5;
+            font-size: 13px;
+            line-height: 1.6;
         }
-        .formulas strong {
-            color: var(--text);
-            display: block;
-            margin-bottom: 4px;
+        .section-block h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .example-box {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 14px;
+            border-radius: 0 12px 12px 0;
+            font-size: 13px;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .example-box h3 {
+            margin: 0 0 6px 0;
+            font-size: 14px;
+            color: var(--accent);
         }
         input[type="number"], input[type="text"] {
             width: 100%;
@@ -171,11 +187,34 @@
         <button class="btn btn-secondary" onclick="showScreen('screen-home')">← На главную</button>
     </div>
 
-    <!-- Страница теории и запуска тренажера -->
+    <!-- Страница теория: Формулы -> Объяснение -> Примеры + Тренажер ДО -->
     <div id="screen-topic-view" class="card hidden">
-        <h2 id="topic-title" style="margin-top:0; font-size:18px;">Раздел</h2>
-        <div class="formulas" id="topic-formulas"></div>
-        <button class="btn" onclick="startTrainer()">🚀 Запустить тренажер задач</button>
+        <h2 id="topic-title" style="margin-top:0; font-size:18px; margin-bottom: 16px;">Раздел</h2>
+        
+        <!-- Кнопка тренажера ДО теории -->
+        <button class="btn btn-success" onclick="startTrainer()">⚡ Быстрый тренажер (ДО теории)</button>
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 16px 0;">
+
+        <!-- Блок 1: Формулы -->
+        <div class="section-block">
+            <h3>1. Основные формулы</h3>
+            <div id="topic-formulas"></div>
+        </div>
+
+        <!-- Блок 2: Объяснение величин -->
+        <div class="section-block">
+            <h3>2. Объяснение величин</h3>
+            <div id="topic-explanation"></div>
+        </div>
+
+        <!-- Блок 3: Разобранный пример -->
+        <div class="example-box">
+            <h3>3. Разбор примера</h3>
+            <div id="topic-example"></div>
+        </div>
+
+        <!-- Кнопка тренажера ПОСЛЕ теории -->
+        <button class="btn" onclick="startTrainer()">🚀 Запустить тренажер (ПОСЛЕ теории)</button>
         <button class="btn btn-secondary" onclick="showScreen('screen-physics-topics')">← К разделам физики</button>
     </div>
 
@@ -192,7 +231,7 @@
         </div>
 
         <button class="btn btn-secondary" id="next-task-btn" onclick="generateTask()" style="display:none;">Следующая задача</button>
-        <button class="btn btn-secondary" onclick="openTopic(currentTopic)">← Назад к формулам</button>
+        <button class="btn btn-secondary" onclick="openTopic(currentTopic)">← Назад к теории</button>
     </div>
 </div>
 
@@ -203,47 +242,69 @@
     const topicsData = {
         kinematics: {
             title: "Кинематика",
-            formulas: "<strong>Формулы:</strong><br>• S = v0*t + at^2/2<br>• v = v0 + at<br>• t = (v - v0)/a"
+            formulas: "• S = v₀·t + (a·t²) / 2<br>• v = v₀ + a·t<br>• S = (v² - v₀²) / (2·а)",
+            explanation: "• <b>S</b> — перемещение (путь), м<br>• <b>v₀</b> — начальная скорость, м/с<br>• <b>v</b> — конечная скорость, м/с<br>• <b>a</b> — ускорение, м/с²<br>• <b>t</b> — время, с",
+            example: "Автомобиль едет с начальной скоростью <b>v₀ = 2 м/с</b>, ускорение <b>a = 3 м/с²</b>, время <b>t = 4 с</b>. Найдите перемещение <b>S</b>.<br><br><em>Решение:</em><br>S = 2·4 + (3·4²) / 2 = 8 + (3·16) / 2 = 8 + 24 = <b>32 м</b>."
         },
         dynamics: {
             title: "Динамика",
-            formulas: "<strong>Формулы:</strong><br>• F = m * a<br>• F_тр = mu * m * g<br>• a = (F2 - F1) / m"
+            formulas: "• F = m · a<br>• F_тр = μ · m · g<br>• F_упр = k · x",
+            explanation: "• <b>F</b> — сила, Н<br>• <b>m</b> — масса тела, кг<br>• <b>a</b> — ускорение, м/с²<br>• <b>μ</b> — коэффициент трения (безразмерный)<br>• <b>g</b> — ускорение свободного падения (~10 м/с²)<br>• <b>k</b> — жесткость пружины, Н/м<br>• <b>x</b> — удлинение пружины, м",
+            example: "Тело массой <b>m = 4 кг</b> движется под действием силы <b>F = 20 Н</b>. Найдите ускорение <b>a</b>.<br><br><em>Решение:</em><br>Из формулы F = m·a выражаем a: a = F / m = 20 / 4 = <b>5 м/с²</b>."
         },
         conservation: {
             title: "Законы сохранения",
-            formulas: "<strong>Формулы:</strong><br>• E_k = (m * v^2) / 2<br>• E_p = m * g * h<br>• p = m * v"
+            formulas: "• E_k = (m · v²) / 2<br>• E_p = m · g · h<br>• p = m · v",
+            explanation: "• <b>E_k</b> — кинетическая энергия, Дж<br>• <b>E_p</b> — потенциальная энергия, Дж<br>• <b>p</b> — импульс тела, кг·м/с<br>• <b>m</b> — масса, кг<br>• <b>v</b> — скорость, м/с<br>• <b>h</b> — высота, м",
+            example: "Найдите кинетическую энергию тела массой <b>m = 2 кг</b> при скорости <b>v = 6 м/с</b>.<br><br><em>Решение:</em><br>E_k = (2 · 6²) / 2 = (2 · 36) / 2 = <b>36 Дж</b>."
         },
         statics: {
             title: "Статика",
-            formulas: "<strong>Формулы:</strong><br>• Момент силы: M = F * d<br>• Закон Гука: F = k * x"
+            formulas: "• M = F · d<br>• F_упр = k · x",
+            explanation: "• <b>M</b> — момент силы, Н·м<br>• <b>F</b> — сила, Н<br>• <b>d</b> — плечо силы, м<br>• <b>k</b> — жесткость, Н/м<br>• <b>x</b> — деформация, м",
+            example: "Пружина жесткостью <b>k = 200 Н/м</b> растянута на <b>x = 0.04 м</b>. Найдите силу упругости.<br><br><em>Решение:</em><br>F_упр = 200 · 0.04 = <b>8 Н</b>."
         },
         mkt: {
             title: "МКТ и Термодинамика",
-            formulas: "<strong>Формулы:</strong><br>• PV = (m/M)RT<br>• Q = c * m * ΔT<br>• Работа газа: A = P * ΔV"
+            formulas: "• P · V = (m / M) · R · T<br>• Q = c · m · ΔT<br>• A = P · ΔV",
+            explanation: "• <b>P</b> — давление, Па<br>• <b>V</b> — объем, м³<br>• <b>T</b> — температура, К<br>• <b>Q</b> — количество теплоты, Дж<br>• <b>c</b> — удельная теплоемкость, Дж/(кг·°C)<br>• <b>A</b> — работа газа, Дж",
+            example: "Газ под давлением <b>P = 100 кПа</b> (100 000 Па) расширился на <b>ΔV = 0.02 м³</b>. Найдите работу газа.<br><br><em>Решение:</em><br>A = 100000 · 0.02 = <b>2000 Дж</b>."
         },
         electrostatics: {
             title: "Электростатика",
-            formulas: "<strong>Формулы:</strong><br>• Закон Кулона: F = k * q1 * q2 / r^2<br>• C = q / U"
+            formulas: "• F = (k · q₁ · q₂) / r²<br>• C = q / U",
+            explanation: "• <b>F</b> — сила взаимодействия зарядов, Н<br>• <b>q₁, q₂</b> — электрические заряды, Кл<br>• <b>r</b> — расстояние между зарядами, м<br>• <b>C</b> — электроемкость, Ф<br>• <b>U</b> — напряжение, В",
+            example: "Конденсатор с зарядом <b>q = 0.0002 Кл</b> находится под напряжением <b>U = 100 В</b>. Найдите емкость <b>C</b>.<br><br><em>Решение:</em><br>C = q / U = 0.0002 / 100 = <b>0.000002 Ф</b>."
         },
         electro: {
             title: "Электродинамика",
-            formulas: "<strong>Формулы:</strong><br>• Закон Ома: I = U / R<br>• Работа тока: A = U * I * t"
+            formulas: "• I = U / R<br>• A = U · I · t",
+            explanation: "• <b>I</b> — сила тока, А<br>• <b>U</b> — напряжение, В<br>• <b>R</b> — сопротивление, Ом<br>• <b>A</b> — работа тока, Дж<br>• <b>t</b> — время, с",
+            example: "Напряжение в цепи <b>U = 220 В</b>, сопротивление резистора <b>R = 44 Ом</b>. Найдите силу тока <b>I</b>.<br><br><em>Решение:</em><br>I = U / R = 220 / 44 = <b>5 А</b>."
         },
         magnetism: {
             title: "Магнетизм и индукция",
-            formulas: "<strong>Формулы:</strong><br>• Сила Ампера: F = I * B * l<br>• Сила Лоренца: F = q * v * B"
+            formulas: "• F_амп = I · B · l · sin(α)<br>• F_лор = q · v · B · sin(α)",
+            explanation: "• <b>F_амп</b> — сила Ампера, Н<br><b>• F_лор</b> — сила Лоренца, Н<br>• <b>I</b> — сила тока, А<br>• <b>B</b> — индукция магнитного поля, Тл<br>• <b>l</b> — длина проводника, м",
+            example: "Ток <b>I = 4 А</b> течет по проводнику длиной <b>l = 0.2 м</b> в поле с индукцией <b>B = 0.5 Тл</b> (угол 90°). Найдите силу Ампера.<br><br><em>Решение:</em><br>F = 4 · 0.5 · 0.2 · 1 = <b>0.4 Н</b>."
         },
         waves: {
             title: "Колебания и волны",
-            formulas: "<strong>Формулы:</strong><br>• T = 2 * pi * sqrt(m / k)<br>• v = lambda * v_freq"
+            formulas: "• T = 2π · √(m / k)<br>• v = λ · ν",
+            explanation: "• <b>T</b> — период колебаний, с<br>• <b>ν (греч. ню)</b> — частота, Гц<br>• <b>λ (лямбда)</b> — длина волны, м<br>• <b>v</b> — скорость волны, м/с",
+            example: "Длина волны равна <b>λ = 4 м</b>, а частота <b>ν = 5 Гц</b>. Найдите скорость волны <b>v</b>.<br><br><em>Решение:</em><br>v = λ · ν = 4 · 5 = <b>20 м/с</b>."
         },
         optics: {
             title: "Оптика",
-            formulas: "<strong>Формулы:</strong><br>• Оптическая сила: D = 1 / F<br>• 1/F = 1/d + 1/f"
+            formulas: "• D = 1 / F<br>• 1 / F = 1 / d + 1 / f",
+            explanation: "• <b>D</b> — оптическая сила линзы, дптр<br>• <b>F</b> — фокусное расстояние, м<br>• <b>d</b> — расстояние от предмета до линзы, м<br>• <b>f</b> — расстояние от изображения до линзы, м",
+            example: "Фокусное расстояние линзы равно <b>F = 0.25 м</b>. Найдите ее оптическую силу <b>D</b>.<br><br><em>Решение:</em><br>D = 1 / 0.25 = <b>4 дптр</b>."
         },
         quantum: {
             title: "Квантовая и ядерная физика",
-            formulas: "<strong>Формулы:</strong><br>• E = h * v<br>• h * v = A_вых + E_кин"
+            formulas: "• E = h · ν<br>• h · ν = A_вых + E_кин",
+            explanation: "• <b>E</b> — энергия фотона, Дж<br>• <b>h</b> — постоянная Планка<br>• <b>A_вых</b> — работа выхода электрона, Дж<br>• <b>E_кин</b> — кинетическая энергия фотоэлектрона, Дж",
+            example: "Было <b>N₀ = 200</b> радиоактивных ядер. Сколько ядер останется спустя <b>n = 3</b> периода полураспада?<br><br><em>Решение:</em><br>N = N₀ / (2ⁿ) = 200 / (2³) = 200 / 8 = <b>25 ядер</b>."
         }
     };
 
@@ -257,6 +318,8 @@
         const data = topicsData[topicKey];
         document.getElementById('topic-title').innerText = data.title;
         document.getElementById('topic-formulas').innerHTML = data.formulas;
+        document.getElementById('topic-explanation').innerHTML = data.explanation;
+        document.getElementById('topic-example').innerHTML = data.example;
         showScreen('screen-topic-view');
     }
 
@@ -278,15 +341,14 @@
             if (subType === 0) {
                 const v0 = Math.floor(Math.random() * 5), a = Math.floor(Math.random() * 3) + 1, t = Math.floor(Math.random() * 4) + 2;
                 correctAnswer = v0 * t + (a * t * t) / 2;
-                document.getElementById('task-text').innerHTML = `Тело движется с v0 = <b>${v0} м/с</b> и ускорением a = <b>${a} м/с²</b> за t = <b>${t} с</b>. Найдите перемещение (в м).`;
+                document.getElementById('task-text').innerHTML = `Тело движется с v₀ = <b>${v0} м/с</b> и ускорением a = <b>${a} м/с²</b> за t = <b>${t} с</b>. Найдите перемещение (в м).`;
             } else if (subType === 1) {
                 const v0 = Math.floor(Math.random() * 5), a = Math.floor(Math.random() * 3) + 1, t = Math.floor(Math.random() * 4) + 2;
                 correctAnswer = v0 + a * t;
-                document.getElementById('task-text').innerHTML = `Тело разгоняется с v0 = <b>${v0} м/с</b>, a = <b>${a} м/с²</b> за t = <b>${t} с</b>. Найдите конечную скорость (в м/с).`;
+                document.getElementById('task-text').innerHTML = `Тело разгоняется с v₀ = <b>${v0} м/с</b>, a = <b>${a} м/с²</b> за t = <b>${t} с</b>. Найдите конечную скорость (в м/с).`;
             } else {
                 correctAnswer = 5;
-                document.getElementById('task-text').innerHTML = `Тело движется равноускорено с a = 2 м/с² и изменяет скорость с 2 м/с до 12 м/с. Найдите время движения (в с).`;
-                correctAnswer = 5;
+                document.getElementById('task-text').innerHTML = `Тело движется равноускоренно с a = 2 м/с² и изменяет скорость с 2 м/с до 12 м/с. Найдите время движения (в с).`;
             }
         } 
         else if (currentTopic === 'dynamics') {
@@ -396,5 +458,6 @@
 
 </body>
 </html>
+
 
 
