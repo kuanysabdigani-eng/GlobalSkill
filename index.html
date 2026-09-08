@@ -176,44 +176,39 @@
         <button class="btn btn-secondary" onclick="openTopic('kinematics')">Кинематика</button>
         <button class="btn btn-secondary" onclick="openTopic('dynamics')">Динамика</button>
         <button class="btn btn-secondary" onclick="openTopic('conservation')">Законы сохранения</button>
-        <button class="btn btn-secondary" onclick="openTopic('statics')">Статика</button>
+        <button class="btn btn-secondary" onclick="openTopic('statics')">Статика и гидростатика</button>
         <button class="btn btn-secondary" onclick="openTopic('mkt')">МКТ и Термодинамика</button>
         <button class="btn btn-secondary" onclick="openTopic('electrostatics')">Электростатика</button>
-        <button class="btn btn-secondary" onclick="openTopic('electro')">Электродинамика</button>
-        <button class="btn btn-secondary" onclick="openTopic('magnetism')">Магнетизм и индукция</button>
+        <button class="btn btn-secondary" onclick="openTopic('electro')">Электродинамика (Постоянный ток)</button>
+        <button class="btn btn-secondary" onclick="openTopic('magnetism')">Магнетизм и ЭМИ</button>
         <button class="btn btn-secondary" onclick="openTopic('waves')">Колебания и волны</button>
-        <button class="btn btn-secondary" onclick="openTopic('optics')">Оптика</button>
+        <button class="btn btn-secondary" onclick="openTopic('optics')">Оптика (Волновая и геометрическая)</button>
         <button class="btn btn-secondary" onclick="openTopic('quantum')">Квантовая и ядерная физика</button>
         <button class="btn btn-secondary" onclick="showScreen('screen-home')">← На главную</button>
     </div>
 
-    <!-- Страница теория: Формулы -> Объяснение -> Примеры + Тренажер ДО -->
+    <!-- Страница теория -->
     <div id="screen-topic-view" class="card hidden">
         <h2 id="topic-title" style="margin-top:0; font-size:18px; margin-bottom: 16px;">Раздел</h2>
         
-        <!-- Кнопка тренажера ДО теории -->
         <button class="btn btn-success" onclick="startTrainer()">⚡ Быстрый тренажер (ДО теории)</button>
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 16px 0;">
 
-        <!-- Блок 1: Формулы -->
         <div class="section-block">
-            <h3>1. Основные формулы</h3>
+            <h3>1. Полный набор формул</h3>
             <div id="topic-formulas"></div>
         </div>
 
-        <!-- Блок 2: Объяснение величин -->
         <div class="section-block">
-            <h3>2. Объяснение величин</h3>
+            <h3>2. Обозначения и единицы СИ</h3>
             <div id="topic-explanation"></div>
         </div>
 
-        <!-- Блок 3: Разобранный пример -->
         <div class="example-box">
-            <h3>3. Разбор примера</h3>
+            <h3>3. Разбор типового примера ЕНТ</h3>
             <div id="topic-example"></div>
         </div>
 
-        <!-- Кнопка тренажера ПОСЛЕ теории -->
         <button class="btn" onclick="startTrainer()">🚀 Запустить тренажер (ПОСЛЕ теории)</button>
         <button class="btn btn-secondary" onclick="showScreen('screen-physics-topics')">← К разделам физики</button>
     </div>
@@ -242,69 +237,69 @@
     const topicsData = {
         kinematics: {
             title: "Кинематика",
-            formulas: "• S = v₀·t + (a·t²) / 2<br>• v = v₀ + a·t<br>• S = (v² - v₀²) / (2·а)",
-            explanation: "• <b>S</b> — перемещение (путь), м<br>• <b>v₀</b> — начальная скорость, м/с<br>• <b>v</b> — конечная скорость, м/с<br>• <b>a</b> — ускорение, м/с²<br>• <b>t</b> — время, с",
-            example: "Автомобиль едет с начальной скоростью <b>v₀ = 2 м/с</b>, ускорение <b>a = 3 м/с²</b>, время <b>t = 4 с</b>. Найдите перемещение <b>S</b>.<br><br><em>Решение:</em><br>S = 2·4 + (3·4²) / 2 = 8 + (3·16) / 2 = 8 + 24 = <b>32 м</b>."
+            formulas: "• S = v₀·t + (a·t²) / 2<br>• v = v₀ + a·t<br>• S = (v² - v₀²) / (2·a)<br>• S = ((v + v₀) / 2) · t<br>• x = x₀ + vₓ·t + (aₓ·t²) / 2<br>• v_ср = S_all / t_all<br>• v_ср = (2·v₁·v₂) / (v₁ + v₂)<br>• a = (v - v₀) / t<br>• H = (g·t²) / 2<br>• t_под = v₀ / g<br>• H_max = v₀² / (2·g)",
+            explanation: "• <b>S</b> — путь/перемещение, м<br>• <b>v₀</b> — нач. скорость, м/с<br>• <b>v</b> — колич. скорость, м/с<br>• <b>a</b> — ускорение, м/с²<br>• <b>t</b> — время, с<br>• <b>x</b> — координата, м<br>• <b>H_max</b> — максимальная высота, м",
+            example: "Тело брошено вертикально вверх с начальной скоростью <b>v₀ = 20 м/с</b>. Найдите время подъема до наивысшей точки (g = 10 м/с²).<br><br><em>Решение:</em><br>t_под = v₀ / g = 20 / 10 = <b>2 с</b>."
         },
         dynamics: {
             title: "Динамика",
-            formulas: "• F = m · a<br>• F_тр = μ · m · g<br>• F_упр = k · x",
-            explanation: "• <b>F</b> — сила, Н<br>• <b>m</b> — масса тела, кг<br>• <b>a</b> — ускорение, м/с²<br>• <b>μ</b> — коэффициент трения (безразмерный)<br>• <b>g</b> — ускорение свободного падения (~10 м/с²)<br>• <b>k</b> — жесткость пружины, Н/м<br>• <b>x</b> — удлинение пружины, м",
-            example: "Тело массой <b>m = 4 кг</b> движется под действием силы <b>F = 20 Н</b>. Найдите ускорение <b>a</b>.<br><br><em>Решение:</em><br>Из формулы F = m·a выражаем a: a = F / m = 20 / 4 = <b>5 м/с²</b>."
+            formulas: "• F = m · a<br>• F_тр = μ · N<br>• N = m·g (на горизонтальной плоскости)<br>• N = m·(g ± a_y) (в лифте)<br>• F_упр = k · |x|<br>• G = m · g<br>• F_тяж_з = G · (M·m) / R²<br>• a_центр = v² / R = ω² · R<br>• F_центр = (m · v²) / R",
+            explanation: "• <b>F</b> — сила, Н<br>• <b>m</b> — масса, кг<br>• <b>a</b> — ускорение, м/с²<br>• <b>μ</b> — коэффициент трения<br>• <b>k</b> — жесткость, Н/м<br>• <b>R</b> — радиус круговой траектории, м",
+            example: "Тело массой <b>m = 2 кг</b> движется по окружности радиусом <b>R = 1 м</b> со скоростью <b>v = 3 м/с</b>. Найдите центростремительную силу.<br><br><em>Решение:</em><br>F_центр = (m · v²) / R = (2 · 3²) / 1 = (2 · 9) / 1 = <b>18 Н</b>."
         },
         conservation: {
             title: "Законы сохранения",
-            formulas: "• E_k = (m · v²) / 2<br>• E_p = m · g · h<br>• p = m · v",
-            explanation: "• <b>E_k</b> — кинетическая энергия, Дж<br>• <b>E_p</b> — потенциальная энергия, Дж<br>• <b>p</b> — импульс тела, кг·м/с<br>• <b>m</b> — масса, кг<br>• <b>v</b> — скорость, м/с<br>• <b>h</b> — высота, м",
-            example: "Найдите кинетическую энергию тела массой <b>m = 2 кг</b> при скорости <b>v = 6 м/с</b>.<br><br><em>Решение:</em><br>E_k = (2 · 6²) / 2 = (2 · 36) / 2 = <b>36 Дж</b>."
+            formulas: "• E_k = (m · v²) / 2<br>• E_p = m · g · h<br>• E_p_пруж = (k · x²) / 2<br>• E_full = E_k + E_p = const<br>• p = m · v<br>• Δp = F · t<br>• A = F · S · cos(α)<br>• A = -ΔE_p<br>• N = A / t = F · v",
+            explanation: "• <b>E_k, E_p</b> — кинетическая и потенциальная энергии, Дж<br>• <b>p</b> — импульс, кг·м/с<br>• <b>A</b> — работа, Дж<br>• <b>N</b> — мощность, Вт",
+            example: "Подъемник за время <b>t = 10 с</b> совершил работу <b>A = 5000 Дж</b>. Найдите полезную мощность крана.<br><br><em>Решение:</em><br>N = A / t = 5000 / 10 = <b>500 Вт</b>."
         },
         statics: {
-            title: "Статика",
-            formulas: "• M = F · d<br>• F_упр = k · x",
-            explanation: "• <b>M</b> — момент силы, Н·м<br>• <b>F</b> — сила, Н<br>• <b>d</b> — плечо силы, м<br>• <b>k</b> — жесткость, Н/м<br>• <b>x</b> — деформация, м",
-            example: "Пружина жесткостью <b>k = 200 Н/м</b> растянута на <b>x = 0.04 м</b>. Найдите силу упругости.<br><br><em>Решение:</em><br>F_упр = 200 · 0.04 = <b>8 Н</b>."
+            title: "Статика и гидростатика",
+            formulas: "• M = F · d<br>• F₁ / F₂ = d₂ / d₁ (правило рычага)<br>• p = F / S<br>• p = p₀ + ρ · g · h<br>• F_A = ρ_ж · g · V_погруж<br>• F_упр = k · x<br>• S₁·v₁ = S₂·v₂ (уравнение неразрывности потока)",
+            explanation: "• <b>M</b> — момент силы, Н·м<br>• <b>d</b> — плечо силы, м<br>• <b>p</b> — давление, Па<br>• <b>ρ</b> — плотность, кг/м³<br>• <b>F_A</b> — архимедова сила, Н",
+            example: "На плечо рычага длиной <b>d₁ = 0.2 м</b> действует сила <b>F₁ = 15 Н</b>. Какая сила <b>F₂</b> уравновесит рычаг на плече <b>d₂ = 0.6 м</b>?<br><br><em>Решение:</em><br>F₁·d₁ = F₂·d₂ ⇒ F₂ = (15 · 0.2) / 0.6 = 3 / 0.6 = <b>5 Н</b>."
         },
         mkt: {
             title: "МКТ и Термодинамика",
-            formulas: "• P · V = (m / M) · R · T<br>• Q = c · m · ΔT<br>• A = P · ΔV",
-            explanation: "• <b>P</b> — давление, Па<br>• <b>V</b> — объем, м³<br>• <b>T</b> — температура, К<br>• <b>Q</b> — количество теплоты, Дж<br>• <b>c</b> — удельная теплоемкость, Дж/(кг·°C)<br>• <b>A</b> — работа газа, Дж",
-            example: "Газ под давлением <b>P = 100 кПа</b> (100 000 Па) расширился на <b>ΔV = 0.02 м³</b>. Найдите работу газа.<br><br><em>Решение:</em><br>A = 100000 · 0.02 = <b>2000 Дж</b>."
+            formulas: "• p = n·k·T = (1/3)·m₀·n·v²_кв<br>• pV = (m/M)RT = NkT<br>• E_kin = (3/2)kT<br>• v_кв = √(3RT / M) = √(3kT / m₀)<br>• Q = c·m·ΔT<br>• Q = λ·m (плавление)<br>• Q = L·m (парообразование)<br>• Q = q·m (сгорание топлива)<br>• ΔU = (3/2)·(m/M)·R·ΔT<br>• Q = ΔU + A<br>• A = p·ΔV (изобарный процесс)<br>• η = (Q_1 - Q_2) / Q_1 = (T_1 - T_2) / T_1",
+            explanation: "• <b>R</b> = 8.31 Дж/(моль·К)<br>• <b>k</b> = 1.38·10⁻²³ Дж/К<br>• <b>N_A</b> = 6.02·10²³ моль⁻¹<br>• <b>η</b> — КПД тепловой машины",
+            example: "Идеальная тепловая машина имеет температуру нагревателя <b>T₁ = 400 К</b> и холодильника <b>T₂ = 300 К</b>. Найдите КПД машины (в %).<br><br><em>Решение:</em><br>η = ((400 - 300) / 400) · 100% = (100 / 400) · 100% = <b>25 %</b>."
         },
         electrostatics: {
             title: "Электростатика",
-            formulas: "• F = (k · q₁ · q₂) / r²<br>• C = q / U",
-            explanation: "• <b>F</b> — сила взаимодействия зарядов, Н<br>• <b>q₁, q₂</b> — электрические заряды, Кл<br>• <b>r</b> — расстояние между зарядами, м<br>• <b>C</b> — электроемкость, Ф<br>• <b>U</b> — напряжение, В",
-            example: "Конденсатор с зарядом <b>q = 0.0002 Кл</b> находится под напряжением <b>U = 100 В</b>. Найдите емкость <b>C</b>.<br><br><em>Решение:</em><br>C = q / U = 0.0002 / 100 = <b>0.000002 Ф</b>."
+            formulas: "• F = (k · |q₁·q₂|) / (ε·r²)<br>• E = F / q = (k·|q|) / (ε·r²)<br>• φ = W / q = (k·q) / r<br>• U = φ₁ - φ₂ = A / q<br>• C = q / U = (ε₀·ε·S) / d<br>• W_эл = (C·U²) / 2 = q² / (2C) = (q·U) / 2<br>• C_seq = (C₁·C₂) / (C₁ + C₂)<br>• C_par = C₁ + C₂",
+            explanation: "• <b>q</b> — заряд, Кл<br>• <b>E</b> — напряженность, В/м<br>• <b>φ</b> — потенциал, В<br>• <b>C</b> — электроемкость, Ф",
+            example: "Два конденсатора емкостью <b>C₁ = 2 мкФ</b> и <b>C₂ = 3 мкФ</b> соединены параллельно. Найдите общую емкость батареи (в мкФ).<br><br><em>Решение:</em><br>C_par = C₁ + C₂ = 2 + 3 = <b>5 мкФ</b>."
         },
         electro: {
             title: "Электродинамика",
-            formulas: "• I = U / R<br>• A = U · I · t",
-            explanation: "• <b>I</b> — сила тока, А<br>• <b>U</b> — напряжение, В<br>• <b>R</b> — сопротивление, Ом<br>• <b>A</b> — работа тока, Дж<br>• <b>t</b> — время, с",
-            example: "Напряжение в цепи <b>U = 220 В</b>, сопротивление резистора <b>R = 44 Ом</b>. Найдите силу тока <b>I</b>.<br><br><em>Решение:</em><br>I = U / R = 220 / 44 = <b>5 А</b>."
+            formulas: "• I = q / t = U / R<br>• R = (ρ · l) / S<br>• R_seq = R₁ + R₂<br>• 1 / R_par = 1/R₁ + 1/R₂<br>• A = U·I·t = I²·Rt = (U²/R)·t<br>• P = U·I = I²·R = U²/R<br>• I = E / (R + r) (закон Ома для полной цепи)<br>• I_max = E / r (ток короткого замыкания)",
+            explanation: "• <b>I</b> — сила тока, А<br>• <b>R</b> — сопротивление, Ом<br>• <b>E</b> — ЭДС, В<br>• <b>r</b> — внутреннее сопротивление, Ом",
+            example: "Резистор сопротивлением <b>R = 10 Ом</b> подключен к источнику с током <b>I = 2 А</b>. Найдите мощность выделяющегося тепла (в Вт).<br><br><em>Решение:</em><br>P = I² · R = 2² · 10 = 4 · 10 = <b>40 Вт</b>."
         },
         magnetism: {
-            title: "Магнетизм и индукция",
-            formulas: "• F_амп = I · B · l · sin(α)<br>• F_лор = q · v · B · sin(α)",
-            explanation: "• <b>F_амп</b> — сила Ампера, Н<br><b>• F_лор</b> — сила Лоренца, Н<br>• <b>I</b> — сила тока, А<br>• <b>B</b> — индукция магнитного поля, Тл<br>• <b>l</b> — длина проводника, м",
-            example: "Ток <b>I = 4 А</b> течет по проводнику длиной <b>l = 0.2 м</b> в поле с индукцией <b>B = 0.5 Тл</b> (угол 90°). Найдите силу Ампера.<br><br><em>Решение:</em><br>F = 4 · 0.5 · 0.2 · 1 = <b>0.4 Н</b>."
+            title: "Магнетизм и ЭМИ",
+            formulas: "• F_амп = I·B·l·sin(α)<br>• F_лор = q·v·B·sin(α)<br>• R_траектории = (m·v) / (|q|·B)<br>• Ф = B·S·cos(α)<br>• E_i = - (ΔΦ / Δt)<br>• E_i_ind = B·l·v·sin(α)<br>• W_магнит = (L·I²) / 2",
+            explanation: "• <b>B</b> — индукция магнитного поля, Тл<br>• <b>Ф</b> — магнитный поток, Вб<br>• <b>L</b> — индуктивность, Гн<br>• <b>E_i</b> — ЭДС индукции, В",
+            example: "Магнитный поток, пронизывающий контур, изменился за <b>Δt = 0.2 с</b> от <b>0.5 Вб</b> до <b>0.1 Вб</b>. Найдите модуль ЭДС индукции (в В).<br><br><em>Решение:</em><br>E_i = |ΔΦ / Δt| = (0.5 - 0.1) / 0.2 = 0.4 / 0.2 = <b>2 В</b>."
         },
         waves: {
             title: "Колебания и волны",
-            formulas: "• T = 2π · √(m / k)<br>• v = λ · ν",
-            explanation: "• <b>T</b> — период колебаний, с<br>• <b>ν (греч. ню)</b> — частота, Гц<br>• <b>λ (лямбда)</b> — длина волны, м<br>• <b>v</b> — скорость волны, м/с",
-            example: "Длина волны равна <b>λ = 4 м</b>, а частота <b>ν = 5 Гц</b>. Найдите скорость волны <b>v</b>.<br><br><em>Решение:</em><br>v = λ · ν = 4 · 5 = <b>20 м/с</b>."
+            formulas: "• T = 1 / ν = t / N<br>• ω = 2π / T = 2πν<br>• T_пружин = 2π·√(m / k)<br>• T_мат = 2π·√(l / g)<br>• x(t) = x_max·cos(ωt + φ₀)<br>• v_волны = λ · ν = λ / T<br>• n_синус = sin(α) / sin(β)",
+            explanation: "• <b>T</b> — период, с<br>• <b>ν</b> — частота, Гц<br>• <b>ω</b> — циклическая частота, рад/с<br>• <b>λ</b> — длина волны, м",
+            example: "Маятник совершает <b>N = 50 колебаний за t = 10 секунд</b>. Найдите период колебаний (в с).<br><br><em>Решение:</em><br>T = t / N = 10 / 50 = <b>0.2 с</b>."
         },
         optics: {
             title: "Оптика",
-            formulas: "• D = 1 / F<br>• 1 / F = 1 / d + 1 / f",
-            explanation: "• <b>D</b> — оптическая сила линзы, дптр<br>• <b>F</b> — фокусное расстояние, м<br>• <b>d</b> — расстояние от предмета до линзы, м<br>• <b>f</b> — расстояние от изображения до линзы, м",
-            example: "Фокусное расстояние линзы равно <b>F = 0.25 м</b>. Найдите ее оптическую силу <b>D</b>.<br><br><em>Решение:</em><br>D = 1 / 0.25 = <b>4 дптр</b>."
+            formulas: "• n₂₁ = n₂ / n₁ = v₁ / v₂ = λ₁ / λ₂<br>• sin(α) / sin(β) = n₂₁<br>• D = 1 / F<br>• 1 / F = 1/d + 1/f<br>• Г = f / d = H / h<br>• d·sin(α) = k·λ (дифракционная решетка)<br>• 2d·sin(α) = k·λ (Брэгг-Вульф)",
+            explanation: "• <b>n</b> — показатель преломления<br>• <b>D</b> — оптическая сила, дптр<br>• <b>F</b> — фокусное расстояние, м<br>• <b>d, f</b> — расстояния от линзы до предмета и изображения",
+            example: "Расстояние от предмета до собирающей линзы <b>d = 0.3 м</b>, а до изображения <b>f = 0.6 м</b>. Найдите линейное увеличение линзы.<br><br><em>Решение:</em><br>Г = f / d = 0.6 / 0.3 = <b>2</b>."
         },
         quantum: {
             title: "Квантовая и ядерная физика",
-            formulas: "• E = h · ν<br>• h · ν = A_вых + E_кин",
-            explanation: "• <b>E</b> — энергия фотона, Дж<br>• <b>h</b> — постоянная Планка<br>• <b>A_вых</b> — работа выхода электрона, Дж<br>• <b>E_кин</b> — кинетическая энергия фотоэлектрона, Дж",
-            example: "Было <b>N₀ = 200</b> радиоактивных ядер. Сколько ядер останется спустя <b>n = 3</b> периода полураспада?<br><br><em>Решение:</em><br>N = N₀ / (2ⁿ) = 200 / (2³) = 200 / 8 = <b>25 ядер</b>."
+            formulas: "• E = h·ν = (c / λ)·h<br>• h·ν = A_вых + E_k_max<br>• p_фотона = E / c = h / λ<br>• N = N₀ · 2^(-t / T_half)<br>• m = m₀ · 2^(-t / T_half)<br>• E_binding = Δm · c²<br>• Δm = Z·m_p + (A - Z)·m_n - m_ядра",
+            explanation: "• <b>h</b> = 6.63·10⁻³⁴ Дж·с<br>• <b>A_вых</b> — работа выхода электрона, Дж/эВ<br>• <b>T_half</b> — период полураспада, с<br>• <b>Δm</b> — дефект масс, кг",
+            example: "Период полураспада радиоактивного изотопа равен <b>T_half = 2 суткам</b>. Сколько ядер останется из <b>80 млн</b> через <b>4 суток</b>?<br><br><em>Решение:</em><br>t / T_half = 4 / 2 = 2 периода.<br>N = 80 · (1/2)² = 80 / 4 = <b>20 млн</b>."
         }
     };
 
@@ -337,101 +332,168 @@
         document.getElementById('next-task-btn').style.display = 'none';
 
         if (currentTopic === 'kinematics') {
-            const subType = Math.floor(Math.random() * 3);
+            const subType = Math.floor(Math.random() * 4);
             if (subType === 0) {
-                const v0 = Math.floor(Math.random() * 5), a = Math.floor(Math.random() * 3) + 1, t = Math.floor(Math.random() * 4) + 2;
+                const v0 = Math.floor(Math.random() * 4), a = Math.floor(Math.random() * 3) + 2, t = Math.floor(Math.random() * 4) + 2;
                 correctAnswer = v0 * t + (a * t * t) / 2;
-                document.getElementById('task-text').innerHTML = `Тело движется с v₀ = <b>${v0} м/с</b> и ускорением a = <b>${a} м/с²</b> за t = <b>${t} с</b>. Найдите перемещение (в м).`;
+                document.getElementById('task-text').innerHTML = `Автомобиль стартует с v₀ = <b>${v0} м/с</b>, ускоряясь с a = <b>${a} м/с²</b> за t = <b>${t} с</b>. Найдите путь (в м).`;
             } else if (subType === 1) {
-                const v0 = Math.floor(Math.random() * 5), a = Math.floor(Math.random() * 3) + 1, t = Math.floor(Math.random() * 4) + 2;
-                correctAnswer = v0 + a * t;
-                document.getElementById('task-text').innerHTML = `Тело разгоняется с v₀ = <b>${v0} м/с</b>, a = <b>${a} м/с²</b> за t = <b>${t} с</b>. Найдите конечную скорость (в м/с).`;
+                const v = Math.floor(Math.random() * 10) + 15, v0 = 5, a = 2;
+                correctAnswer = (v*v - v0*v0) / (2 * a);
+                document.getElementById('task-text').innerHTML = `Скорость тела выросла с ${v0} до ${v} м/с при ускорении a = ${a} м/с². Найдите перемещение (в м).`;
+            } else if (subType === 2) {
+                const h = Math.floor(Math.random() * 3) + 2;
+                correctAnswer = Number(Math.sqrt(2 * h * 10).toFixed(1));
+                document.getElementById('task-text').innerHTML = `Тело свободно падает с высоты h = <b>${h} м</b> без начальной скорости (g=10). Найдите конечную скорость (в м/с).`;
             } else {
-                correctAnswer = 5;
-                document.getElementById('task-text').innerHTML = `Тело движется равноускоренно с a = 2 м/с² и изменяет скорость с 2 м/с до 12 м/с. Найдите время движения (в с).`;
+                const v0 = 20;
+                correctAnswer = v0 / 10;
+                document.getElementById('task-text').innerHTML = `Тело брошено вверх с v₀ = <b>${v0} м/с</b> (g=10). Найдите время подъема (в с).`;
             }
         } 
         else if (currentTopic === 'dynamics') {
-            const subType = Math.floor(Math.random() * 2);
+            const subType = Math.floor(Math.random() * 4);
             if (subType === 0) {
-                const m = Math.floor(Math.random() * 4) + 2, a = Math.floor(Math.random() * 5) + 1;
+                const m = Math.floor(Math.random() * 5) + 2, a = Math.floor(Math.random() * 4) + 2;
                 correctAnswer = m * a;
                 document.getElementById('task-text').innerHTML = `Тело массой <b>${m} кг</b> движется с ускорением <b>${a} м/с²</b>. Найдите силу (в Н).`;
+            } else if (subType === 1) {
+                const k = Math.floor(Math.random() * 100) + 100, x = 0.05;
+                correctAnswer = k * x;
+                document.getElementById('task-text').innerHTML = `Пружина жесткостью <b>${k} Н/м</b> деформирована на <b>0.05 м</b>. Найдите силу упругости (в Н).`;
+            } else if (subType === 2) {
+                const m = 4, mu = 0.2;
+                correctAnswer = mu * m * 10;
+                document.getElementById('task-text').innerHTML = `Брусок массой <b>${m} кг</b> скользит по полу с μ = <b>${mu}</b> (g=10). Найдите силу трения (в Н).`;
             } else {
-                const m = 5, mu = 0.2, g = 10;
-                correctAnswer = mu * m * g;
-                document.getElementById('task-text').innerHTML = `Тело массой <b>${m} кг</b> скользит по поверхности с коэффициентом трения μ = <b>${mu}</b> (g = 10 м/с²). Найдите силу трения (в Н).`;
+                const m = 2, v = 6, R = 2;
+                correctAnswer = (m * v * v) / R;
+                document.getElementById('task-text').innerHTML = `Тело массой <b>${m} кг</b> движется по окружности радиусом <b>${R} м</b> со скоростью <b>${v} м/с</b>. Найдите центростремительную силу (в Н).`;
             }
         }
         else if (currentTopic === 'conservation') {
-            const subType = Math.floor(Math.random() * 3);
+            const subType = Math.floor(Math.random() * 4);
             if (subType === 0) {
-                const m = 2, v = 6;
+                const m = Math.floor(Math.random() * 3) + 2, v = Math.floor(Math.random() * 4) + 4;
                 correctAnswer = (m * v * v) / 2;
                 document.getElementById('task-text').innerHTML = `Найдите кинетическую энергию (в Дж) тела массой <b>${m} кг</b> при скорости <b>${v} м/с</b>.`;
             } else if (subType === 1) {
-                const m = 3, h = 4, g = 10;
-                correctAnswer = m * g * h;
-                document.getElementById('task-text').innerHTML = `Найдите потенциальную энергию (в Дж) тела массой <b>${m} кг</b> на высоте <b>${h} м</b> (g = 10).`;
-            } else {
-                const m = 4, v = 3;
+                const m = 3, h = 5;
+                correctAnswer = m * 10 * h;
+                document.getElementById('task-text').innerHTML = `Найдите потенциальную энергию (в Дж) груза массой <b>${m} кг</b> на высоте <b>${h} м</b> (g=10).`;
+            } else if (subType === 2) {
+                const m = 2, v = 5;
                 correctAnswer = m * v;
-                document.getElementById('task-text').innerHTML = `Найдите импульс (в кг·м/с) тела массой <b>${m} кг</b>, движущегося со скоростью <b>${v} м/с</b>.`;
+                document.getElementById('task-text').innerHTML = `Найдите модуль импульса (в кг·м/с) тела массой <b>${m} кг</b> со скоростью <b>${v} м/с</b>.`;
+            } else {
+                const A = 400, t = 8;
+                correctAnswer = A / t;
+                document.getElementById('task-text').innerHTML = `Какая мощность (в Вт) развивается при совершении работы <b>${A} Дж</b> за <b>${t} с</b>?`;
             }
         }
         else if (currentTopic === 'statics') {
-            const subType = Math.floor(Math.random() * 2);
+            const subType = Math.floor(Math.random() * 3);
             if (subType === 0) {
-                const F = 10, d1 = 0.2, d2 = 0.4;
-                correctAnswer = (F * d1) / d2;
-                document.getElementById('task-text').innerHTML = `Сила <b>${F} Н</b> действует на плече <b>${d1} м</b>. Какая сила уравновесит ее на плече <b>${d2} м</b> (в Н)?`;
+                const rho = 1000, h = 0.4;
+                correctAnswer = rho * 10 * h;
+                document.getElementById('task-text').innerHTML = `Найдите гидростатическое давление (в Па) столба воды высотой <b>${h} м</b> (ρ=1000, g=10).`;
+            } else if (subType === 1) {
+                const V = 0.02;
+                correctAnswer = 1000 * 10 * V;
+                document.getElementById('task-text').innerHTML = `Тело полностью погружено в воду, его объем <b>${V} м³</b> (ρ=1000, g=10). Найдите архимедову силу (в Н).`;
             } else {
-                const k = 200, x = 0.04;
-                correctAnswer = k * x;
-                document.getElementById('task-text').innerHTML = `Пружина жесткостью <b>${k} Н/м</b> растянута на <b>${x} м</b>. Найдите силу упругости (в Н).`;
+                const F1 = 20, d1 = 0.3, d2 = 0.6;
+                correctAnswer = (F1 * d1) / d2;
+                document.getElementById('task-text').innerHTML = `Сила <b>${F1} Н</b> на плече <b>${d1} м</b> уравновешена на плече <b>${d2} м</b>. Найдите вторую силу (в Н).`;
             }
         }
         else if (currentTopic === 'mkt') {
-            const subType = Math.floor(Math.random() * 2);
+            const subType = Math.floor(Math.random() * 3);
             if (subType === 0) {
-                const m = 2, c = 4200, dt = 10;
+                const nu = 2, T = 400;
+                correctAnswer = 1.5 * nu * 8.31 * T;
+                document.getElementById('task-text').innerHTML = `Найдите внутреннюю энергию (в Дж) <b>${nu} моль</b> одноатомного газа при <b>${T} К</b> (R=8.31).`;
+            } else if (subType === 1) {
+                const m = 0.5, c = 4200, dt = 20;
                 correctAnswer = c * m * dt;
-                document.getElementById('task-text').innerHTML = `Найдите количество теплоты (в Дж) для нагрева воды (c = 4200) массой <b>${m} кг</b> на <b>${dt} °C</b>.`;
+                document.getElementById('task-text').innerHTML = `Сколько теплоты (в Дж) нужно для нагрева воды (c=4200) массой <b>${m} кг</b> на <b>${dt} °C</b>?`;
             } else {
-                const P = 100000, dV = 0.02;
-                correctAnswer = P * dV;
-                document.getElementById('task-text').innerHTML = `Газ при постоянном давлении <b>100 кПа</b> (100000 Па) расширился на <b>0.02 м³</b>. Найдите работу газа (в Дж).`;
+                const T1 = 500, T2 = 400;
+                correctAnswer = ((T1 - T2) / T1) * 100;
+                document.getElementById('task-text').innerHTML = `Нагреватель имеет <b>${T1} К</b>, холодильник <b>${T2} К</b>. Найдите КПД идеальной машины (в %).`;
             }
         }
         else if (currentTopic === 'electrostatics') {
-            const q = 0.0002, U = 100;
-            correctAnswer = Number((q / U).toFixed(6));
-            document.getElementById('task-text').innerHTML = `Конденсатор с зарядом <b>0.0002 Кл</b> под напряжением <b>100 В</b>. Найдите электроемкость (в Ф).`;
+            const subType = Math.floor(Math.random() * 2);
+            if (subType === 0) {
+                const C = 10e-6, U = 200;
+                correctAnswer = (C * U * U) / 2;
+                document.getElementById('task-text').innerHTML = `Конденсатор емкостью <b>10 мкФ</b> (10⁻⁶ Ф) заряжен до <b>200 В</b>. Найдите энергию поля (в Дж).`;
+            } else {
+                const C1 = 4, C2 = 4;
+                correctAnswer = (C1 * C2) / (C1 + C2);
+                document.getElementById('task-text').innerHTML = `Два конденсатора <b>4 мкФ</b> и <b>4 мкФ</b> соединены последовательно. Найдите общую емкость (в мкФ).`;
+            }
         }
         else if (currentTopic === 'electro') {
-            const U = 220, R = 44;
-            correctAnswer = U / R;
-            document.getElementById('task-text').innerHTML = `Напряжение <b>${U} В</b>, сопротивление <b>${R} Ом</b>. Найдите силу тока (в А).`;
+            const subType = Math.floor(Math.random() * 2);
+            if (subType === 0) {
+                const U = 110, R = 22;
+                correctAnswer = U / R;
+                document.getElementById('task-text').innerHTML = `Напряжение на резисторе <b>${U} В</b>, сопротивление <b>${R} Ом</b>. Найдите силу тока (в А).`;
+            } else {
+                const I = 3, R = 5;
+                correctAnswer = I * I * R;
+                document.getElementById('task-text').innerHTML = `Ток <b>${I} А</b> течет через резистор <b>${R} Ом</b>. Найдите мощность (в Вт).`;
+            }
         }
         else if (currentTopic === 'magnetism') {
-            const I = 4, B = 0.5, l = 0.2;
-            correctAnswer = I * B * l;
-            document.getElementById('task-text').innerHTML = `Ток <b>${I} А</b> в проводнике длиной <b>${l} м</b> в поле с индукцией <b>${B} Тл</b>. Найдите силу Ампера (в Н).`;
+            const subType = Math.floor(Math.random() * 2);
+            if (subType === 0) {
+                const B = 0.4, l = 0.5, I = 5;
+                correctAnswer = B * l * I;
+                document.getElementById('task-text').innerHTML = `Ток <b>${I} А</b> в проводнике длиной <b>${l} м</b> в поле с индукцией <b>${B} Тл</b> (угол 90°). Найдите силу Ампера (в Н).`;
+            } else {
+                const dPhi = 0.6, dt = 0.3;
+                correctAnswer = dPhi / dt;
+                document.getElementById('task-text').innerHTML = `Магнитный поток изменился на <b>${dPhi} Вб</b> за <b>${dt} с</b>. Найдите ЭДС индукции (в В).`;
+            }
         }
         else if (currentTopic === 'waves') {
-            const lambda = 4, freq = 5;
-            correctAnswer = lambda * freq;
-            document.getElementById('task-text').innerHTML = `Длина волны <b>${lambda} м</b>, частота <b>${freq} Гц</b>. Найдите скорость волны (в м/с).`;
+            const subType = Math.floor(Math.random() * 2);
+            if (subType === 0) {
+                const lambda = 2.5, nu = 4;
+                correctAnswer = lambda * nu;
+                document.getElementById('task-text').innerHTML = `Длина волны <b>${lambda} м</b>, частота колебаний <b>${nu} Гц</b>. Найдите скорость волны (в м/с).`;
+            } else {
+                const N = 40, t = 10;
+                correctAnswer = t / N;
+                document.getElementById('task-text').innerHTML = `Маятник делает <b>${N} колебаний за ${t} с</b>. Найдите период (в с).`;
+            }
         }
         else if (currentTopic === 'optics') {
-            const F = 0.25;
-            correctAnswer = 1 / F;
-            document.getElementById('task-text').innerHTML = `Фокусное расстояние линзы равно <b>0.25 м</b>. Найдите оптическую силу (в дптр).`;
+            const subType = Math.floor(Math.random() * 2);
+            if (subType === 0) {
+                const F = 0.2;
+                correctAnswer = 1 / F;
+                document.getElementById('task-text').innerHTML = `Фокусное расстояние тонкой линзы равно <b>${F} м</b>. Найдите ее оптическую силу (в дптр).`;
+            } else {
+                const f = 0.8, d = 0.4;
+                correctAnswer = f / d;
+                document.getElementById('task-text').innerHTML = `Расстояние до изображения <b>${f} м</b>, до предмета <b>${d} м</b>. Найдите увеличение линзы.`;
+            }
         }
         else if (currentTopic === 'quantum') {
-            const N0 = 200, n = 3;
-            correctAnswer = N0 / Math.pow(2, n);
-            document.getElementById('task-text').innerHTML = `Было <b>${N0}</b> ядер. Сколько ядер останется спустя <b>${n}</b> периода полураспада?`;
+            const subType = Math.floor(Math.random() * 2);
+            if (subType === 0) {
+                const E_ph = 5, A_out = 2;
+                correctAnswer = E_ph - A_out;
+                document.getElementById('task-text').innerHTML = `Энергия фотона <b>${E_ph} эВ</b>, работа выхода <b>${A_out} эВ</b>. Найдите макс. кинетическую энергию электрона (в эВ).`;
+            } else {
+                const N0 = 64, n_per = 3;
+                correctAnswer = N0 / Math.pow(2, n_per);
+                document.getElementById('task-text').innerHTML = `Было <b>${N0} млн</b> ядер. Прошло <b>${n_per} периода полураспада</b>. Сколько ядер осталось (в млн)?`;
+            }
         }
     }
 
@@ -458,6 +520,7 @@
 
 </body>
 </html>
+
 
 
 
