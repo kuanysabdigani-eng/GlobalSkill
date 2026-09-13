@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -54,13 +54,18 @@
         .btn-success { background-color: var(--accent); }
         .btn-warning { background-color: var(--warning); color: #000; }
         .btn-danger { background-color: var(--danger); }
-        
+
         .section-block {
             background: rgba(0,0,0,0.2); border: 1px solid var(--border);
             border-radius: 12px; padding: 14px; margin-bottom: 16px;
             font-size: 13px; line-height: 1.6;
         }
         .section-block h3 { margin: 0 0 8px 0; font-size: 14px; color: var(--primary); text-transform: uppercase; }
+        .cheat-sheet {
+            background: rgba(16, 185, 129, 0.1); border: 1px dashed var(--accent);
+            border-radius: 12px; padding: 14px; margin-bottom: 16px; font-size: 13px; line-height: 1.6;
+        }
+        .cheat-sheet h3 { margin: 0 0 6px 0; font-size: 14px; color: var(--accent); }
         .example-box {
             background: rgba(99, 102, 241, 0.1); border-left: 3px solid var(--primary);
             padding: 14px; border-radius: 0 12px 12px 0; font-size: 13px; margin-bottom: 16px; line-height: 1.8;
@@ -101,7 +106,7 @@
     <!-- Список разделов физики -->
     <div id="screen-physics-topics" class="card hidden">
         <h2 style="margin-top:0; font-size:18px;">Физика: Выбери раздел</h2>
-        <button class="btn btn-secondary" onclick="openTopic('kinematics')">1. Кинематика</button>
+        <button class="btn btn-secondary" onclick="openTopic('kinematics')">1. Кинематика (Прямолинейная и Вращательная)</button>
         <button class="btn btn-secondary" onclick="openTopic('dynamics')">2. Динамика</button>
         <button class="btn btn-secondary" onclick="openTopic('conservation')">3. Законы сохранения</button>
         <button class="btn btn-secondary" onclick="openTopic('statics')">4. Статика и Гидростатика</button>
@@ -118,7 +123,13 @@
     <!-- Теория и выбор сложности -->
     <div id="screen-theory" class="card hidden">
         <h2 id="th-title" style="margin-top:0; font-size:18px; margin-bottom: 16px;"></h2>
-        
+
+        <!-- Шпаргалка для быстрых расчетов (активна для кинематики) -->
+        <div id="th-cheat" class="cheat-sheet hidden">
+            <h3>💡 ЕНТ Лайфхаки и Шпаргалка</h3>
+            <div id="th-cheat-text"></div>
+        </div>
+
         <div class="section-block">
             <h3>Основные формулы</h3>
             <div id="th-formulas"></div>
@@ -138,7 +149,7 @@
         <button class="btn btn-success" onclick="startTrainer('easy')">🟢 Легкий (База ЕНТ)</button>
         <button class="btn btn-warning" onclick="startTrainer('medium')">🟡 Средний (Стандарт)</button>
         <button class="btn btn-danger" onclick="startTrainer('hard')">🔴 Сложный (На 2 балла)</button>
-        
+
         <button class="btn btn-secondary" onclick="showScreen('screen-physics-topics')" style="margin-top: 16px;">← К списку разделов</button>
     </div>
 
@@ -148,7 +159,7 @@
             <span id="tr-badge" class="badge"></span>
             <span id="tr-counter" style="font-size: 13px; color: var(--text-secondary); font-weight: bold;">Задача 1 из 5</span>
         </div>
-        
+
         <div class="task-condition" id="tr-text"></div>
         <div id="feedback-container"></div>
 
@@ -171,29 +182,30 @@ let activeTasksList = [];
 // Полная база данных по всем 11 разделам
 const dataBase = {
     kinematics: {
-        title: "1. Кинематика",
-        formulas: "• S = v₀t + at²/2<br>• v = v₀ + at<br>• S = (v² - v₀²) / 2a<br>• x = x₀ + v_x t<br>• v_ср = S_всего / t_всего",
-        explanation: "Кинематика изучает движение тел без учета причин. Важно не путать среднюю скорость (весь путь на все время) со средним арифметическим скоростей.",
-        examples: "1. Автомобиль едет со скоростью 10 м/с 5 секунд. Путь S = 50 м.<br><br>2. Разгон с 0 до 20 м/с за 4 с. Ускорение a = 5 м/с².<br><br>3. Падение с высоты при g=10 за 2 с: h = gt²/2 = 20 м.<br><br>4. Бросок вверх со скоростью 30 м/с. Время подъема t = 3 с.<br><br>5. x = 5 + 4t. Начальная координата 5 м, скорость 4 м/с.",
+        title: "1. Кинематика и Вращение",
+        cheat: "• <b>Перевод единиц:</b> км/ч ÷ 3.6 = м/с | м/с × 3.6 = км/ч.<br>• <b>Как выражать время ($t$):</b> Из формулы $S = v_0 t + \\frac{at^2}{2}$ при $v_0 = 0$ время равно $t = \\sqrt{\\frac{2S}{a}}$.<br>• <b>Квадратные корни:</b> Если $t^2 = 49$, то $t = \\sqrt{49} = 7$ с. Всегда проверяйте знак и размерность!",
+        formulas: "• S = v₀t + at²/2<br>• v = v₀ + at<br>• v_ср = S_всего / t_всего<br>• <b>Связь скоростей:</b> v = ωR<br>• <b>Центростремительное ускорение:</b> a_n = v² / R = ω²R<br>• <b>Период и частота:</b> T = 1 / ν, ω = 2πν<br>• <b>Относительность:</b> v_отн = v₁ ± v₂",
+        explanation: "Кинематика изучает движение тел без учета причин, включая вращательное движение по окружности и относительность скоростей.",
+        examples: "1. Перевод: 72 км/ч ÷ 3.6 = 20 м/с.<br><br>2. Выражение времени: если S = 50 м, a = 4 м/с², то t = √(2·50/4) = √25 = 5 с.<br><br>3. Линейная скорость при ω = 10 рад/с и R = 0.5 м: v = 10 · 0.5 = 5 м/с.<br><br>4. Центростремительное ускорение: a_n = (5)² / 0.5 = 50 м/с².<br><br>5. Относительная скорость навстречу: 10 м/с + 15 м/с = 25 м/с.",
         tasks: {
             easy: [
                 { text: "Автомобиль едет со скоростью 12 м/с в течение 5 с. Найдите пройденный путь (в метрах).", ans: 60 },
                 { text: "Тело движется с ускорением 2 м/с² в течение 4 с из состояния покоя. Найдите скорость (в м/с).", ans: 8 },
                 { text: "Камень падает без начальной скорости 3 с. Найдите конечную скорость при g = 10 м/с² (в м/с).", ans: 30 },
-                { text: "Тело прошло 100 м за 20 с с постоянной скоростью. Найдите скорость (в м/с).", ans: 5 },
-                { text: "Мяч бросили вертикально вверх со скоростью 20 м/с. На какую максимальную высоту он поднимется (в м, g=10)?", ans: 20 }
+                { text: "Переведите скорость 72 км/ч в метры в секунду (м/с).", ans: 20 },
+                { text: "Частота вращения диска равна 5 Гц. Найдите период обращения (в секундах).", ans: 0.2 }
             ],
             medium: [
                 { text: "Автомобиль тормозит с a = 3 м/с² от скорости 15 м/с до остановки. Тормозной путь (в метрах)?", ans: 37.5 },
-                { text: "Тело прошло 48 м за 4 с при равноускоренном движении без начальной скорости. Ускорение (в м/с²)?", ans: 6 },
-                { text: "Координата x = 20 - 4t. Через сколько секунд тело окажется в точке x = 0?", ans: 5 },
-                { text: "Мяч бросили вверх со скоростью 20 м/с (g = 10). Через сколько секунд он упадет обратно на землю?", ans: 4 },
+                { text: "Тело прошло 48 м за 4 с при равноускоренном движении из состояния покоя. Ускорение (в м/с²)?", ans: 6 },
+                { text: "Точка движется по окружности радиусом 2 м с угловой скоростью 3 рад/с. Найдите линейную скорость (в м/с).", ans: 6 },
+                { text: "Два поезда едут навстречу друг другу со скоростями 15 м/с и 20 м/с. Какова их скорость сближения (в м/с)?", ans: 35 },
                 { text: "Первую половину пути авто ехало со скоростью 60 км/ч, вторую — 90 км/ч. Найдите среднюю скорость (в км/ч).", ans: 72 }
             ],
             hard: [
                 { text: "Два тела движутся навстречу друг другу со скоростями 10 м/с и 15 м/с. Расстояние между ними 100 м. Через сколько секунд они встретятся?", ans: 4 },
                 { text: "Тело проходит последнюю секунду свободного падения путь 25 м (g = 10). С какой высоты падало тело (в метрах)?", ans: 45 },
-                { text: "Лыжник спускается с горы длиной 50 м с ускорением 2 м/с² из состояния покоя. Найдите время спуска (в с, округлить до сотых)?", ans: 7.07 },
+                { text: "Тело совершает равномерное движение по окружности радиусом 1 м с центростремительным ускорением 16 м/с². Найдите частоту обращения (π² ≈ 10, в Гц)?", ans: 2 },
                 { text: "Найти путь, пройденный телом за 4-ю секунду равноускоренного движения из состояния покоя с ускорением 2 м/с².", ans: 7 },
                 { text: "Тело брошено под углом 30° к горизонту со скоростью 20 м/с. Дальность полета (в метрах, g=10, √3 ≈ 1.73)?", ans: 34.6 }
             ]
@@ -202,7 +214,7 @@ const dataBase = {
     dynamics: {
         title: "2. Динамика",
         formulas: "• F = ma<br>• F_тр = μN<br>• F_упр = kx<br>• P = m(g ± a)<br>• F = G(m₁m₂)/R²",
-        explanation: "Динамика изучает причины движения (силы). Ключевое на ЕНТ — правильное направление сил и проекции на оси координат.",
+        explanation: "Динамика изучает причины движения (сил). Ключевое на ЕНТ — правильное направление сил и проекции на оси координат.",
         examples: "1. Сила 20 Н действует на массу 4 кг: a = 5 м/с².<br><br>2. Сила тяжести для 5 кг (g=10) F = 50 Н.<br><br>3. Пружина (k=100 Н/м) растянута на 0.05 м: F = 5 Н.<br><br>4. Трение (μ=0.2, N=50 Н): F_тр = 10 Н.<br><br>5. Вес в лифте, едущем вверх с a=2 м/с²: P = 50*(10+2) = 600 Н.",
         tasks: {
             easy: [
@@ -464,7 +476,7 @@ const dataBase = {
         title: "11. Квантовая и ядерная физика",
         formulas: "• E = hν = hc / λ<br>• hν = A_вых + mv²/2<br>• N = N₀ · 2^(-t / T)<br>• E = mc²<br>• ΔE = Δm · 931.5 МэВ",
         explanation: "Квантовая и ядерная физика. Основные концепции — фотоэффект (уравнение Эйнштейна) и закон радиоактивного полураспада.",
-        examples: "1. Энергия фотона пропорциональна частоте E = hν.<br><br>2. Задерживающее напряжение связано с кинетической энергией: eU_з = E_к.<br><br>3. Из 1000 ядер через один период полураспада T останется 500.<br><br>4. При α-распаде массовое число уменьшается на 4, зарядовое на 2.<br><br>5. При β-распаде массовое число не меняется, зарядовое увеличивается на 1.",
+        examples: "1. Энергия фотона пропорциональна частоте E = hν.<br><br>2. Задерживающее напряжение связано с кинетической энергией: eU_з = E_к.<br><br>3. Из 1000 ядер через один период полураспада T останется 500.<br><br>4. При альфа-распаде массовое число уменьшается на 4, зарядовое на 2.<br><br>5. При бета-распаде массовое число не меняется, зарядовое увеличивается на 1.",
         tasks: {
             easy: [
                 { text: "Было 400 ядер. Период полураспада 2 часа. Сколько ядер останется через 6 часов?", ans: 50 },
@@ -506,6 +518,16 @@ function openTopic(key) {
     document.getElementById('th-formulas').innerHTML = item.formulas;
     document.getElementById('th-explanation').innerHTML = item.explanation;
     document.getElementById('th-examples').innerHTML = item.examples;
+
+    // Шпаргалка видна только для кинематики
+    const cheatEl = document.getElementById('th-cheat');
+    if(key === 'kinematics') {
+        document.getElementById('th-cheat-text').innerHTML = item.cheat;
+        cheatEl.classList.remove('hidden');
+    } else {
+        cheatEl.classList.add('hidden');
+    }
+
     showScreen('screen-theory');
 }
 
@@ -513,12 +535,12 @@ function startTrainer(level) {
     currentLevel = level;
     taskIndex = 0;
     activeTasksList = dataBase[currentKey].tasks[level];
-    
+
     const badge = document.getElementById('tr-badge');
     if(level === 'easy') { badge.innerText = '🟢 Легкий уровень (1 балл)'; badge.className = 'badge badge-easy'; }
     if(level === 'medium') { badge.innerText = '🟡 Средний уровень (1 балл)'; badge.className = 'badge badge-medium'; }
     if(level === 'hard') { badge.innerText = '🔴 Сложный уровень (2 балла)'; badge.className = 'badge badge-hard'; }
-    
+
     showScreen('screen-trainer');
     loadTask();
 }
@@ -554,7 +576,7 @@ function checkAnswer() {
 
     document.getElementById('user-answer').style.display = 'none';
     document.querySelector('#answer-area .btn-success').style.display = 'none';
-    
+
     const nextBtn = document.getElementById('next-btn');
     if (taskIndex < activeTasksList.length - 1) {
         nextBtn.innerText = 'Следующая задача →';
