@@ -517,28 +517,36 @@
             const data = activeQuestions[currentQuestionIndex];
             const optionsContainer = document.getElementById('options-container');
             const buttons = optionsContainer.children;
-
             const feedbackEl = document.getElementById('feedback');
-            feedbackEl.classList.remove('hidden');
 
-            if (selectedIndex === data.correct) {
-                buttons[selectedIndex].className = "w-full text-left p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 font-medium text-sm md:text-base transition";
-                score += 10;
-                feedbackEl.className = "p-4 rounded-xl mb-6 text-sm bg-emerald-950/50 border border-emerald-800/50 text-emerald-300";
-                feedbackEl.innerHTML = `Правильно! 💡 Разбор: ${data.explanation}`;
-            } else {
-                buttons[selectedIndex].className = "w-full text-left p-4 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 font-medium text-sm md:text-base transition";
-                buttons[data.correct].className = "w-full text-left p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 font-medium text-sm md:text-base transition";
-                feedbackEl.className = "p-4 rounded-xl mb-6 text-sm bg-rose-950/50 border border-rose-800/50 text-rose-300";
-                feedbackEl.innerHTML = `Неверно. 💡 Правильный разбор: ${data.explanation}`;
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+                if (i === data.correct) {
+                    buttons[i].classList.add('bg-emerald-600/30', 'border-emerald-500', 'text-emerald-200');
+                } else if (i === selectedIndex) {
+                    buttons[i].classList.add('bg-rose-600/30', 'border-rose-500', 'text-rose-200');
+                }
             }
 
+            if (selectedIndex === data.correct) {
+                score += 10;
+                feedbackEl.className = "p-4 rounded-xl mb-6 text-sm bg-emerald-950/50 border border-emerald-800/50 text-emerald-200";
+                feedbackEl.innerHTML = `<strong>Верно! 🎉</strong> ${data.explanation}`;
+            } else {
+                feedbackEl.className = "p-4 rounded-xl mb-6 text-sm bg-rose-950/50 border border-rose-800/50 text-rose-200";
+                feedbackEl.innerHTML = `<strong>Неверно. ❌</strong> ${data.explanation}`;
+            }
+
+            feedbackEl.classList.remove('hidden');
             document.getElementById('score-display').innerText = `Баллы: ${score}`;
 
-            const nextBtn = document.getElementById('next-btn');
-            nextBtn.classList.remove('hidden');
-            nextBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
+            if (currentQuestionIndex < activeQuestions.length - 1) {
+                document.getElementById('next-btn').classList.remove('hidden');
+            } else {
+                setTimeout(() => {
+                    showCompletion();
+                }, 1500);
+            }
             triggerMathTypeset();
         }
 
@@ -546,28 +554,32 @@
             currentQuestionIndex++;
             if (currentQuestionIndex < activeQuestions.length) {
                 loadQuestion();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                document.getElementById('quiz-container').classList.add('hidden');
-                document.getElementById('completion-card').classList.remove('hidden');
-                const maxPossible = activeQuestions.length * 10;
-                document.getElementById('final-score').innerText = `Вы набрали: ${score} из ${maxPossible} баллов`;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                showCompletion();
             }
         }
 
-        function restartLevel() {
-            currentQuestionIndex = 0;
-            score = 0;
-            document.getElementById('quiz-container').classList.remove('hidden');
-            document.getElementById('completion-card').classList.add('hidden');
-            loadQuestion();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function showCompletion() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('completion-card').classList.remove('hidden');
+            document.getElementById('final-score').innerText = `Ваш результат: ${score} из ${activeQuestions.length * 10}`;
+            triggerMathTypeset();
         }
 
-        populateTopics();
-        filterQuestions();
-        loadQuestion();
+        function restartLevel() {
+            score = 0;
+            currentQuestionIndex = 0;
+            document.getElementById('completion-card').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        window.onload = () => {
+            populateTopics();
+            filterQuestions();
+            loadQuestion();
+        };
     </script>
 </body>
 </html>
+ 
