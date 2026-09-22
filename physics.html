@@ -1,616 +1,524 @@
-<!DOCTYPE html>
+
+   <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GlobalSkill - Полный курс физики для ЕНТ</title>
+    <title>GlobalSkill — ЕНТ Тренажер по темам</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Настройка MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg: #090d16;
-            --card-bg: #131c31;
-            --border: #1e293b;
-            --text: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-        .container {
-            width: 100%;
-            max-width: 480px;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h1 {
-            font-size: 22px;
-            margin: 0 0 4px 0;
-            color: var(--primary);
-        }
-        .subtitle {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-            transition: background 0.2s;
-        }
-        .btn:hover { background-color: var(--primary-hover); }
-        .btn-secondary { background-color: transparent; border: 1px solid var(--border); color: var(--text); }
-        .btn-success { background-color: var(--accent); }
-        .btn-warning { background-color: var(--warning); color: #000; }
-        .btn-danger { background-color: var(--danger); }
-        
-        .section-block, .example-box {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 14px;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-        .example-box {
-            background: rgba(99, 102, 241, 0.08);
-            border-left: 3px solid var(--primary);
-        }
-        h3 {
-            margin: 0 0 6px 0;
-            font-size: 13px;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-        input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            font-size: 15px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-        .task-condition {
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 14px;
-        }
-        .feedback {
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
-        .feedback.error { background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; }
-        .feedback.success { background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent); color: #6ee7b7; }
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        .badge-easy { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .badge-medium { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .badge-hard { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .hidden { display: none !important; }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
 
-<div class="container">
-    <header>
-        <h1>GlobalSkill Physics ⚡</h1>
-        <div class="subtitle">От Кинематики до Ядерной физики для ЕНТ</div>
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+                GlobalSkill // ЕНТ Math Pro
+            </h1>
+            <div id="subject-selector" class="flex flex-wrap gap-2 justify-center">
+                <button onclick="switchMode('math_literacy')" id="btn-math_literacy" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-blue-600 text-white transition shadow-md">Мат. грамотность</button>
+                <button onclick="switchMode('profile_math')" id="btn-profile_math" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">Профильная мат.</button>
+                <button onclick="switchMode('formulas')" id="btn-formulas" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">📖 Шпаргалка</button>
+            </div>
+        </div>
     </header>
 
-    <!-- Главное меню разделов -->
-    <div id="screen-topics" class="card">
-        <h2 style="margin-top:0; font-size:16px;">Выбери раздел физики</h2>
-        <button class="btn btn-secondary" onclick="openTopic('kinematics')">1. Кинематика</button>
-        <button class="btn btn-secondary" onclick="openTopic('dynamics')">2. Динамика</button>
-        <button class="btn btn-secondary" onclick="openTopic('conservation')">3. Законы сохранения</button>
-        <button class="btn btn-secondary" onclick="openTopic('statics')">4. Статика и Гидростатика</button>
-        <button class="btn btn-secondary" onclick="openTopic('mkt')">5. МКТ и Термодинамика</button>
-        <button class="btn btn-secondary" onclick="openTopic('electrostatics')">6. Электростатика</button>
-        <button class="btn btn-secondary" onclick="openTopic('electro')">7. Электродинамика</button>
-        <button class="btn btn-secondary" onclick="openTopic('magnetism')">8. Магнетизм</button>
-        <button class="btn btn-secondary" onclick="openTopic('waves')">9. Колебания и волны</button>
-        <button class="btn btn-secondary" onclick="openTopic('optics')">10. Оптика</button>
-        <button class="btn btn-secondary" onclick="openTopic('quantum')">11. Квантовая и ядерная физика</button>
-    </div>
-
-    <!-- Теория и выбор сложности тренажера -->
-    <div id="screen-theory" class="card hidden">
-        <h2 id="th-title" style="margin-top:0; font-size:16px;"></h2>
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
         
-        <div class="section-block">
-            <h3>Основные формулы</h3>
-            <div id="th-formulas"></div>
+        <!-- Controls Container (Topic & Difficulty Selection) -->
+        <div id="controls-container" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 mb-6 flex flex-col gap-4">
+            
+            <!-- Topic Filter Dropdown -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-800/40 p-3 rounded-xl border border-slate-700/50">
+                <label for="topic-select" class="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                    🎯 Раздел темы:
+                </label>
+                <select id="topic-select" onchange="onTopicChange()" class="bg-slate-900 text-blue-400 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:border-blue-500 transition w-full sm:w-auto">
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+
+            <!-- Difficulty Selector -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Уровень сложности:</span>
+                <div id="difficulty-container" class="flex justify-center gap-2 w-full sm:w-auto">
+                    <button onclick="setDifficulty('easy')" id="btn-diff-easy" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white transition">🟢 Легкий</button>
+                    <button onclick="setDifficulty('medium')" id="btn-diff-medium" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">🟡 Средний</button>
+                    <button onclick="setDifficulty('hard')" id="btn-diff-hard" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">🔴 Сложный</button>
+                </div>
+            </div>
         </div>
 
-        <div class="section-block">
-            <h3>Суть и объяснение темы</h3>
-            <div id="th-explanation"></div>
+        <!-- Quiz Section -->
+        <div id="quiz-container" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-6">
+                <div class="flex items-center gap-2">
+                    <span id="question-counter" class="text-xs font-semibold tracking-wider uppercase px-2.5 py-1 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20">Вопрос 1 / 10</span>
+                    <span id="topic-badge" class="text-xs font-medium px-2.5 py-1 bg-slate-800 text-slate-300 rounded-full border border-slate-700">Тема</span>
+                </div>
+                <span id="score-display" class="text-sm font-medium text-slate-400">Баллы: 0</span>
+            </div>
+
+            <!-- Sample / Reference Pattern Box -->
+            <div id="sample-box" class="mb-6 p-4 rounded-xl bg-indigo-950/40 border border-indigo-800/50 text-indigo-200 text-xs md:text-sm">
+                <div class="font-semibold text-indigo-400 mb-1 flex items-center gap-1.5">
+                    <span>💡 Образец решения перед глазами:</span>
+                </div>
+                <div id="sample-text" class="text-slate-300 leading-relaxed">
+                    Загрузка образца...
+                </div>
+            </div>
+
+            <h2 id="question-text" class="text-lg md:text-xl font-semibold mb-6 text-slate-200">
+                Загрузка вопроса...
+            </h2>
+
+            <div id="options-container" class="grid gap-3 mb-6"></div>
+
+            <div id="feedback" class="hidden p-4 rounded-xl mb-6 text-sm"></div>
+
+            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl transition shadow-lg shadow-blue-600/20">
+                Следующий вопрос
+            </button>
         </div>
 
-        <div class="example-box">
-            <h3>Понятные примеры (5 штук)</h3>
-            <div id="th-examples"></div>
+        <!-- Formulas & Theory Section -->
+        <div id="formulas-container" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
+            <h2 class="text-2xl font-bold mb-6 text-blue-400">Справочник тем и формул ЕНТ</h2>
+            
+            <div class="space-y-6 text-slate-300">
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <h3 class="font-semibold text-white mb-2">1. Проценты и растворы</h3>
+                    <p class="text-sm text-slate-300">$p\%$ от $a = \frac{a \cdot p}{100}$. Формула смесей: $m_1 c_1 + m_2 c_2 = (m_1 + m_2) c_{\text{см}}$.</p>
+                </div>
+
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <h3 class="font-semibold text-white mb-2">2. Движение и работа</h3>
+                    <p class="text-sm text-slate-300">$S = v \cdot t, \quad v_{\text{ср}} = \frac{S_{\text{все}}}{t_{\text{все}}}, \quad \frac{1}{t_1} + \frac{1}{t_2} = \frac{1}{t_{\text{совм}}}$.</p>
+                </div>
+
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <h3 class="font-semibold text-white mb-2">3. Алгебра, показательные и логарифмы</h3>
+                    <p class="text-sm text-slate-300">$\log_a(b \cdot c) = \log_a b + \log_a c, \quad a^{\log_a b} = b, \quad a^{f(x)} = a^{g(x)} \implies f(x) = g(x)$.</p>
+                </div>
+
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <h3 class="font-semibold text-white mb-2">4. Тригонометрия и анализ</h3>
+                    <p class="text-sm text-slate-300">$\sin^2 x + \cos^2 x = 1, \quad (x^n)' = n x^{n-1}, \quad \int x^n dx = \frac{x^{n+1}}{n+1} + C$.</p>
+                </div>
+            </div>
         </div>
 
-        <h3 style="margin-top: 16px;">Выбери уровень тренажера:</h3>
-        <button class="btn btn-success" onclick="startTrainer('easy')">🟢 Легкий уровень (5 задач)</button>
-        <button class="btn btn-warning" onclick="startTrainer('medium')">🟡 Средний уровень (5 задач)</button>
-        <button class="btn btn-danger" onclick="startTrainer('hard')">🔴 Сложный уровень (5 задач)</button>
-        
-        <button class="btn btn-secondary" onclick="showScreen('screen-topics')" style="margin-top: 12px;">← К списку разделов</button>
-    </div>
-
-    <!-- Тренажер задач -->
-    <div id="screen-trainer" class="card hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <span id="tr-badge" class="badge"></span>
-            <span id="tr-counter" style="font-size: 12px; color: var(--text-secondary);">Задача 1 из 5</span>
+        <!-- Completion Card -->
+        <div id="completion-card" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center shadow-xl">
+            <h2 class="text-2xl font-bold mb-3 text-white">Тема/уровень пройден! 🎉</h2>
+            <p id="final-score" class="text-slate-400 mb-6">Ваш результат: </p>
+            <button onclick="restartLevel()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl transition shadow-lg shadow-blue-600/20">
+                Пройти заново
+            </button>
         </div>
-        
-        <div class="task-condition" id="tr-text"></div>
-        <div id="feedback-container"></div>
+    </main>
 
-        <div id="answer-area">
-            <input type="number" id="user-answer" placeholder="Введи числовой ответ" step="any">
-            <button class="btn btn-success" onclick="checkAnswer()">Проверить</button>
-        </div>
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 py-4 text-center text-xs text-slate-600">
+        GlobalSkill Platform &bull; ЕНТ 2026
+    </footer>
 
-        <button class="btn btn-secondary" id="next-btn" onclick="nextTask()" style="display:none;">Следующая задача →</button>
-        <button class="btn btn-secondary" onclick="openTopic(currentKey)">← Назад к теории</button>
-    </div>
-</div>
+    <script>
+        const database = {
+            math_literacy: {
+                easy: [
+                    { topic: "Проценты и растворы", sample: "Пример: Товар стоит 800 тг. При скидке 10% вычитаем $800 \\times 0{,}10 = 80$ тг. Новая цена: $800 - 80 = 720$ тг.", question: "Товар стоил 1000 тенге. Цена выросла на 20%. Найдите новую цену.", options: ["1100 тг", "1200 тг", "1250 тг", "1300 тг"], correct: 1, explanation: "$1000 \\times 0{,}20 = 200$ тг. $1000 + 200 = 1200$ тенге." },
+                    { topic: "Проценты и растворы", sample: "Пример: Если 20% от $x$ равны 40, то $0{,}2x = 40 \\implies x = 200$.", question: "30% от числа равны 45. Найдите это число.", options: ["120", "135", "150", "160"], correct: 2, explanation: "$0{,}3x = 45 \\implies x = 45 / 0{,}3 = 150$." },
+                    { topic: "Проценты и растворы", sample: "Пример: 15% от 200 = $200 \\times 0{,}15 = 30$.", question: "Найдите 25% от числа 200.", options: ["40", "45", "50", "60"], correct: 2, explanation: "$200 \\cdot 0{,}25 = 50$." },
+                    { topic: "Проценты и растворы", sample: "Пример: Наценка 50% к 400 = $400 + 200 = 600$.", question: "Книга стоила 800 тенге. Ее уценили на 10%. Какова новая цена?", options: ["700 тг", "720 тг", "750 тг", "760 тг"], correct: 1, explanation: "$800 \\times 0{,}1 = 80$. $800 - 80 = 720$ тг." },
+                    { topic: "Проценты и растворы", sample: "Пример: Часть от целого находится делением.", question: "Какую часть составляет число 15 от числа 60?", options: ["1/3", "1/4", "1/5", "2/5"], correct: 1, explanation: "$15 / 60 = 1/4$." },
+                    { topic: "Проценты и растворы", sample: "Пример: Перевод дроби в проценты: $\\frac{1}{2} = 50\\%$.", question: "Выразите в процентах дробь 3/5.", options: ["30%", "40%", "50%", "60%"], correct: 3, explanation: "$(3/5) \\cdot 100\\% = 60\\%." },
+                    { topic: "Проценты и растворы", sample: "Пример: Соль в растворе равна массе умноженной на процент.", question: "В 200 г раствора содержится 10% соли. Сколько граммов соли в растворе?", options: ["10 г", "15 г", "20 г", "25 г"], correct: 2, explanation: "$200 \\cdot 0{,}10 = 20$ г." },
+                    { topic: "Проценты и растворы", sample: "Пример: Если число увеличили в 2 раза, оно выросло на 100%.", question: "Число 50 увеличили на 40%. Какое число получилось?", options: ["60", "70", "80", "90"], correct: 1, explanation: "$50 \\cdot 1{,}4 = 70$." },
+                    { topic: "Проценты и растворы", sample: "Пример: Обратная задача на проценты.", question: "Цена товара снизилась с 500 до 400 тенге. На сколько процентов снизилась цена?", options: ["10%", "15%", "20%", "25%"], correct: 2, explanation: "Разница 100. $(100/500)\\cdot 100\\% = 20\\%." },
+                    { topic: "Проценты и растворы", sample: "Пример: Смешивание величин.", question: "Смешали 2 кг 20%-го и 3 кг 30%-го сиропа. Какова масса смеси?", options: ["4 кг", "5 кг", "6 кг", "7 кг"], correct: 1, explanation: "$2 + 3 = 5$ кг." },
 
-<script>
-let currentKey = '';
-let currentLevel = 'easy';
-let taskIndex = 0;
-let currentCorrect = 0;
+                    { topic: "Геометрия и наглядность", sample: "Пример: Площадь квадрата со стороной 4 см равна $S = 4^2 = 16$ см².", question: "Найдите площадь квадрата со стороной 5 см.", options: ["10 см²", "20 см²", "25 см²", "30 см²"], correct: 2, explanation: "$S = 5^2 = 25$ см²." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Периметр прямоугольника 6 и 4: $P = 2 \\cdot (6 + 4) = 20$ см.", question: "Длина прямоугольника 8 см, ширина 5 см. Найдите его периметр.", options: ["13 см", "26 см", "40 см", "20 см"], correct: 1, explanation: "$P = 2 \\cdot (8 + 5) = 26$ см." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Площадь прямоугольника $S = a \\cdot b$.", question: "Найдите площадь прямоугольника со сторонами 7 см и 4 см.", options: ["22 см²", "28 см²", "32 см²", "14 см²"], correct: 1, explanation: "$7 \\cdot 4 = 28$ см²." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Периметр квадрата $P = 4a$.", question: "Найдите периметр квадрата со стороной 9 см.", options: ["18 см", "27 см", "36 см", "81 см"], correct: 2, explanation: "$4 \\cdot 9 = 36$ см." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Площадь треугольника $S = \\frac{1}{2}ah$.", question: "Найдите площадь треугольника с основанием 10 см и высотой 6 см.", options: ["30 см²", "60 см²", "15 см²", "40 см²"], correct: 0, explanation: "$(10 \\cdot 6) / 2 = 30$ см²." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Сумма углов треугольника равна 180°.", question: "Два угла треугольника равны 50° и 70°. Найдите третий угол.", options: ["50°", "60°", "70°", "80°"], correct: 1, explanation: "$180° - (50° + 70°) = 60°$." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Диаметр равен удвоенному радиусу: $D = 2R$.", question: "Радиус круга равен 4 см. Найдите его диаметр.", options: ["2 см", "8 см", "16 см", "6 см"], correct: 1, explanation: "$4 \\cdot 2 = 8$ см." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: У прямоугольника противоположные стороны равны.", question: "У прямоугольника ширина 3 см, а длина в 3 раза больше. Найдите длину.", options: ["6 см", "9 см", "12 см", "15 см"], correct: 1, explanation: "$3 \\cdot 3 = 9$ см." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Объем куба $V = a^3$.", question: "Найдите объем куба с ребром 3 см.", options: ["9 см³", "18 см³", "27 см³", "36 см³"], correct: 2, explanation: "$3^3 = 27$ см³." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Развернутый угол равен 180°.", question: "Один из смежных углов равен 110°. Найдите второй угол.", options: ["70°", "80°", "90°", "100°"], correct: 0, explanation: "$180° - 110° = 70°$." },
 
-const dataBase = {
-    kinematics: {
-        title: "1. Кинематика",
-        formulas: "• S = v₀t + at²/2<br>• v = v₀ + at<br>• S = (v² - v₀²) / 2a<br>• x = x₀ + vxt<br>• v_среднее = S_всего / t_всего",
-        explanation: "Кинематика изучает движение тел без учета причин, его вызвавших. Основные понятия: путь, перемещение, скорость и ускорение.",
-        examples: "1. Автомобиль едет со скоростью 10 м/с 5 секунд. Путь S = 10 · 5 = 50 м.<br>2. Тело разгоняется с 0 до 20 м/с за 4 с. Ускорение a = 20/4 = 5 м/с².<br>3. Свободное падение с высоты при g=10 за 2 с дает высоту h = gt²/2 = 20 м.<br>4. Тело брошено вертикально вверх со скоростью 30 м/с. Время подъема t = v₀/g = 3 с.<br>5. Координата тела меняется по закону x = 5 + 4t. Начальная координата 5 м, скорость 4 м/с.",
-        tasks: {
-            easy: [
-                { text: "Автомобиль едет со скоростью 12 м/с в течение 5 с. Найдите пройденный путь (в метрах).", ans: 60 },
-                { text: "Тело движется с ускорением 2 м/с² в течение 4 с из состояния покоя. Найдите скорость (в м/с).", ans: 8 },
-                { text: "Найдите перемещение тела при начальной скорости 5 м/с за 3 с с ускорением 1 м/с².", ans: 19 },
-                { text: "Камень падает без начальной скорости 3 с. Найдите конечную скорость при g = 10 м/с² (в м/с).", ans: 30 },
-                { text: "Тело прошло 100 м за 20 с с постоянной скоростью. Найдите скорость (в м/с).", ans: 5 }
-            ],
-            medium: [
-                { text: "Автомобиль тормозит с ускорением 3 м/с² от начальной скорости 15 м/с до остановки. Найдите тормозной путь (в метрах).", ans: 37.5 },
-                { text: "Тело движется равноускоренно. За 4 с оно прошло 48 м, начальная скорость равна нулю. Найдите ускорение (в м/с²).", ans: 6 },
-                { text: "Координата тела меняется как x = 20 - 4t. Через сколько секунд тело окажется в начале координат (x = 0)?", ans: 5 },
-                { text: "Мяч бросили вверх со скоростью 20 м/с (g = 10). Через сколько секунд он упадет обратно на землю?", ans: 4 },
-                { text: "Первую половину пути автомобиль ехал со скоростью 60 км/ч, вторую — 90 км/ч. Найдите среднюю скорость на всем пути (в км/ч).", ans: 72 }
-            ],
-            hard: [
-                { text: "Два тела движутся навстречу друг другу со скоростями 10 м/с и 15 м/с. Расстояние между ними 100 м. Через сколько секунд они встретятся?", ans: 4 },
-                { text: "Тело проходит последнюю секунду свободного падения путь 25 м (g = 10). С какой высоты падало тело (в метрах)?", ans: 45 },
-                { text: "Ускорение точки задано как a = 4t. При t = 0 скорость равна 2 м/с. Найдите скорость в момент t = 3 с (в м/с).", ans: 20 },
-                { text: "Лыжник спускается с горы длиной 50 м с ускорением 2 м/с² из состояния покоя. Найдите время спуска (в секундах).", ans: 7.07 },
-                { text: "Найти путь, пройденный телом за 4-ю секунду равноускоренного движения из состояния покоя с ускорением 2 м/с².", ans: 7 }
-            ]
+                    { topic: "Движение и работа", sample: "Пример: $S = v \\cdot t$.", question: "Какое расстояние проедет автомобиль со скоростью 60 км/ч за 3 часа?", options: ["120 км", "150 км", "180 км", "210 км"], correct: 2, explanation: "$60 \\cdot 3 = 180$ км." },
+                    { topic: "Движение и работа", sample: "Пример: Время $t = S / v$.", question: "За какое время пешеход пройдет 15 км со скоростью 5 км/ч?", options: ["2 часа", "3 часа", "4 часа", "5 часов"], correct: 1, explanation: "$15 / 5 = 3$ часа." },
+                    { topic: "Движение и работа", sample: "Пример: Скорость $v = S / t$.", question: "Найдите скорость велосипедиста, если он проехал 36 км за 2 часа.", options: ["12 км/ч", "16 км/ч", "18 км/ч", "20 км/ч"], correct: 2, explanation: "$36 / 2 = 18$ км/ч." },
+                    { topic: "Движение и работа", sample: "Пример: При движении навстречу скорости складываются.", question: "Два объекта движутся навстречу со скоростями 40 км/ч и 50 км/ч. Какова скорость сближения?", options: ["10 км/ч", "45 км/ч", "90 км/ч", "200 км/ч"], correct: 2, explanation: "$40 + 50 = 90$ км/ч." },
+                    { topic: "Движение и работа", sample: "Пример: 1 час = 60 минут.", question: "Сколько минут составляют 50% от 1 часа?", options: ["15 мин", "20 мин", "30 мин", "45 мин"], correct: 2, explanation: "$60 \\cdot 0{,}5 = 30$ минут." },
+                    { topic: "Движение и работа", sample: "Пример: Перевод скорости из м/с в км/ч умножением на 3.6.", question: "Скорость поезда равна 20 м/с. Какова его скорость в км/ч?", options: ["60 км/ч", "72 км/ч", "80 км/ч", "90 км/ч"], correct: 1, explanation: "$20 \\cdot 3{,}6 = 72$ км/ч." },
+                    { topic: "Движение и работа", sample: "Пример: Работа равна произведению производительности на время.", question: "Рабочий делает 5 деталей в час. Сколько деталей он сделает за 4 часа?", options: ["15 деталей", "20 деталей", "25 деталей", "30 деталей"], correct: 1, explanation: "$5 \\cdot 4 = 20$ деталей." },
+                    { topic: "Движение и работа", sample: "Пример: Скорость удаления при движении в противоположные стороны.", question: "Два пешехода вышли из одной точки в противоположные стороны со скоростями 4 км/ч и 5 км/ч. Каково расстояние между ними через 2 часа?", options: ["16 км", "18 км", "20 км", "22 км"], correct: 1, explanation: "$(4 + 5) \\cdot 2 = 18$ км." },
+                    { topic: "Движение и работа", sample: "Пример: Если поезд едет 4 часа со скоростью 70 км/ч.", question: "Поезд шел 4 часа со скоростью 70 км/ч. Какой путь он преодолел?", options: ["240 км", "280 км", "300 км", "320 км"], correct: 1, explanation: "$4 \\cdot 70 = 280$ км." },
+                    { topic: "Движение и работа", sample: "Пример: Нахождение времени выполнения работы.", question: "Нужно покрасить 60 заборных досок. Маляр красит по 15 досок в час. Сколько времени уйдет?", options: ["3 часа", "4 часа", "5 часов", "6 часов"], correct: 1, explanation: "$60 / 15 = 4$ часа." },
+
+                    { topic: "Уравнения и логика", sample: "Пример: Подстановка значения $x = 5$ в $2x + 3 = 13$.", question: "Найдите значение выражения $3x + 5$ при $x = 4$.", options: ["12", "15", "17", "20"], correct: 2, explanation: "$3 \\cdot 4 + 5 = 17$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Среднее арифметическое суммы элементов.", question: "Среднее арифметическое трех чисел равно 12. Найдите их сумму.", options: ["24", "36", "48", "30"], correct: 1, explanation: "Сумма = $12 \\cdot 3 = 36$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Решение простейшего линейного уравнения $2x = 10 \\implies x = 5$.", question: "Решите уравнение: $4x - 8 = 12$", options: ["3", "4", "5", "6"], correct: 2, explanation: "$4x = 20 \\implies x = 5$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Раскрытие скобок: $2(x + 3) = 2x + 6$.", question: "Упростите выражение: $5(x + 2) - 3x$", options: ["$2x + 10$", "$2x + 2$", "$8x + 10$", "$5x + 7$"], correct: 0, explanation: "$5x + 10 - 3x = 2x + 10$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Сумма противоположных чисел равна 0.", question: "Найдите корень уравнения: $7x + 3 = 5x + 9$", options: ["2", "3", "4", "5"], correct: 1, explanation: "$2x = 6 \\implies x = 3$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Квадрат числа всегда положителен.", question: "Чему равен квадрат числа $-6$?", options: ["-36", "12", "36", "-12"], correct: 2, explanation: "$(-6) \\cdot (-6) = 36$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Деление на отрицательное число меняет знак.", question: "Решите неравенство: $-3x < 15$", options: ["$x > -5$", "$x < -5$", "$x > 5$", "$x < 5$"], correct: 0, explanation: "При делении на $-3$ знак меняется: $x > -5$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Модуль числа положителен.", question: "Найдите значение выражения: $|-12| + |-5|$", options: ["7", "-7", "17", "-17"], correct: 2, explanation: "$12 + 5 = 17$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Порядок действий в выражении.", question: "Вычислите: $20 - 4 \\cdot 3 + 2$", options: ["10", "14", "16", "5"], correct: 0, explanation: "$20 - 12 + 2 = 10$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Вынесение общего множителя.", question: "Разложите на множители: $3x + 6$", options: ["$3(x + 2)$", "$6(x + 1)$", "$3(x + 3)$", "$x(3 + 6)$"], correct: 0, explanation: "$3(x + 2)$." },
+
+                    { topic: "Теория чисел", sample: "Пример: НОК чисел 6 и 8 равен 24.", question: "Найдите наименьшее общее кратное (НОК) чисел 12 и 18.", options: ["24", "36", "72", "6"], correct: 1, explanation: "Кратные 12 и 18 пересекаются на 36." },
+                    { topic: "Теория чисел", sample: "Пример: НОД чисел 12 и 18 равен 6.", question: "Найдите наибольший общий делитель (НОД) чисел 24 и 36.", options: ["6", "8", "12", "18"], correct: 2, explanation: "Наибольший общий делитель 24 и 36 равен 12." },
+                    { topic: "Теория чисел", sample: "Пример: Число делится на 3, если сумма цифр делится на 3.", question: "Какое из чисел делится на 3 без остатка?", options: ["124", "235", "342", "413"], correct: 2, explanation: "Сумма цифр 3 + 4 + 2 = 9 (делится на 3)." },
+                    { topic: "Теория чисел", sample: "Пример: Число четное, если оканчивается на четную цифру.", question: "Какое из чисел является простым?", options: ["15", "21", "29", "33"], correct: 2, explanation: "29 делится только на 1 и на себя." },
+                    { topic: "Теория чисел", sample: "Пример: Четные числа делятся на 2.", question: "Сколько простых чисел среди первых пяти натуральных чисел (1, 2, 3, 4, 5)?", options: ["2", "3", "4", "5"], correct: 1, explanation: "Простые числа: 2, 3, 5 (их три)." },
+                    { topic: "Теория чисел", sample: "Пример: Деление с остатком.", question: "Какой остаток получается при делении 38 на 5?", options: ["1", "2", "3", "4"], correct: 2, explanation: "$38 = 5 \\cdot 7 + 3$ (остаток 3)." },
+                    { topic: "Теория чисел", sample: "Пример: Квадраты чисел.", question: "Чему равен квадрат числа 13?", options: ["144", "169", "196", "181"], correct: 1, explanation: "$13^2 = 169$." },
+                    { topic: "Теория чисел", sample: "Пример: Кубы чисел.", question: "Чему равен куб числа 4?", options: ["16", "32", "64", "48"], correct: 2, explanation: "$4^3 = 64$." },
+                    { topic: "Теория чисел", sample: "Пример: Обратное число.", question: "Какое число взаимно обратное для числа 4/5?", options: ["-4/5", "5/4", "1", "4/5"], correct: 1, explanation: "При умножении на 5/4 получается 1." },
+                    { topic: "Теория чисел", sample: "Пример: Округление чисел.", question: "Округлите число 3,46 до десятых.", options: ["3,4", "3,5", "4,0", "3,0"], correct: 1, explanation: "После четки 4 идет 6, поэтому округляем до 3,5." }
+                ],
+                medium: [
+                    { topic: "Проценты и растворы", sample: "Пример: Изменение цены дважды.", question: "Товар подорожал на 20%, а затем подешевел на 10%. Как изменилась цена?", options: ["Подорожал на 8%", "Подорожал на 10%", "Не изменилась", "Подорожал на 12%"], correct: 0, explanation: "$100 \\to 120 \\to 108$ (+8%)." },
+                    { topic: "Проценты и растворы", sample: "Пример: Масса соли в растворе.", question: "К 30 кг 15%-го раствора добавили воду и получили 10%-й раствор. Сколько воды добавили?", options: ["10 кг", "15 кг", "20 кг", "25 кг"], correct: 1, explanation: "Соль: $4{,}5$ кг. Новый вес 45 кг. Добавили 15 кг воды." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Средняя скорость туда и обратно.", question: "Лыжник проехал туда со скоростью 15 км/ч, а вернулся со скоростью 10 км/ч. Найдите среднюю скорость.", options: ["12 км/ч", "12,5 км/ч", "13 км/ч", "11,5 км/ч"], correct: 0, explanation: "Формула гармонического среднего дает 12 км/ч." },
+                    { topic: "Движение и работа", sample: "Пример: Скорость течения реки.", question: "Катер прошел по течению 48 км за 3 часа, а против — за 4 часа. Найдите скорость течения.", options: ["1 км/ч", "2 км/ч", "3 км/ч", "4 км/ч"], correct: 1, explanation: "По течению 16, против 12. Течение = $(16-12)/2 = 2$." },
+                    { topic: "Уравнения и логика", sample: "Пример: Задачи на возраст.", question: "Отцу 40 лет, сыну 16. Через сколько лет отец будет вдвое старше сына?", options: ["Через 4 года", "Через 6 лет", "Через 8 лет", "Через 10 лет"], correct: 2, explanation: "$40+x = 2(16+x) \\implies x = 8$." },
+                    { topic: "Теория чисел", sample: "Пример: Последовательности.", question: "Найдите следующий член последовательности: 2, 6, 12, 20, 30, ...", options: ["38", "40", "42", "46"], correct: 2, explanation: "Разности шагов растут на 2: +4, +6, +8, +10, далее +12 (42)." },
+                    { topic: "Проценты и растворы", sample: "Пример: Сплавы.", question: "В сплаве 40% меди и 60% цинка. Масса меди 20 кг. Найдите общую массу сплава.", options: ["40 кг", "50 кг", "60 кг", "80 кг"], correct: 1, explanation: "$0{,}4x = 20 \\implies x = 50$ кг." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Периметр и площади фигур.", question: "Периметр квадрата равен 36 см. Найдите его площадь.", options: ["36 см²", "64 см²", "81 см²", "100 см²"], correct: 2, explanation: "Сторона 9, площадь $9^2 = 81$ см²." },
+                    { topic: "Движение и работа", sample: "Пример: Совместная работа.", question: "Первая труба наполняет бассейн за 6 часов, вторая — за 12. За сколько наполнят вместе?", options: ["3 часа", "4 часа", "5 часов", "4.5 часа"], correct: 1, explanation: "$1/6 + 1/12 = 3/12 = 1/4$ (4 часа)." },
+                    { topic: "Теория чисел", sample: "Пример: Остатки от деления.", question: "При делении числа на 5 остаток 3, а при делении на 4 остаток 2. Наименьшее такое число:", options: ["13", "18", "23", "28"], correct: 1, explanation: "Число 18 подходит под оба условия." }
+                ],
+                hard: [
+                    { topic: "Уравнения и логика", sample: "Пример: Прогрессии.", question: "Три числа образуют геометрическую прогрессию. Их сумма 26, произведение 216. Найдите числа.", options: ["2, 6, 18", "3, 6, 12", "1, 6, 36", "4, 6, 9"], correct: 0, explanation: "$b^3 = 216 \\implies b = 6$. Сумма 2+6+18=26." },
+                    { topic: "Уравнения и логика", sample: "Пример: Возрастные пропорции.", question: "Сумма возрастов родителей 80 лет. 10 лет назад отношение было 7:5. Сколько лет отцу сейчас?", options: ["40 лет", "42 года", "45 лет", "48 лет"], correct: 2, explanation: "10 лет назад сумма 60. Отцу было 35, сейчас 45." },
+                    { topic: "Движение и работа", sample: "Пример: Обратное время труб.", question: "Первая труба наполняет на 5 часов быстрее второй. Вместе за 6 ч. Время первой:", options: ["8 часов", "10 часов", "12 часов", "15 часов"], correct: 1, explanation: "Уравнение дает $x = 10$ часов." },
+                    { topic: "Теория чисел", sample: "Пример: Двузначные числа.", question: "Сумма цифр двузначного числа 11. Перестановка цифр увеличивает число на 27. Найдите число.", options: ["47", "38", "56", "29"], correct: 0, explanation: "Число 47: перестановка 74, $74 - 47 = 27$." },
+                    { topic: "Теория чисел", sample: "Пример: Вероятности.", question: "В урне 5 белых и 4 черных шара. Извлекают 2 шара. Вероятность того, что оба белые:", options: ["5/18", "2/9", "4/9", "1/3"], correct: 0, explanation: "$C_5^2 / C_9^2 = 10 / 36 = 5/18$." },
+                    { topic: "Проценты и растворы", sample: "Пример: Разбавление растворов.", question: "Сколько воды нужно добавить к 40 л 30%-го раствора, чтобы получить 20%-й?", options: ["10 л", "15 л", "20 л", "25 л"], correct: 2, explanation: "Чистое вещество 12 л. Объем 60 л. Добавили 20 л." },
+                    { topic: "Геометрия и наглядность", sample: "Пример: Высота треугольника.", question: "Стороны треугольника 7, 8, 9. Высота на большую сторону равна:", options: ["$8\\sqrt{5}/3$", "$4\\sqrt{5}/3$", "$3\\sqrt{5}$", "$6\\sqrt{5}/5$"], correct: 0, explanation: "Площадь по Герону $12\\sqrt{5}$, высота равна $8\\sqrt{5}/3$." },
+                    { topic: "Движение и работа", sample: "Пример: Производительность труда.", question: "Делая по 25 деталей вместо 20 в день, бригада закончила на 2 дня раньше. Всего деталей:", options: ["160", "180", "200", "250"], correct: 2, explanation: "Уравнение даёт 10 дней по 20 деталей = 200 штук." },
+                    { topic: "Уравнения и логика", sample: "Пример: Логарифмы в логике.", question: "Найдите значение: $\\log_2 3 \\cdot \\log_3 4 \\cdot \\log_4 5 \\cdot \\log_5 8$", options: ["2", "3", "4", "5"], correct: 1, explanation: "Сворачивается до $\\log_2 8 = 3$." },
+                    { topic: "Теория чисел", sample: "Пример: Рекуррентные формулы.", question: "Формула $a_n = n^2 - 3n + 2$. Найдите номер члена, равного 20.", options: ["4", "5", "6", "7"], correct: 2, explanation: "$n^2 - 3n - 18 = 0 \\implies n = 6$." }
+                ]
+            },
+            profile_math: {
+                easy: [
+                    { topic: "Показательные и логарифмы", sample: "Пример: $3^x = 9 \\implies x = 2$.", question: "Решите показательное уравнение: $2^x = 32$", options: ["3", "4", "5", "6"], correct: 2, explanation: "$2^5 = 32 \\implies x = 5$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: $\\log_2 8 = 3$.", question: "Вычислите логарифм: $\\log_3 81$", options: ["2", "3", "4", "9"], correct: 2, explanation: "$3^4 = 81$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: $\\log_5 25 = 2$.", question: "Вычислите: $\\log_2 32$", options: ["3", "4", "5", "6"], correct: 2, explanation: "$2^5 = 32$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: $a^0 = 1$.", question: "Найдите корень уравнения: $5^{x} = 1$", options: ["0", "1", "5", "-1"], correct: 0, explanation: "Любое число в нулевой степени равно 1." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: $\\lg 10 = 1$.", question: "Вычислите десятичный логарифм: $\\lg 1000$", options: ["2", "3", "4", "10"], correct: 1, explanation: "$10^3 = 1000$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Основание степени.", question: "Решите уравнение: $3^x = 27$", options: ["2", "3", "4", "9"], correct: 1, explanation: "$3^3 = 27$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Свойства логарифмов.", question: "Чему равно $\\log_7 7$?", options: ["0", "1", "7", "49"], correct: 1, explanation: "Логарифм основания по самому себе равен 1." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Отрицательная степень.", question: "Вычислите: $2^{-3}$", options: ["-8", "1/8", "-1/8", "8"], correct: 1, explanation: "$2^{-3} = 1 / 2^3 = 1/8$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Логарифм единицы.", question: "Чему равен $\\log_9 1$?", options: ["0", "1", "9", "-1"], correct: 0, explanation: "Логарифм единицы при любом основании равен 0." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Степень числа.", question: "Решите уравнение: $4^x = 64$", options: ["2", "3", "4", "5"], correct: 1, explanation: "$4^3 = 64$." },
+
+                    { topic: "Производная и интеграл", sample: "Пример: $(x^3)' = 3x^2$.", question: "Найдите производную функции: $f(x) = x^4 - 3x^2 + 5$", options: ["$4x^3 - 6x$", "$4x^3 - 3x + 5$", "$4x^3 - 6x + 5$", "$x^3 - 6x$"], correct: 0, explanation: "По правилу дифференцирования степенной функции." },
+                    { topic: "Производная и интеграл", sample: "Пример: $\\int 2x dx = x^2 + C$.", question: "Найдите первообразную функции: $f(x) = 3x^2$", options: ["$x^3 + C$", "$3x^3 + C$", "$6x + C$", "$\\frac{x^3}{3} + C$"], correct: 0, explanation: "Интеграл от $3x^2$ равен $x^3 + C$." },
+                    { topic: "Производная и интеграл", sample: "Пример: Производная константы равна нулю.", question: "Найдите производную константы $f(x) = 15$", options: ["15", "1", "0", "x"], correct: 2, explanation: "Производная любого числа равна 0." },
+                    { topic: "Производная и интеграл", sample: "Пример: $(x)' = 1$.", question: "Найдите производную функции: $f(x) = 7x - 4$", options: ["7", "7x", "-4", "1"], correct: 0, explanation: "Производная линейного члена равна его коэффициенту." },
+                    { topic: "Производная и интеграл", sample: "Пример: Интеграл константы.", question: "Найдите первообразную: $f(x) = 5$", options: ["$5 + C$", "$5x + C$", "$x + C$", "0"], correct: 1, explanation: "Интеграл константы $5$ равен $5x + C$." },
+                    { topic: "Производная и интеграл", sample: "Пример: Производная суммы.", question: "Найдите производную: $f(x) = x^2 + 3x$", options: ["$2x + 3$", "$x^2 + 3$", "$2x$", "$2x + 3x$"], correct: 0, explanation: "Сумма производных слагаемых: $2x + 3$." },
+                    { topic: "Производная и интеграл", sample: "Пример: Интеграл суммы.", question: "Найдите интеграл: $\\int (2x + 1) dx$", options: ["$x^2 + x + C$", "$2x^2 + x$", "$x^2 + C$", "$2 + C$"], correct: 0, explanation: "Интеграл суммы равен сумме интегралов." },
+                    { topic: "Производная и интеграл", sample: "Пример: Производная $e^x$.", question: "Найдите производную функции: $f(x) = e^x$", options: ["$e^x$", "$xe^{x-1}$", "$1$", "0"], correct: 0, explanation: "Производная экспоненты равна самой себе." },
+                    { topic: "Производная и интеграл", sample: "Пример: Производная синуса.", question: "Найдите производную: $f(x) = \\sin x$", options: ["$\\cos x$", "$-\\cos x$", "$\\sin x$", "$-\\sin x$"], correct: 0, explanation: "Производная синуса — косинус." },
+                    { topic: "Производная и интеграл", sample: "Пример: Производная косинуса.", question: "Найдите производную: $f(x) = \\cos x$", options: ["$\\cos x$", "$-\\cos x$", "$\\sin x$", "$-\\sin x$"], correct: 1, explanation: "Производная косинуса — минус синус." },
+
+                    { topic: "Тригонометрия", sample: "Пример: $\\sin(30^\\circ) = 1/2$.", question: "Найдите значение: $\\sin\\left(\\frac{\\pi}{6}\\right)$", options: ["$1/2$", "$\\sqrt{3}/2$", "$\\sqrt{2}/2$", "$1$"], correct: 0, explanation: "Синус 30 градусов равен 1/2." },
+                    { topic: "Тригонометрия", sample: "Пример: $\\sin^2 x + \\cos^2 x = 1$.", question: "Упростите выражение: $\\sin^2\\alpha + \\cos^2\\alpha$", options: ["0", "1", "2", "-1"], correct: 1, explanation: "Основное тригонометрическое тождество." },
+                    { topic: "Тригонометрия", sample: "Пример: $\\cos(0) = 1$.", question: "Найдите значение: $\\cos(0^\\circ)$", options: ["0", "1", "-1", "1/2"], correct: 1, explanation: "Косинус нуля равен 1." },
+                    { topic: "Тригонометрия", sample: "Пример: $\\operatorname{tg}(45^\\circ) = 1$.", question: "Найдите тангенс угла $\\frac{\\pi}{4}$", options: ["0", "1", "$\\sqrt{3}$", "$1/\\sqrt{3}$"], correct: 1, explanation: "Тангенс 45 градусов равен 1." },
+                    { topic: "Тригонометрия", sample: "Пример: Период синуса $2\\pi$.", question: "Чему равен период функции $y = \sin x$?", options: ["$\\pi/2$", "$\\pi$", "$2\\pi$", "$4\\pi$"], correct: 2, explanation: "Период синуса и косинуса равен $2\\pi$." },
+                    { topic: "Тригонометрия", sample: "Пример: Значение косинуса.", question: "Найдите $\\cos\\left(\\frac{\\pi}{3}\\right)$", options: ["$1/2$", "$\\sqrt{3}/2$", "$\\sqrt{2}/2$", "0"], correct: 0, explanation: "Косинус 60 градусов равен 1/2." },
+                    { topic: "Тригонометрия", sample: "Пример: Четность косинуса.", question: "Чему равен $\\cos(-\\alpha)$?", options: ["$\\cos\\alpha$", "$-\\cos\\alpha$", "$\\sin\\alpha$", "$-\\sin\\alpha$"], correct: 0, explanation: "Косинус — четная функция." },
+                    { topic: "Тригонометрия", sample: "Пример: Нечетность синуса.", question: "Чему равен $\\sin(-\\alpha)$?", options: ["$\\sin\\alpha$", "$-\\sin\\alpha$", "$\\cos\\alpha$", "$-\\cos\\alpha$"], correct: 1, explanation: "Синус — нечетная функция." },
+                    { topic: "Тригонометрия", sample: "Пример: Тангенс через синус и косинус.", question: "Тангенс угла равен отношению...", options: ["косинуса к синусу", "синуса к косинусу", "синуса к единице", "единицы к косинусу"], correct: 1, explanation: "$\\operatorname{tg}x = \\sin x / \\cos x$." },
+                    { topic: "Тригонометрия", sample: "Пример: Значение синуса 90 градусов.", question: "Найдите $\\sin\\left(\\frac{\\pi}{2}\\right)$", options: ["0", "1", "-1", "1/2"], correct: 1, explanation: "Синус 90 градусов равен 1." },
+
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Теорема Пифагора $c = \\sqrt{a^2 + b^2}$.", question: "Катеты прямоугольного треугольника 3 см и 4 см. Найдите гипотенузу.", options: ["5 см", "6 см", "7 см", "$\\sqrt{7}$"], correct: 0, explanation: "$c = \\sqrt{3^2 + 4^2} = 5$ см." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Прогрессии в геометрии.", question: "Первый член ар. прогрессии 3, разность 2. Найдите 4-й член.", options: ["7", "9", "11", "13"], correct: 1, explanation: "$a_4 = 3 + 3 \\cdot 2 = 9$." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Сумма углов многоугольника.", question: "Найдите сумму внутренних углов треугольника.", options: ["180°", "360°", "540°", "720°"], correct: 0, explanation: "Сумма углов треугольника равна 180°." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Площадь круга $S = \\pi R^2$.", question: "Найдите площадь круга радиуса 2 см.", options: ["$2\\pi$", "$4\\pi$", "$8\\pi$", "$pi$"], correct: 1, explanation: "$S = \\pi \\cdot 2^2 = 4\\pi$." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Площадь параллелограмма.", question: "Площадь параллелограмма со стороной 6 и высотой 5 равна:", options: ["11", "25", "30", "60"], correct: 2, explanation: "$S = a \\cdot h = 6 \\cdot 5 = 30$." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Объем прямоугольного параллелепипеда.", question: "Найдите объем параллелепипеда с измерениями 2, 3 и 4.", options: ["9", "12", "24", "18"], correct: 2, explanation: "$V = 2 \\cdot 3 \\cdot 4 = 24$." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Свойства ромба.", question: "Диагонали ромба пересекаются под углом...", options: ["30°", "45°", "60°", "90°"], correct: 3, explanation: "Диагонали ромба перпендикулярны." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Сумма углов выпуклого четырехугольника.", question: "Чему равна сумма углов четырехугольника?", options: ["180°", "270°", "360°", "720°"], correct: 2, explanation: "Сумма углов четырехугольника равна 360°." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Радиус и диаметр.", question: "Диаметр сферы равен 10 см. Чему равен ее радиус?", options: ["20 см", "5 см", "10 см", "2,5 см"], correct: 1, explanation: "$R = D / 2 = 5$ см." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Периметр правильного треугольника.", question: "Сторона равностороннего треугольника равна 6 см. Найдите его периметр.", options: ["12 см", "18 см", "24 см", "36 см"], correct: 1, explanation: "$3 \\cdot 6 = 18$ см." },
+
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: $\\log_2 x = 4 \\implies x = 16$.", question: "Решите уравнение: $\\log_2(x - 1) = 3$", options: ["7", "8", "9", "10"], correct: 2, explanation: "$x - 1 = 2^3 = 8 \\implies x = 9$." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Вероятность события $P = m / n$.", question: "В коробке 2 белых и 3 черных шара. Вероятность вытащить белый:", options: ["2/5", "3/5", "1/2", "2/3"], correct: 0, explanation: "$P = 2 / 5$." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Достоверное событие имеет вероятность 1.", question: "Какова вероятность того, что при броске кубика выпадет число от 1 до 6?", options: ["0", "1/2", "1", "1/6"], correct: 2, explanation: "Это достоверное событие, вероятность равна 1." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Невозможное событие.", question: "Вероятность того, что на кубике выпадет число 7:", options: ["0", "1", "1/6", "7/6"], correct: 0, explanation: "На кубике всего 6 граней, событие невозможное (0)." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Перестановки $P_n = n!$.", question: "Сколькими способами можно расставить 3 книги на полке?", options: ["3", "6", "9", "12"], correct: 1, explanation: "$3! = 1 \\cdot 2 \\cdot 3 = 6$." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Независимые события.", question: "Монету бросают 2 раза. Вероятность выпадения двух орлов:", options: ["1/2", "1/4", "1/3", "1/6"], correct: 1, explanation: "$(1/2) \\cdot (1/2) = 1/4$." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Простейшая вероятность.", question: "В классе 20 учеников, из них 5 отличников. Какова вероятность наугад выбрать отличника?", options: ["1/4", "1/5", "1/2", "4/5"], correct: 0, explanation: "$5 / 20 = 1/4$." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Сумма вероятностей противоположных событий равна 1.", question: "Вероятность дождя завтра равна 0,3. Какова вероятность отсутствия дождя?", options: ["0,3", "0,5", "0,7", "1"], correct: 2, explanation: "$1 - 0{,}3 = 0{,}7$." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Правило умножения.", question: "У вас есть 3 рубашки и 2 пары брюк. Сколькими способами можно составить комплект?", options: ["3", "5", "6", "9"], correct: 2, explanation: "$3 \\cdot 2 = 6$ вариантов." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Карловые задачи.", question: "Из колоды в 36 карт наугад тянут одну. Вероятность вытащить туз:", options: ["1/36", "1/9", "4/9", "1/4"], correct: 1, explanation: "В колоде 4 туза: $4/36 = 1/9$." }
+                ],
+                medium: [
+                    { topic: "Тригонометрия", sample: "Пример: $\\sin x = 0 \\implies x = \\pi n$.", question: "Решите уравнение: $\\sin x = 0$", options: ["$x = \\pi n$", "$x = \\frac{\\pi}{2} + \\pi n$", "$x = 2\\pi n$", "$x = \\frac{\\pi}{4}$"], correct: 0, explanation: "Синус равен нулю в точках $\\pi n$." },
+                    { topic: "Тригонометрия", sample: "Пример: $S = a b \\sin\\alpha / 2$.", question: "Стороны параллелограмма 6 и 8 см, угол 30°. Найдите площадь.", options: ["24 см²", "12 см²", "48 см²", "20 см²"], correct: 0, explanation: "$6 \\cdot 8 \\cdot \\sin(30°) = 24$ см²." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Вынесение общего множителя.", question: "Решите уравнение: $3^{x+1} + 3^x = 108$", options: ["2", "3", "4", "5"], correct: 1, explanation: "$3^x(3 + 1) = 108 \\implies 3^x = 27 \\implies x = 3$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Свойства логарифмов и ОДЗ.", question: "Решите уравнение: $\\lg(x-2) + \\lg(x+1) = 1$", options: ["3", "4", "5", "6"], correct: 1, explanation: "$(x-2)(x+1) = 10 \\implies x = 4$." },
+                    { topic: "Производная и интеграл", sample: "Пример: Критические точки.", question: "Найдите критические точки функции: $f(x) = x^3 - 3x^2$", options: ["$x = 0; x = 2$", "$x = 0; x = 3$", "$x = 1; x = 3$", "$x = -1; x = 1$"], correct: 0, explanation: "$f'(x) = 3x^2 - 6x = 0 \\implies x = 0, 2$." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Длина окружности $C = 2\\pi R$.", question: "Найдите длину окружности радиуса 5 см (при $\\pi \\approx 3{,}14$).", options: ["31,4 см", "15,7 см", "62,8 см", "25 см"], correct: 0, explanation: "$2 \\cdot 3{,}14 \\cdot 5 = 31{,}4$ см." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Пирамида.", question: "В правильной четырехугольной пирамиде сторона основания 6, высота 4. Апофема равна:", options: ["3", "4", "5", "6"], correct: 2, explanation: "Апофема $l = \\sqrt{4^2 + 3^2} = 5$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Вычисления.", question: "Вычислите: $\\log_2 16 + \\log_3 27 - \\log_5 25$", options: ["2", "3", "4", "5"], correct: 3, explanation: "$4 + 3 - 2 = 5$." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Векторы.", question: "Скалярное произведение векторов $\\vec{a}(1; 2)$ и $\\vec{b}(3; 4)$ равно:", options: ["10", "11", "12", "5"], correct: 1, explanation: "$1 \\cdot 3 + 2 \\cdot 4 = 11$." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Два броска кубика.", question: "При двух бросках кубика вероятность выпадения двух шестерок:", options: ["1/36", "1/6", "1/12", "1/18"], correct: 0, explanation: "$(1/6) \\cdot (1/6) = 1/36$." }
+                ],
+                hard: [
+                    { topic: "Производная и интеграл", sample: "Пример: Определенный интеграл.", question: "Вычислите определенный интеграл: $\\int_0^2 (3x^2 - 2x + 1) dx$", options: ["4", "6", "8", "10"], correct: 1, explanation: "$[x^3 - x^2 + x]_0^2 = 6$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Системы логарифмов.", question: "Решите систему: $\\begin{cases} \\log_y x = 2 \\\\ x + y = 12 \\end{cases}$", options: ["(9; 3)", "(8; 4)", "(4; 2)", "(10; 2)"], correct: 0, explanation: "$y^2 + y - 12 = 0 \\implies y = 3, x = 9$." },
+                    { topic: "Тригонометрия", sample: "Пример: Область значений.", question: "Найдите область значений функции: $f(x) = 3\\sin x - 4\\cos x + 5$", options: ["[-1; 11]", "[0; 10]", "[2; 8]", "[-5; 5]"], correct: 1, explanation: "Амплитуда 5, диапазон $[0; 10]$." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Объем шара.", question: "Радиус шара равен 3. Найдите его объем.", options: ["$36\\pi$", "$24\\pi$", "$18\\pi$", "$12\\pi$"], correct: 0, explanation: "$V = (4/3)\\pi R^3 = 36\\pi$." },
+                    { topic: "Производная и интеграл", sample: "Пример: Экстремумы на отрезке.", question: "Найдите наименьшее значение $f(x) = x^3 - 3x$ на отрезке $[-2; 2]$.", options: ["-2", "-3", "-4", "0"], correct: 0, explanation: "Минимальное значение на концах и в точках равно $-2$." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Площадь сферы.", question: "Площадь поверхности сферы равна $36\\pi$. Найдите диаметр сферы.", options: ["3", "6", "9", "12"], correct: 1, explanation: "$4\\pi R^2 = 36\\pi \\implies R = 3 \\implies D = 6$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Сумма геометрической прогрессии.", question: "В геом. прогрессии $b_1 = 2, q = 2$. Найдите сумму первых 6 членов.", options: ["62", "63", "64", "126"], correct: 3, explanation: "$S_6 = 2(2^6 - 1) = 126$." },
+                    { topic: "Показательные и логарифмы", sample: "Пример: Рост бактерий.", question: "Бактерии удваиваются каждый час. Вначале было 100. Сколько станет через 4 часа?", options: ["800", "1600", "3200", "6400"], correct: 1, explanation: "$100 \\cdot 2^4 = 1600$." },
+                    { topic: "Геометрия и стереометрия", sample: "Пример: Диагональ параллелепипеда.", question: "Измерения прямоугольного параллелепипеда равны 2, 3 и 6. Диагональ равна:", options: ["7", "8", "9", "10"], correct: 0, explanation: "$d = \\sqrt{2^2 + 3^2 + 6^2} = \\sqrt{49} = 7$." },
+                    { topic: "Вероятность и комбинаторика", sample: "Пример: Сочетания.", question: "Сколькими способами можно выбрать 3 человек из 10?", options: ["120", "140", "160", "200"], correct: 0, explanation: "$C_{10}^3 = 120$." }
+                ]
+            }
+        };
+
+        let currentMode = 'math_literacy';
+        let currentDifficulty = 'easy';
+        let currentSelectedTopic = 'ALL';
+        let activeQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function triggerMathTypeset() {
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
         }
-    },
-    dynamics: {
-        title: "2. Динамика",
-        formulas: "• F = ma<br>• F_тр = μN<br>• F_упр = kx<br>• G = mg<br>• Первый и третий законы Ньютона",
-        explanation: "Динамика объясняет, почему тела движутся так или иначе, используя понятие массы, сил и взаимодействия.",
-        examples: "1. Сила 20 Н действует на массу 4 кг. Ускорение a = 20/4 = 5 м/с².<br>2. Сила тяжести для массы 5 кг при g=10 равна G = 50 Н.<br>3. Пружина с жесткостью 100 Н/м растянута на 0.05 м. F = 5 Н.<br>4. Трение скольжения при μ=0.2 и N=50 Н равно F_тр = 10 Н.<br>5. Лифт едет с ускорением вверх, вес тела увеличивается по формуле P = m(g+a).",
-        tasks: {
-            easy: [
-                { text: "Найдите силу, сообщающую телу массой 3 кг ускорение 4 м/с² (в Ньютонах).", ans: 12 },
-                { text: "Найдите массу тела, если сила 30 Н дает ему ускорение 6 м/с² (в кг).", ans: 5 },
-                { text: "Найдите вес тела массой 6 кг в покое при g = 10 м/с² (в Н).", ans: 60 },
-                { text: "Пружина с жесткостью 200 Н/м сжата на 0.05 м. Найдите силу упругости (в Н).", ans: 10 },
-                { text: "Найдите силу трения скольжения, если коэффициент μ = 0.3, а нормальная реакция опоры N = 40 Н.", ans: 12 }
-            ],
-            medium: [
-                { text: "Тело массой 4 кг тянут по полу с силой 25 Н, коэффициент трения 0.3 (g = 10). Найдите ускорение тела (в м/с²).", ans: 3.2 },
-                { text: "Два груза массами 2 кг и 3 кг связаны нитью через блок. Найдите ускорение системы (g = 10).", ans: 2 },
-                { text: "Лифт поднимается с ускорением 2 м/с². Чему равен вес пассажира массой 50 кг (g = 10, в Н)?", ans: 600 },
-                { text: "Брусок массой 2 кг соскальзывает по наклонной плоскости с углом 30 градусов без трения (sin 30 = 0.5, g = 10). Ускорение?", ans: 5 },
-                { text: "Какая сила нужна, чтобы удержать груз массой 10 кг на наклонной плоскости с коэффициентом трения 0.2 (угол 45°, cos≈0.7)?", ans: 56 }
-            ],
-            hard: [
-                { text: "Система из трех грузов массами 1, 2 и 3 кг соединена нитями. К крайнему приложена сила 24 Н. Найдите силу натяжения первой нити.", ans: 4 },
-                { text: "Тело бросили вверх по наклонной плоскости с углом 30° со скоростью 10 м/с. Коэффициент трения 0.1. Путь до остановки?", ans: 6.5 },
-                { text: "Тележка массой 9 кг стоит на гладком полу. На нее падает комок глины массой 1 кг со скоростью 10 м/с горизонтально. Общая скорость?", ans: 1 },
-                { text: "Брусок массой 5 кг удерживают на шероховатой плоскости (μ=0.4, угол 45°). Какую минимальную силу надо приложить вдоль плоскости вверх?", ans: 6.8 },
-                { text: "Космический корабль массой 2 т движется под действием тяги двигателей 10 кН. Найдите ускорение (в м/с²).", ans: 5 }
-            ]
+
+        function populateTopics() {
+            const topicSelect = document.getElementById('topic-select');
+            topicSelect.innerHTML = '<option value="ALL">✨ Все темы по порядку</option>';
+
+            const rawQuestions = database[currentMode][currentDifficulty] || [];
+            const topicsSet = new Set(rawQuestions.map(q => q.topic));
+
+            topicsSet.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.innerText = t;
+                topicSelect.appendChild(opt);
+            });
         }
-    },
-    conservation: {
-        title: "3. Законы сохранения",
-        formulas: "• E_k = mv²/2<br>• E_p = mgh<br>• E_p_пружины = kx²/2<br>• p = mv<br>• A = ΔE",
-        explanation: "Законы сохранения энергии, импульса и момента импульса позволяют решать сложные задачи через начальные и конечные состояния системы.",
-        examples: "1. Кинетическая энергия тела 2 кг при скорости 4 м/с равна E_k = 2·16/2 = 16 Дж.<br>2. Потенциальная энергия на высоте 5 м для массы 2 кг (g=10): E_p = 100 Дж.<br>3. Импульс тела массой 3 кг со скоростью 5 м/с равен p = 15 кг·м/с.<br>4. Закон сохранения энергии: падение тела переводит всю E_p в E_k.<br>5. Абсолютно неупругий удар объединяет массы в одну.",
-        tasks: {
-            easy: [
-                { text: "Найдите кинетическую энергию тела массой 4 кг при скорости 5 м/с (в Джоулях).", ans: 50 },
-                { text: "Найдите потенциальную энергию тела массой 2 кг на высоте 10 м (g = 10, в Дж).", ans: 200 },
-                { text: "Найдите импульс тела массой 3 кг, движущегося со скоростью 8 м/с.", ans: 24 },
-                { text: "Какую работу совершает сила 50 Н при перемещении тела на 4 м в направлении силы (в Дж)?", ans: 200 },
-                { text: "Мяч массой 0.5 кг упал с высоты и имеет скорость 10 м/с у земли. Найдите его кинетическую энергию.", ans: 25 }
-            ],
-            medium: [
-                { text: "Тело массой 2 кг упало с высоты 5 м. С какой скоростью оно ударилось о землю (g = 10, в м/с)?", ans: 10 },
-                { text: "Пружина жесткостью 400 Н/м сжата на 0.1 м. Найдите потенциальную энергию деформации (в Дж).", ans: 2 },
-                { text: "Тело массой 2 кг движется со скоростью 4 м/с и сталкивается с неподвижным телом массой 2 кг, после чего они движутся вместе. Скорость?", ans: 2 },
-                { text: "Мощность двигателя равна 4 кВт. Какую работу он совершает за 1 минуту (в кДж)?", ans: 240 },
-                { text: "Груз подняли на высоту 2 м за 4 с с постоянной скоростью, затратив мощность 100 Вт. Найдите массу груза (g = 10).", ans: 20 }
-            ],
-            hard: [
-                { text: "Тело брошено вертикально вверх с поверхности земли со скоростью 20 м/с. На какой высоте кинетическая энергия равна потенциальной (g = 10)?", ans: 10 },
-                { text: "Пуля массой 10 г летит со скоростью 400 м/с и пробивает доску, вылетая со скоростью 100 м/с. Найти работу сил сопротивления (в Дж).", ans: 750 },
-                { text: "Снаряд массой 5 кг летит со скоростью 200 м/с и разрывается на два осколка 2 кг и 3 кг. Первый летит назад со скоростью 100 м/с. Скорость второго?", ans: 433.3 },
-                { text: "Тело соскальзывает с горки высотой 3 м с трением, теряя 20% энергии. Скорость у основания горки (g = 10)?", ans: 6.9 },
-                { text: "Маленький шарик подвешен на нити длиной 1 м. Его отклонили на 60 градусов и отпустили. Скорость в нижней точке (g = 10)?", ans: 3.16 }
-            ]
+
+        function filterQuestions() {
+            const rawQuestions = database[currentMode][currentDifficulty] || [];
+            if (currentSelectedTopic === 'ALL') {
+                activeQuestions = rawQuestions;
+            } else {
+                activeQuestions = rawQuestions.filter(q => q.topic === currentSelectedTopic);
+            }
+            currentQuestionIndex = 0;
         }
-    },
-    statics: {
-        title: "4. Статика и Гидростатика",
-        formulas: "• M = Fd<br>• p = ρgh<br>• F_архимеда = ρ_ж g V_ погруж<br>• Условия равновесия: сумма сил = 0, сумма моментов = 0",
-        explanation: "Изучает условия равновесия тел, рычаги, моменты сил, а также законы покоящихся жидкостей и газов (давление, закон Архимеда, Паскаля).",
-        examples: "1. Момент силы 10 Н на плече 0.5 м равен M = 5 Н·м.<br>2. Давление воды на глубине 10 м: p = 1000·10·10 = 100 000 Па.<br>3. Архимедова сила для погруженного тела объемом 0.01 м³ в воде равна 100 Н.<br>4. Рычаг в равновесии: F₁d₁ = F₂d₂.<br>5. Плотность тела плавающего в жидкости связана с глубиной погружения.",
-        tasks: {
-            easy: [
-                { text: "Найдите гидростатическое давление воды на глубине 5 м (ρ = 1000, g = 10, в Па).", ans: 50000 },
-                { text: "Найдите архимедову силу, действующую на тело объемом 0.002 м³, погруженное в воду (ρ = 1000, g = 10, в Н).", ans: 20 },
-                { text: "Сила 20 Н действует на плечо 0.3 м. Найдите момент силы (в Н·м).", ans: 6 },
-                { text: "На плечо рычага 0.4 м действует сила 50 Н. Какая сила уравновесит его на плече 0.2 м?", ans: 100 },
-                { text: "Площадь поршня гидравлического пресса 0.05 м², сила давления 500 Н. Найдите давление (в Па).", ans: 10000 }
-            ],
-            medium: [
-                { text: "Кусок металла массой 540 г имеет объем 200 см³. Найдите плотность металла (в кг/м³).", ans: 2700 },
-                { text: "Тело плавает в воде, погружаясь на 80% своего объема. Найдите плотность материала тела (ρ_воды = 1000).", ans: 800 },
-                { text: "Однородный стержень длиной 1 м и массой 2 кг подвешен на оси в центре. На одном конце груз 3 кг. Где надо повесить груз 5 кг для равновесия (в метрах от оси)?", ans: 0.6 },
-                { text: "В сосуд с водой налита керосин высотой 20 см. Найдите давление керосина на границу с водой (ρ_керосина = 800, g = 10).", ans: 1600 },
-                { text: "Маленький поршень пресса площадью 2 см² действует с силой 40 Н. Какая сила возникает на большом поршне площадью 100 см²?", ans: 2000 }
-            ],
-            hard: [
-                { text: "Тело весит в воздухе 5 Н, а в воде 3 Н. Найдите объем этого тела (g = 10, в м³).", ans: 0.0002 },
-                { text: "Тонкий стержень массой 4 кг и длиной 2 л шарнирно закреплен. К нему подвешен груз 10 кг на расстоянии 0.5 м от оси. Найти силу натяжения троса под углом 90 градусов на конце стержня.", ans: 35 },
-                { text: "Цилиндр плавает в ртути и воде. Вычислить долю объема цилиндра в воде, если плотность тела 4000, ртути 13600.", ans: 0.71 },
-                { text: "Плавающая льдина выступает над водой на объем 50 м³. Найдите полный объем льдины (плотность льда 900, воды 1000).", ans: 500 },
-                { text: "Сосуд с водой уравновешен на весах. В воду опускают камень массой 2 кг и плотностью 4000 кг/м³, не касаясь дна. На сколько изменится показание весов (в Н)?", ans: 5 }
-            ]
+
+        function switchMode(mode) {
+            currentMode = mode;
+            score = 0;
+            currentSelectedTopic = 'ALL';
+
+            ['math_literacy', 'profile_math', 'formulas'].forEach(m => {
+                const btn = document.getElementById(`btn-${m}`);
+                if (m === mode) {
+                    btn.className = "px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-blue-600 text-white transition shadow-md";
+                } else {
+                    btn.className = "px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition";
+                }
+            });
+
+            if (mode === 'formulas') {
+                document.getElementById('controls-container').classList.add('hidden');
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('completion-card').classList.add('hidden');
+                document.getElementById('formulas-container').classList.remove('hidden');
+            } else {
+                document.getElementById('formulas-container').classList.add('hidden');
+                document.getElementById('controls-container').classList.remove('hidden');
+                document.getElementById('quiz-container').classList.remove('hidden');
+                document.getElementById('completion-card').classList.add('hidden');
+                
+                populateTopics();
+                document.getElementById('topic-select').value = currentSelectedTopic;
+                filterQuestions();
+                loadQuestion();
+            }
+            triggerMathTypeset();
         }
-    },
-    mkt: {
-        title: "5. МКТ и Термодинамика",
-        formulas: "• pV = (m/M)RT<br>• U = (3/2)νRT<br>• Q = cmΔT + λm + Lm<br>• ΔU = Q - A<br>• КПД = (Q_1 - Q_2) / Q_1",
-        explanation: "Молекулярно-кинетическая теория связывает макроскопические параметры (давление, температура) со свойствами молекул. Термодинамика описывает тепловые процессы и работу газа.",
-        examples: "1. Уравнение Менделеева-Клапейрона связывает p, V, T через моли.<br>2. Количество теплоты для нагрева воды: Q = 4200 · массу · разницу температур.<br>3. Первый закон термодинамики: переданное тепло идет на изменение внутренней энергии и работу.<br>4. Работа газа при постоянном давлении: A = pΔV.<br>5. КПД тепловой машины всегда меньше 1.",
-        tasks: {
-            easy: [
-                { text: "Найдите количество теплоты для нагрева 2 кг воды на 10 °C (удельная теплоемкость 4200, в Дж).", ans: 84000 },
-                { text: "Газ совершил работу 500 Дж, при этом ему передали 1200 Дж теплоты. Найдите изменение внутренней энергии (в Дж).", ans: 700 },
-                { text: "Найдите внутреннюю энергия 2 моль одноатомного газа при температуре 300 К (R = 8.31, в Дж).", ans: 7479 },
-                { text: "Газ при постоянном давлении 200 кПа расширился на 0.003 м³. Найдите работу газа (в Дж).", ans: 600 },
-                { text: "Какая масса льда при 0 °C расплавится при получении 330 кДж теплоты (уд. теплота плавления 330 кДж/кг)?", ans: 1 }
-            ],
-            medium: [
-                { text: "Найти объем 2 моль идеального газа при давлении 200 кПа и температуре 300 К (R = 8.31, в м³).", ans: 0.0249 },
-                { text: "Идеальный газ изотермически сжали, совершив работу 300 Дж. Какое количество теплоты выделилось в окружающую среду (в Дж)?", ans: 300 },
-                { text: "Тепловая машина за цикл получает от нагревателя 1000 Дж теплоты и отдает холодильнику 600 Дж. Найдите КПД машины (в %).", ans: 40 },
-                { text: "При изохорном нагревании газу передали 500 Дж теплоты. Чему равна совершенная газом работа (в Дж)?", ans: 0 },
-                { text: "Какую работу совершит 1 моль идеального газа при изобарном нагревании на 50 К (R = 8.31, в Дж)?", ans: 415.5 }
-            ],
-            hard: [
-                { text: "Найти КПД идеального теплового двигателя с температурой нагревателя 400 К и холодильника 300 К (в %).", ans: 25 },
-                { text: "Одному молю гелия сообщили 600 Дж теплоты, при этом газ совершил работу 200 Дж. На сколько изменилась температура газа (R = 8.31)?", ans: 32.1 },
-                { text: "В цилиндре под поршнем находится воздух. При сообщении 40 кДж тепла поршень массой 50 кг поднялся на 2 метра (g = 10). Изменение внутренней энергии (в кДж)?", ans: 39 },
-                { text: "Найти среднюю кинетическую энергию теплового движения молекул одноатомного газа при температуре 400 К (постоянная Больцмана k = 1.38·10⁻²³, в Дж).", ans: 8.28e-21 },
-                { text: "Газ перевели из состояния 1 в состояние 3 по циклу, совершив работу 400 Дж и выделив 100 Дж в конце. Найти полный подвод тепла.", ans: 500 }
-            ]
+
+        function setDifficulty(diff) {
+            currentDifficulty = diff;
+            score = 0;
+
+            ['easy', 'medium', 'hard'].forEach(d => {
+                const btn = document.getElementById(`btn-diff-${d}`);
+                if (d === diff) {
+                    btn.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white transition shadow";
+                } else {
+                    btn.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition";
+                }
+            });
+
+            const previousTopic = currentSelectedTopic;
+            populateTopics();
+
+            const topicSelect = document.getElementById('topic-select');
+            const topicExists = Array.from(topicSelect.options).some(opt => opt.value === previousTopic);
+
+            if (topicExists) {
+                currentSelectedTopic = previousTopic;
+                topicSelect.value = previousTopic;
+            } else {
+                currentSelectedTopic = 'ALL';
+                topicSelect.value = 'ALL';
+            }
+
+            filterQuestions();
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('completion-card').classList.add('hidden');
+            loadQuestion();
         }
-    },
-    electrostatics: {
-        title: "6. Электростатика",
-        formulas: "• F = k * q1 * q2 / r²<br>• E = F / q<br>• C = q / U<br>• W = CU²/2<br>• φ = W_p / q",
-        explanation: "Изучает взаимодействие неподвижных электрических зарядов, электрическое поле, потенциал и емкость конденсаторов.",
-        examples: "1. Закон Кулона определяет силу взаимодействия двух точечных зарядов.<br>2. Напряженность поля E показывает силу, действующую на единичный заряд.<br>3. Электроемкость плоского конденсатора зависит от площади пластин и расстояния.<br>4. Энергия заряженного конденсатора запасается в электрическом поле.<br>5. Потенциал — энергетическая характеристика поля.",
-        tasks: {
-            easy: [
-                { text: "Два заряда по 2 мкКл на расстоянии 3 м в вакууме (k = 9·10⁹). Найдите силу взаимодействия (в Н). Код ответа округлить до сотых: 0.04", ans: 0.04 },
-                { text: "Найдите напряженность поля, если на заряд 4 мкКл действует сила 0.02 Н (в Н/Кл).", ans: 5000 },
-                { text: "Конденсатор емкостью 5 мкФ заряжен до напряжения 100 В. Найдите заряд на обкладках (в Кл).", ans: 0.0005 },
-                { text: "Какова энергия конденсатора емкостью 20 мФ при напряжении 10 В (в Дж)?", ans: 1 },
-                { text: "Какая работа совершается при перемещении заряда 5 Кл между точками с разностью потенциалов 20 В (в Дж)?", ans: 100 }
-            ],
-            medium: [
-                { text: "Расстояние между двумя точечными зарядами увеличили в 2 раза. Во сколько раз изменилась сила Кулона (в раз)? Введите число.", ans: 4 },
-                { text: "Плоский конденсатор зарядили до 200 В. Емкость 10 пФ. Найти энергию поля (в джоулях, записать как 2e-7 или десятичной дробью 0.0000002). Введите 0.0000002", ans: 0.0000002 },
-                { text: "Два конденсатора с емкостями 2 мФ и 3 мФ соединены параллельно. Найдите общую емкость (в мФ).", ans: 5 },
-                { text: "Сила взаимодействия двух зарядов в вакууме 16 Н. Какова будет сила в диэлектрике с проницаемостью 2 на том же расстоянии?", ans: 8 },
-                { text: "Напряженность однородного поля равна 500 В/м. Найдите разность потенциалов между точками на силовой линии на расстоянии 0.04 м.", ans: 20 }
-            ],
-            hard: [
-                { text: "Шарик массой 1 г с зарядом 10 мкКл висит в однородном вертикальном электрическом поле. Напряженность поля (g = 10, в В/м)?", ans: 1000 },
-                { text: "Электрон влетает в плоский конденсатор со скоростью 10⁷ м/с параллельно пластинам. Длина пластин 5 см, напряженность 180 В/м. Смещение по вертикали (в мм)?", ans: 0.8 },
-                { text: "Три одинаковых конденсатора по 6 мФ соединены последовательно. Найдите общую эквивалентную емкость (в мФ).", ans: 2 },
-                { text: "Металлический шар радиусом 10 см имеет потенциал 300 В. Найдите заряд шара (k = 9·10⁹, в нКл).", ans: 3.33 },
-                { text: "Два одинаковых проводящих шарика с зарядами +q и -3q привели в соприкосновение и раздвинули на прежнее расстояние. Во сколько раз изменилась сила взаимодействия?", ans: 3 }
-            ]
+
+        function onTopicChange() {
+            const select = document.getElementById('topic-select');
+            currentSelectedTopic = select.value;
+            score = 0;
+            filterQuestions();
+            loadQuestion();
         }
-    },
-    electro: {
-        title: "7. Электродинамика",
-        formulas: "• I = q / t = U / R<br>• R = ρ * l / S<br>• P = UI = I²R<br>• Закон Ома для полной цепи: I = E / (R + r)<br>• Работа тока: A = UIt",
-        explanation: "Изучает постоянный электрический ток, законы Ома, Джоуля-Ленца, последовательное и параллельное соединения проводников.",
-        examples: "1. Сила тока — это заряд, проходящий за секунду.<br>2. Сопротивление проводника зависит от материала, длины и площади сечения.<br>3. Закон Ома для участка цепи: ток прямо пропорционален напряжению.<br>4. Полная цепь включает внутреннее сопротивление источника r.<br>5. Мощность тока выражается через напряжение и ток.",
-        tasks: {
-            easy: [
-                { text: "Напряжение на резисторе 220 В, сопротивление 44 Ом. Найдите силу тока (в А).", ans: 5 },
-                { text: "Через проводник за 10 с проходит заряд 20 Кл. Найдите силу тока (в А).", ans: 2 },
-                { text: "Найдите сопротивление медного провода длиной 100 м и площадью сечения 2 мм² (удельное сопротивление 0.017 Ом·мм²/м, в Ом).", ans: 0.85 },
-                { text: "Резистор сопротивлением 10 Ом подключен к источнику с током 2 А. Найдите напряжение (в В).", ans: 20 },
-                { text: "Найдите мощность тока при напряжении 12 В и силе тока 2 А (в Вт).", ans: 24 }
-            ],
-            medium: [
-                { text: "Два резистора по 6 Ом соединены параллельно. Найдите общее сопротивление (в Ом).", ans: 3 },
-                { text: "Источник тока с ЭДС 12 В и внутренним сопротивлением 1 Ом замкнут на резистор 5 Ом. Найдите силу тока (в А).", ans: 2 },
-                { text: "Какое количество теплоты выделяется на резисторе 20 Ом за 5 минут при силе тока 2 А (в кДж)?", ans: 24 },
-                { text: "Электроплитка мощностью 1 кВт работает при напряжении 200 В. Найдите сопротивление спирали (в Ом).", ans: 40 },
-                { text: "При последовательном соединении двух резисторов общее сопротивление 15 Ом, а при параллельном — 3.33 Ом. Чему равен больший резистор?", ans: 10 }
-            ],
-            hard: [
-                { text: "При внешнем сопротивлении 9 Ом ток в цепи 0.5 А, а при 4 Ом — 1 А. Найдите ЭДС источника (в Вольтах).", ans: 5 },
-                { text: "Резисторы 2 Ом, 3 Ом и 6 Ом соединены смешанно: первые два последовательно, а третий параллельно им. Общее сопротивление?", ans: 2.5 },
-                { text: "Медный провод вытянули так, что его длина увеличилась в 2 раза. Во сколько раз увеличилось его электрическое сопротивление?", ans: 4 },
-                { text: "Аккумулятор с ЭДС 6 В и внутренним сопротивлением 0.5 Ом подключен к реостату. При какой силе тока мощность в реостате максимальна?", ans: 6 },
-                { text: "Электродвигатель с сопротивлением обмотки 2 Ом подключен к сети 120 В и потребляет ток 5 А. Какова полезная механическая мощность двигателя (в Вт)?", ans: 550 }
-            ]
+
+        function loadQuestion() {
+            answered = false;
+            
+            if (!activeQuestions || activeQuestions.length === 0) {
+                document.getElementById('question-text').innerText = "В этой теме пока нет вопросов данного уровня сложности.";
+                document.getElementById('options-container').innerHTML = '';
+                document.getElementById('sample-text').innerText = "—";
+                document.getElementById('next-btn').classList.add('hidden');
+                return;
+            }
+
+            const data = activeQuestions[currentQuestionIndex];
+            
+            document.getElementById('question-counter').innerText = `Вопрос ${currentQuestionIndex + 1} / ${activeQuestions.length}`;
+            document.getElementById('topic-badge').innerText = data.topic;
+            document.getElementById('score-display').innerText = `Баллы: ${score}`;
+            
+            document.getElementById('sample-text').innerHTML = data.sample;
+            document.getElementById('question-text').innerHTML = data.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            data.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 text-slate-200 transition font-medium text-sm md:text-base";
+                btn.innerHTML = option;
+                btn.onclick = () => selectOption(index);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+
+            triggerMathTypeset();
         }
-    },
-    magnetism: {
-        title: "8. Магнетизм",
-        formulas: "• F_ампера = B * I * l * sin(α)<br>• F_лоренца = q * v * B * sin(α)<br>• Ф = B * S * cos(α)<br>• ЭДС индукции: e = - ΔФ / Δt<br>• Индуктивность: W = L * I² / 2",
-        explanation: "Описывает магнитные поля, создаваемые токами, действие магнитного поля на движущиеся заряды и проводники с током, а также электромагнитную индукцию.",
-        examples: "1. Сила Ампера действует на проводник с током в магнитном поле.<br>2. Сила Лоренца действует на движущийся заряд перпендикулярно вектору скорости.<br>3. Магнитный поток пронизывает контур площади S.<br>4. Закон Фарадея: изменение потока создает ЭДС индукции.<br>5. Самоиндукция возникает при изменении тока в самом контуре.",
-        tasks: {
-            easy: [
-                { text: "Найдите силу Ампера для проводника длиной 0.2 м с током 5 А в поле с индукцией 0.4 Тл под углом 90° (в Н).", ans: 0.4 },
-                { text: "Магнитный поток через контур равен 0.05 Вб при индукции 0.1 Тл. Найдите площадь контура (в м²).", ans: 0.5 },
-                { text: "Найдите силу Лоренца для заряда 2 мкКл, летящего со скоростью 10⁴ м/с в поле 0.5 Тл перпендикулярно (в Н).", ans: 0.01 },
-                { text: "Какова индуктивность катушки, если при токе 4 А в ней запасена энергия 16 Дж?", ans: 2 },
-                { text: "В витке за 0.1 с магнитный поток изменился от 0 до 0.5 Вб. Найдите ЭДС индукции (в В).", ans: 5 }
-            ],
-            medium: [
-                { text: "Протон влетает в однородное магнитное поле с индукцией 0.02 Тл со скоростью 10⁶ м/с перпендикулярно линиям. Найдите радиус орбиты (масса протона 1.67·10⁻²⁷, заряд 1.6·10⁻¹⁹, в метрах).", ans: 0.52 },
-                { text: "Катушка имеет индуктивность 0.4 Гн. Какой ток течет в ней, если энергия магнитного поля равна 20 Дж (в А)?", ans: 10 },
-                { text: "Проводник длиной 0.5 м движется со скоростью 10 м/с перпендикулярно индукции 0.2 Тл. Найти наведенную ЭДС (в В).", ans: 1 },
-                { text: "В соленоиде из 200 витков магнитный поток меняется на 0.02 Вб за 0.4 с. ЭДС индукции в соленоиде (в В)?", ans: 10 },
-                { text: "Кольцо радиусом 10 см расположено перпендикулярно полю 0.5 Тл. Найти магнитный поток через кольцо (π = 3.14, в Вб).", ans: 0.0157 }
-            ],
-            hard: [
-                { text: "Квадратная рамка со стороной 10 см помещена в поле 0.4 Тл. Рамку поворачивают за 0.02 с на 90 градусов. Средняя ЭДС (в В)?", ans: 0.2 },
-                { text: "Горизонтальный проводник массой 20 г и длиной 50 см лежит на рельсах в перпендикулярном поле 0.4 Тл. Какой минимальный ток нужен для движения вверх с ускорением 2 м/с² (g = 10)?", ans: 3 },
-                { text: "Частица с зарядом q и массой m ускорена разностью потенциалов U и влетает в поле B перпендикулярно. Радиус траектории пропорционален... Введите коэффициент корень из (2mU) / (qB). Пусть m=1, U=50, q=1, B=2. Ответ округлить до сотых.", ans: 7.07 },
-                { text: "Ток в катушке индуктивностью 0.2 Гн равномерно уменьшается с 5 А до 0 за 0.01 с. Средняя ЭДС самоиндукции (в В)?", ans: 100 },
-                { text: "Длинный прямой проводник с током 10 А создает магнитное поле. Индукция на расстоянии 5 см от провода (μ₀ = 4π·10⁻⁷, в мкТл)?", ans: 40 }
-            ]
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const data = activeQuestions[currentQuestionIndex];
+            const optionsContainer = document.getElementById('options-container');
+            const buttons = optionsContainer.children;
+            
+            const feedbackEl = document.getElementById('feedback');
+            feedbackEl.classList.remove('hidden');
+
+            if (selectedIndex === data.correct) {
+                buttons[selectedIndex].className = "w-full text-left p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 font-medium text-sm md:text-base transition";
+                score += 10;
+                feedbackEl.className = "p-4 rounded-xl mb-6 text-sm bg-emerald-950/50 border border-emerald-800/50 text-emerald-300";
+                feedbackEl.innerHTML = `Правильно! 💡 Разбор: ${data.explanation}`;
+            } else {
+                buttons[selectedIndex].className = "w-full text-left p-4 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 font-medium text-sm md:text-base transition";
+                buttons[data.correct].className = "w-full text-left p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 font-medium text-sm md:text-base transition";
+                feedbackEl.className = "p-4 rounded-xl mb-6 text-sm bg-rose-950/50 border border-rose-800/50 text-rose-300";
+                feedbackEl.innerHTML = `Неверно. 💡 Правильный разбор: ${data.explanation}`;
+            }
+
+            document.getElementById('score-display').innerText = `Баллы: ${score}`;
+            
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.classList.remove('hidden');
+            nextBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            triggerMathTypeset();
         }
-    },
-    waves: {
-        title: "9. Колебания и волны",
-        formulas: "• T = 1 / ν<br>• T_пружинный = 2π√(m / k)<br>• T_математический = 2π√(l / g)<br>• λ = v * T = v / ν<br>• ω = 2π / T",
-        explanation: "Изучает гармонические колебания пружинного и маятникового типа, распространение механических и электромагнитных волн.",
-        examples: "1. Период и частота — взаимно обратные величины.<br>2. Формула Томсона определяет период колебаний в контуре LC.<br>3. Скорость волны связана с длиной волны и частотой: v = λν.<br>4. Математический маятник зависит от длины подвеса и g.<br>5. Пружинный маятник зависит от массы и жесткости.",
-        tasks: {
-            easy: [
-                { text: "Частота колебаний равна 50 Гц. Найдите период колебаний (в секундах).", ans: 0.02 },
-                { text: "Длина волны равна 4 м, а частота 5 Гц. Найдите скорость волны (в м/с).", ans: 20 },
-                { text: "Найдите период математического маятника длиной 1 м (g = 10, π = 3.14, в с). Округлить до десятых: 2.0", ans: 2 },
-                { text: "Пружинный маятник имеет массу 0.1 кг и жесткость 10 Н/м. Период колебаний (π=3.14, в с)? Округлить до сотых: 0.63", ans: 0.63 },
-                { text: "Колебательный контур содержит катушку 0.1 Гн и конденсатор 10 мкФ. Период свободных колебаний (π=3.14, в мс)? Ответ в мс округлить до десятых: 6.3", ans: 6.3 }
-            ],
-            medium: [
-                { text: "Волна распространяется со скоростью 340 м/с при частоте 170 Гц. Найдите длину волны (в метрах).", ans: 2 },
-                { text: "Во сколько раз нужно увеличить длину математического маятника, чтобы период его колебаний увеличился в 3 раза?", ans: 9 },
-                { text: "Груз на пружине совершает 20 колебаний за 10 секунд. Найдите частоту колебаний (в Гц).", ans: 2 },
-                { text: "Максимальное смещение при колебаниях 0.05 м, частота 10 Гц. Найдите максимальную скорость (v_max = Aω, π=3.14, в м/с).", ans: 3.14 },
-                { text: "В колебательном контуре емкость конденсатора увеличили в 4 раза. Во сколько раз изменился период колебаний?", ans: 2 }
-            ],
-            hard: [
-                { text: "Уравнение колебаний задано как x = 0.05 cos(50πt). Найдите циклическую частоту (в рад/с).", ans: 157 },
-                { text: "Математический маятник на Луне (g_луны = 1.6) имеет такой же период, как на Земле (g=10) длиной 2.5 м. Длина маятника на Луне (в метрах)?", ans: 0.4 },
-                { text: "Максимальная энергия в колебательном контуре 10 мДж, максимальный заряд 2 мкКл. Найдите индуктивность катушки (в Генри)?", ans: 5 },
-                { text: "Тело совершает гармонические колебания. При смещении 3 см скорость равна 4 см/с, а при 4 см — 3 см/с. Амплитуда колебаний (в см)?", ans: 5 },
-                { text: "Найти отношение энергий магнитного и электрического поля в контуре в момент, когда фаза колебаний равна π/6.", ans: 0.33 }
-            ]
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < activeQuestions.length) {
+                loadQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('completion-card').classList.remove('hidden');
+                const maxPossible = activeQuestions.length * 10;
+                document.getElementById('final-score').innerText = `Вы набрали: ${score} из ${maxPossible} баллов`;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
-    },
-    optics: {
-        title: "10. Оптика",
-        formulas: "• n = c / v<br>• sin(α) / sin(β) = n2 / n1<br>• 1 / F = 1 / d + 1 / f<br>• D = 1 / F<br>• d_увеличение = f / d",
-        explanation: "Оптический раздел изучает законы отражения и преломления света, ход лучей в линзах, зеркалах и интерференцию/дифракцию.",
-        examples: "1. Показатель преломления показывает замедление света в среде.<br>2. Закон Снеллиуса описывает преломление на границе сред.<br>3. Тонкая линза связывает фокус, расстояние до предмета и изображения.<br>4. Оптическая сила измеряется в диоптриях.<br>5. Дифракционная решетка раскладывает свет в спектр.",
-        tasks: {
-            easy: [
-                { text: "Фокусное расстояние линзы равно 0.2 м. Найдите оптическую силу в диоптриях.", ans: 5 },
-                { text: "Скорость света в среде равна 2·10⁸ м/с (c = 3·10⁸). Найдите абсолютный показатель преломления (округлить до сотых: 1.5).", ans: 1.5 },
-                { text: "Предмет находится на расстоянии 0.6 м от линзы с фокусом 0.2 м. На каком расстоянии получается изображение (в метрах)?", ans: 0.3 },
-                { text: "Оптическая сила линзы -2.5 дптр. Найдите ее фокусное расстояние (в метрах).", ans: -0.4 },
-                { text: "Угол падения света равен 30°, угол преломления 30° при переходе в другую среду. Чему равен относительный показатель преломления?", ans: 1 }
-            ],
-            medium: [
-                { text: "Дифракционная решетка имеет 500 штрихов на 1 мм. Найдите период решетки d (в микрометрах, или в м записать как 0.000002). Введите 0.000002", ans: 0.000002 },
-                { text: "Предмет высотой 5 см дает действительное изображение высотой 15 см в линзе. Найдите линейное увеличение линзы.", ans: 3 },
-                { text: "Луч света падает на плоское зеркало под углом 40° к поверхности зеркала. Чему равен угол отражения (в градусах)?", ans: 50 },
-                { text: "Линза дает мнимое изображение предмета на расстоянии 15 см, при этом сама линза находится в 10 см от предмета. Фокус линзы (в см)?", ans: 30 },
-                { text: "Предельный угол полного внутреннего отражения для среды равен 45°. Найдите показатель преломления этой среды (sin 45° ≈ 0.707).", ans: 1.41 }
-            ],
-            hard: [
-                { text: "Собирающая линза дает на экране изображение предмета с увеличением 4. Если предмет сдвинуть на 1.5 см ближе к линзе, увеличение станет равным 9. Фокус линзы (в см)?", ans: 5.4 },
-                { text: "В опыте Юнга расстояние между щелями 1 мм, экран на расстоянии 1 м. Длина волны света 500 нм. Найти расстояние между соседними интерференционными максимумами (в мм)?", ans: 0.5 },
-                { text: "На дифракционную решетку с периодом 2 мкм падает свет длиной 500 нм нормально. Найти наибольший порядок спектра, наблюдаемый на экране.", ans: 4 },
-                { text: "Тонкая водяная пленка (n = 1.33) освещена белым светом перпендикулярно. При какой минимальной толщине пленки в отраженном свете наблюдается максимум для волны 600 нм (в нм)?", ans: 112.8 },
-                { text: "Система из двух линз с оптическими силами +2 дптр и -3 дптр приложена вплотную. Оптическая сила системы (в дптр)?", ans: -1 }
-            ]
+
+        function restartLevel() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('completion-card').classList.add('hidden');
+            loadQuestion();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    },
-    quantum: {
-        title: "11. Квантовая и ядерная физика",
-        formulas: "• E = hν = hc / λ<br>• hν = A_вых + mv²/2<br>• N = N₀ * 2^(-t / T)<br>• E = mc²<br>• Дефект массы: ΔM = Z*m_p + N*m_n - M_ядра",
-        explanation: "Квантовая физика изучает корпускулярно-волновой дуализм, фотоэффект, строение атома Бора, а ядерная физика — радиоактивность, ядерные реакции и дефект масс.",
-        examples: "1. Энергия фотона зависит от частоты света через постоянную Планка.<br>2. Фотоэффект описывает выбивание электронов светом с преодолением работы выхода.<br>3. Период полураспада показывает время распада половины радиоактивных ядер.<br>4. Эквивалентность массы и энергии Эйнштейна: E=mc².<br>5. Дефект массы объясняет энергию связи атомного ядра.",
-        tasks: {
-            easy: [
-                { text: "Найдите энергию фотона с частотой 5·10¹⁴ Гц (h = 6.63·10⁻³⁴, в Дж). Введите ответ как 3.315e-19 или десятичной 0.0000000000000000003315. Давайте округлим в Дж как 3.32e-19 -> Введите 0.000000000000000000332", ans: 3.32e-19 },
-                { text: "Работа выхода электрона из металла равна 2 эВ. Чему равна красная граница фотоэффекта в герцах (эВ = 1.6·10⁻¹⁹ Дж, h = 6.63·10⁻³⁴)? Ответ в Гц округлить до 4.8e14 -> Введите 480000000000000", ans: 480000000000000 },
-                { text: "Было 400 радиоактивных ядер. Период полураспада 2 часа. Сколько ядер останется через 6 часов?", ans: 50 },
-                { text: "При дефекте массы 0.001 а.е.м. выделится энергия. 1 а.е.м = 931 МэВ. Чему равна энергия связи (в МэВ)?", ans: 0.931 },
-                { text: "Длина волны света равна 500 нм (c = 3·10⁸, h = 6.63·10⁻³⁴). Энергия фотона (в эВ)? Введите 2.48", ans: 2.48 }
-            ],
-            medium: [
-                { text: "Красная граница фотоэффекта для металла равна 600 нм. Найти работу выхода электрона (в эВ, h=6.63·10⁻³⁴, c=3·10⁸). Округлить до сотых: 2.07", ans: 2.07 },
-                { text: "Период полураспада радиоактивного изотопа 8 дней. Через сколько дней количество нераспавшихся ядер уменьшится в 16 раз?", ans: 32 },
-                { text: "Какую задерживающую разность потенциалов нужно применить, чтобы остановить фотоэлектроны с максимальной скоростью 10⁶ м/с (масса электрона 9.1·10⁻³, заряд 1.6·10⁻¹⁹, в В)?", ans: 2.84 },
-                { text: "Электрон перешел в атоме водорода с одного энергетического уровня на другой, излучив фотон с энергией 2.5 эВ. Найти длину волны излучения (в нм)?", ans: 497 },
-                { text: "Найти дефект массы ядра гелия ²He⁴, если масса протона 1.0073 а.е.м, нейтрона 1.0087 а.е.м, а ядра гелия 4.0015 а.е.м (в а.е.м)?", ans: 0.0303 }
-            ],
-            hard: [
-                { text: "При облучении металла светом с длиной волны 400 нм максимальная скорость электронов 1 м/с (условно). При длине 200 нм скорость изменилась. Найдите работу выхода (в эВ)?", ans: 3.1 },
-                { text: "Энергия связи ядра атома азота составляет 115 МэВ. Найдите удельную энергию связи на один нуклон (у азота 14 нуклонов, в МэВ/нуклон)?", ans: 8.21 },
-                { text: "В результате альфа-распада ядра ¹²Np²³⁷ образуется новое ядро. Какое массовое число будет у дочернего ядра?", ans: 233 },
-                { text: "Сколько альфа- и бета-распадов происходит при превращении урана ²³⁸U⁹² в стабильный свинец ²⁰⁶Pb⁸²?", ans: 8 },
-                { text: "Найти кинетическую энергию альфа-частицы, вылетающей при радиоактивном распаде, если дефект массы реакции равен 0.005 а.е.м (в МэВ)?", ans: 4.655 }
-            ]
-        }
-    }
-};
 
-function showScreen(id) {
-    document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-}
-
-function openTopic(key) {
-    currentKey = key;
-    const item = dataBase[key];
-    document.getElementById('th-title').innerText = item.title;
-    document.getElementById('th-formulas').innerHTML = item.formulas;
-    document.getElementById('th-explanation').innerHTML = item.explanation;
-    document.getElementById('th-examples').innerHTML = item.examples;
-    showScreen('screen-theory');
-}
-
-let activeTasksList = [];
-
-function startTrainer(level) {
-    currentLevel = level;
-    taskIndex = 0;
-    activeTasksList = dataBase[currentKey].tasks[level];
-    
-    const badge = document.getElementById('tr-badge');
-    if(level === 'easy') { badge.innerText = 'Легкий уровень'; badge.className = 'badge badge-easy'; }
-    if(level === 'medium') { badge.innerText = 'Средний уровень'; badge.className = 'badge badge-medium'; }
-    if(level === 'hard') { badge.innerText = 'Сложный уровень'; badge.className = 'badge badge-hard'; }
-    
-    showScreen('screen-trainer');
-    loadTask();
-}
-
-function loadTask() {
-    document.getElementById('feedback-container').innerHTML = '';
-    document.getElementById('user-answer').value = '';
-    document.getElementById('user-answer').style.display = 'block';
-    document.querySelector('#answer-area .btn-success').style.display = 'block';
-    document.getElementById('next-btn').style.display = 'none';
-
-    document.getElementById('tr-counter').innerText = `Задача ${taskIndex + 1} из 5`;
-    document.getElementById('tr-text').innerHTML = activeTasksList[taskIndex].text;
-}
-
-function checkAnswer() {
-    const val = parseFloat(document.getElementById('user-answer').value);
-    const correct = activeTasksList[taskIndex].ans;
-    const fb = document.getElementById('feedback-container');
-
-    if (isNaN(val)) {
-        fb.innerHTML = `<div class="feedback error">Введите числовое значение!</div>`;
-        return;
-    }
-
-    // Погрешность для сложных дробных ответов до 1% или абсолютная 0.05
-    if (Math.abs(val - correct) <= Math.abs(correct * 0.02) + 0.05) {
-        fb.innerHTML = `<div class="feedback success">🎉 Отлично! Ответ верный.</div>`;
-    } else {
-        fb.innerHTML = `<div class="feedback error">❌ Ошибка. Правильный ответ: <b>${correct}</b></div>`;
-    }
-
-    document.getElementById('user-answer').style.display = 'none';
-    document.querySelector('#answer-area .btn-success').style.display = 'none';
-    
-    if (taskIndex < activeTasksList.length - 1) {
-        document.getElementById('next-btn').style.display = 'block';
-    } else {
-        document.getElementById('next-btn').innerText = 'Завершить уровень 🎉';
-        document.getElementById('next-btn').style.display = 'block';
-    }
-}
-
-function nextTask() {
-    taskIndex++;
-    if (taskIndex < activeTasksList.length) {
-        loadTask();
-    } else {
-        document.getElementById('next-btn').innerText = 'Следующая задача →';
-        openTopic(currentKey);
-    }
-}
-</script>
+        populateTopics();
+        filterQuestions();
+        loadQuestion();
+    </script>
 </body>
 </html>
+ 
