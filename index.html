@@ -1457,6 +1457,39 @@ function nextTask() {
 </body>
 </html>
                   
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Пример кнопки</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl max-w-md w-full shadow-xl">
+        <h2 id="question-text" class="text-lg font-semibold mb-6">Товар стоил 1000 тенге. Цена выросла на 20%.</h2>
+        
+        <!-- Кнопка следующей задачи -->
+        <button onclick="nextTask()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 font-medium rounded-xl transition">
+            Следующий вопрос
+        </button>
+    </div>
+
+    <script>
+        const tasks = [
+            "Товар стоил 1000 тенге. Цена выросла на 20%.",
+            "30% от числа равны 45. Найдите это число.",
+            "Найдите площадь квадрата со стороной 5 см."
+        ];
+        let currentIndex = 0;
+
+        function nextTask() {
+            currentIndex = (currentIndex + 1) % tasks.length;
+            document.getElementById('question-text').innerText = tasks[currentIndex];
+        }
+    </script>
+</body>
+</html>
                 
                 
             
