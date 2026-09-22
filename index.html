@@ -1491,5 +1491,68 @@ function nextTask() {
 </body>
 </html>
                 
-                
+    // Безопасная функция рендеринга формул с защитой от сбоев
+function safeTypeset(element) {
+    if (window.MathJax) {
+        // Если используется версия с промисами (MathJax 3+)
+        if (window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise([element]).catch((err) => {
+                console.warn('Ошибка рендеринга MathJax пропущена:', err);
+            });
+        } 
+        // Для старых версий MathJax (2.x)
+        else if (window.MathJax.Hub) {
+            try {
+                window.MathJax.Hub.Queue(["Typeset", window.MathJax.Hub, element]);
+            } catch (err) {
+                console.warn('Ошибка MathJax Hub:', err);
+            }
+        }
+    }
+}
+
+// Пример безопасной функции смены вопроса
+let currentQuestionIndex = 0;
+
+function loadQuestion(index) {
+    const questions = getQuestionsList(); // Твой массив или источник данных
+    
+    if (index >= questions.length) {
+        showResults();
+        return;
+    }
+
+    const q = questions[index];
+    
+    // Элементы интерфейса
+    const questionContainer = document.getElementById('question-container');
+    const explanationContainer = document.getElementById('explanation-container');
+
+    // Безопасная вставка данных
+    questionContainer.innerHTML = q.questionText || '';
+    explanationContainer.innerHTML = q.explanation || '';
+
+    // Запускаем рендеринг формул так, чтобы он не мог сломать логику переключения
+    safeTypeset(questionContainer);
+    safeTypeset(explanationContainer);
+}
+
+// Кнопка «Следующий вопрос»
+function nextQuestion() {
+    currentQuestionIndex++;
+    loadQuestion(currentQuestionIndex);
+}
+
+// Обработчик клика по кнопке
+document.getElementById('next-btn').addEventListener('click', () => {
+    try {
+        nextQuestion();
+    } catch (error) {
+        console.error('Критическая ошибка при переходе:', error);
+        // Резервный сброс, чтобы пользователь в любом случае шел дальше
+        currentQuestionIndex++;
+        loadQuestion(currentQuestionIndex);
+    }
+});
+            
             
