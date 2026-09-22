@@ -923,4 +923,785 @@ function nextTask() {
 </body>
 </html>
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalSkill — ЕНТ Тренажер по темам</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Настройка MathJax -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+                GlobalSkill // ЕНТ Math Pro
+            </h1>
+            <div id="subject-selector" class="flex flex-wrap gap-2 justify-center">
+                <button onclick="switchMode('math_literacy')" id="btn-math_literacy" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-blue-600 text-white transition shadow-md">Мат. грамотность</button>
+                <button onclick="switchMode('profile_math')" id="btn-profile_math" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">Профильная мат.</button>
+                <button onclick="switchMode('formulas')" id="btn-formulas" class="px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">📖 Шпаргалка</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
+        
+        <!-- Controls Container (Topic & Difficulty Selection) -->
+        <div id="controls-container" class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 mb-6 flex flex-col gap-4">
+            
+            <!-- Topic Filter Dropdown -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-800/40 p-3 rounded-xl border border-slate-700/50">
+                <label for="topic-select" class="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                    🎯 Раздел темы:
+                </label>
+                <select id="topic-select" onchange="onTopicChange()" class="bg-slate-900 text-blue-400 border border-slate-700 rounded-lg px-3 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:border-blue-500 transition w-full sm:w-auto">
+                    <!-- Populated dynamically -->
+                </select>
+            </div>
+
+            <!-- Difficulty Selector -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Уровень сложности:</span>
+                <div id="difficulty-container" class="flex justify-center gap-2 w-full sm:w-auto">
+                    <button onclick="setDifficulty('easy')" id="btn-diff-easy" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white transition">🟢 Легкий</button>
+                    <button onclick="setDifficulty('medium')" id="btn-diff-medium" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">🟡 Средний</button>
+                    <button onclick="setDifficulty('hard')" id="btn-diff-hard" class="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition">🔴 Сложный</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quiz-container" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-6">
+                <div class="flex items-center gap-2">
+                    <span id="question-counter" class="text-xs font-semibold tracking-wider uppercase px-2.5 py-1 bg-blue-500/10 text-blue-400 rounded-full border border-blue-500/20">Вопрос 1 / 10</span>
+                    <span id="topic-badge" class="text-xs font-medium px-2.5 py-1 bg-slate-800 text-slate-300 rounded-full border border-slate-700">Тема</span>
+                </div>
+                <span id="score-display" class="text-sm font-medium text-slate-400">Баллы: 0</span>
+            </div>
+
+            <!-- Sample / Reference Pattern Box -->
+            <div id="sample-box" class="mb-6 p-4 rounded-xl bg-indigo-950/40 border border-indigo-800/50 text-indigo-200 text-xs md:text-sm">
+                <div class="font-semibold text-indigo-400 mb-1 flex items-center gap-1.5">
+                    <span>💡 Образец решения перед глазами:</span>
+                </div>
+                <div id="sample-text" class="text-slate-300 leading-relaxed">
+                    Загрузка образца...
+                </div>
+            </div>
+
+            <h2 id="question-text" class="text-lg md:text-xl font-semibold mb-6 text-slate-200">
+                Загрузка вопроса...
+            </h2>
+
+            <div id="options-container" class="grid gap-3 mb-6"></div>
+
+            <div id="feedback" class="hidden p-4 rounded-xl mb-6 text-sm"></div>
+
+            <button id="next-btn" onclick="nextQuestion()" class="hidden w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl transition shadow-lg shadow-blue-600/20">
+                Следующий вопрос
+            </button>
+        </div>
+
+        <!-- Formulas & Theory Section -->
+        <div id="formulas-container" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
+            <h2 class="text-2xl font-bold mb-6 text-blue-400">Справочник тем и формул ЕНТ</h2>
+            
+            <div class="space-y-6 text-slate-300">
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <h3 class="font-semibold text-white mb-2">1. Проценты и растворы</h3>
+                    <p class="text-sm text-slate-300">$p\%$ от $a = \frac{a \cdot p}{100}$. Формула смесей: $m_1 c_1 + m_2 c_2 = (m_1 + m_2) c_{\text{см}}$.</p>
+                </div>
+
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <h3 class="font-semibold text-white mb-2">2. Движение и работа</h3>
+                    <p class="text-sm text-slate-300">$S = v \cdot t, \quad v_{\text{ср}} = \frac{S_{\text{все}}}{t_{\text{все}}}, \quad \frac{1}{t_1} + \frac{1}{t_2} = \frac{1}{t_{\text{совм}}}$.</p>
+                </div>
+
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <h3 class="font-semibold text-white mb-2">3. Алгебра, показательные и логарифмы</h3>
+                    <p class="text-sm text-slate-300">$\log_a(b \cdot c) = \log_a b + \log_a c, \quad a^{\log_a b} = b, \quad a^{f(x)} = a^{g(x)} \implies f(x) = g(x)$.</p>
+                </div>
+
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50">
+                    <h3 class="font-semibold text-white mb-2">4. Тригонометрия и анализ</h3>
+                    <p class="text-sm text-slate-300">$\sin^2 x + \cos^2 x = 1, \quad (x^n)' = n x^{n-1}, \quad \int x^n dx = \frac{x^{n+1}}{n+1} + C$.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Card -->
+        <div id="completion-card" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center shadow-xl">
+            <h2 class="text-2xl font-bold mb-3 text-white">Тема/уровень пройден! 🎉</h2>
+            <p id="final-score" class="text-slate-400 mb-6">Ваш результат: </p>
+            <button onclick="restartLevel()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl transition shadow-lg shadow-blue-600/20">
+                Пройти заново
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 py-4 text-center text-xs text-slate-600">
+        GlobalSkill Platform &bull; ЕНТ 2026
+    </footer>
+
+    <script>
+        const database = {
+            math_literacy: {
+                easy: [
+                    {
+                        topic: "Проценты и растворы",
+                        sample: "Пример: Товар стоит 800 тг. При скидке 10% вычитаем $800 \\times 0{,}10 = 80$ тг. Новая цена: $800 - 80 = 720$ тг.",
+                        question: "Товар стоил 1000 тенге. Цена выросла на 20%. Найдите новую цену.",
+                        options: ["1100 тг", "1200 тг", "1250 тг", "1300 тг"], correct: 1,
+                        explanation: "$1000 \\times 0{,}20 = 200$ тг. $1000 + 200 = 1200$ тенге."
+                    },
+                    {
+                        topic: "Проценты и растворы",
+                        sample: "Пример: Если 20% от $x$ равны 40, то $0{,}2x = 40 \\implies x = 40 / 0{,}2 = 200$.",
+                        question: "30% от числа равны 45. Найдите это число.",
+                        options: ["120", "135", "150", "160"], correct: 2,
+                        explanation: "$0{,}3x = 45 \\implies x = 45 / 0{,}3 = 150$."
+                    },
+                    {
+                        topic: "Геометрия и наглядность",
+                        sample: "Пример: Площадь квадрата со стороной 4 см равна $S = a^2 = 4^2 = 16$ см².",
+                        question: "Найдите площадь квадрата со стороной 5 см.",
+                        options: ["10 см²", "20 см²", "25 см²", "30 см²"], correct: 2,
+                        explanation: "$S = a^2 = 5^2 = 25$ см²."
+                    },
+                    {
+                        topic: "Геометрия и наглядность",
+                        sample: "Пример: Периметр прямоугольника 6 на 4: $P = 2 \\times (6 + 4) = 20$ см.",
+                        question: "Длина прямоугольника 8 см, ширина 5 см. Найдите его периметр.",
+                        options: ["13 см", "26 см", "40 см", "20 см"], correct: 1,
+                        explanation: "$P = 2 \\cdot (8 + 5) = 26$ см."
+                    },
+                    {
+                        topic: "Движение и работа",
+                        sample: "Пример: Автомобиль со скоростью 50 км/ч за 2 часа проедет $S = v \\times t = 50 \\times 2 = 100$ км.",
+                        question: "Какое расстояние проедет автомобиль со скоростью 60 км/ч за 3 часа?",
+                        options: ["120 км", "150 км", "180 км", "210 км"], correct: 2,
+                        explanation: "$S = v \\cdot t = 60 \\cdot 3 = 180$ км."
+                    },
+                    {
+                        topic: "Движение и работа",
+                        sample: "Пример: 50% от 1 часа (60 мин) равны $60 \\times 0{,}5 = 30$ минут.",
+                        question: "Сколько минут составляют 25% от 1 часа?",
+                        options: ["10 минут", "12 минут", "15 минут", "20 минут"], correct: 2,
+                        explanation: "$60 \\times 0{,}25 = 15$ минут."
+                    },
+                    {
+                        topic: "Уравнения и логика",
+                        sample: "Пример: Вычислите $2x + 3$ при $x = 5$: $2 \\times 5 + 3 = 13$.",
+                        question: "Найдите значение выражения $3x + 5$ при $x = 4$.",
+                        options: ["12", "15", "17", "20"], correct: 2,
+                        explanation: "$3 \\cdot 4 + 5 = 17$."
+                    },
+                    {
+                        topic: "Уравнения и логика",
+                        sample: "Пример: Если среднее арифметическое 4 чисел равно 10, их сумма равна $10 \\times 4 = 40$.",
+                        question: "Среднее арифметическое трех чисел равно 12. Найдите их сумму.",
+                        options: ["24", "36", "48", "30"], correct: 1,
+                        explanation: "Сумма = $12 \\times 3 = 36$."
+                    },
+                    {
+                        topic: "Теория чисел",
+                        sample: "Пример: НОК чисел 6 и 8 равен 24, так как 24 делится и на 6, и на 8.",
+                        question: "Найдите наименьшее общее кратное (НОК) чисел 12 и 18.",
+                        options: ["24", "36", "72", "6"], correct: 1,
+                        explanation: "Кратные 12: 12, 24, 36... Кратные 18: 18, 36... НОК = 36."
+                    },
+                    {
+                        topic: "Теория чисел",
+                        sample: "Пример: Из 30 учеников 50% — девочки: $30 \\times 0{,}5 = 15$.",
+                        question: "В классе 25 учеников, 40% из них — мальчики. Сколько мальчиков в классе?",
+                        options: ["8", "10", "12", "15"], correct: 1,
+                        explanation: "$25 \\cdot 0{,}40 = 10$ мальчиков."
+                    }
+                ],
+                medium: [
+                    {
+                        topic: "Проценты и растворы",
+                        sample: "Пример: Цена 100 выросла на 10% (стала 110), затем упала на 10% (минус 11) = 99. Упала на 1%.",
+                        question: "Товар подорожал на 20%, а затем подешевел на 10%. Как изменилась первоначальная цена?",
+                        options: ["Подорожал на 8%", "Подорожал на 10%", "Не изменилась", "Подорожал на 12%"], correct: 0,
+                        explanation: "$100 \\to 120 \\to 120 - 12 = 108$. Цена выросла на 8%."
+                    },
+                    {
+                        topic: "Проценты и растворы",
+                        sample: "Пример: В 20 кг 10%-го раствора содержится $20 \\times 0{,}1 = 2$ кг соли.",
+                        question: "К 30 кг 15%-го раствора соли добавили воду и получили 10%-й раствор. Сколько воды добавили?",
+                        options: ["10 кг", "15 кг", "20 кг", "25 кг"], correct: 1,
+                        explanation: "Соль: $30 \\cdot 0{,}15 = 4{,}5$ кг. Новый раствор: $4{,}5 / 0{,}10 = 45$ кг. Вода: $45 - 30 = 15$ кг."
+                    },
+                    {
+                        topic: "Движение и работа",
+                        sample: "Пример: Скорость по течению 15, против 11. Скорость течения: $(15 - 11)/2 = 2$ км/ч.",
+                        question: "Катер прошел по течению 48 км за 3 часа, а против течения — за 4 часа. Найдите скорость течения реки.",
+                        options: ["1 км/ч", "2 км/ч", "3 км/ч", "4 км/ч"], correct: 1,
+                        explanation: "$v_{\\text{по}} = 16$, $v_{\\text{прот}} = 12$. $v_{\\text{теч}} = (16 - 12) / 2 = 2$ км/ч."
+                    },
+                    {
+                        topic: "Движение и работа",
+                        sample: "Пример: Двое делают работу за 2 и 3 часа. Совместно: $\\frac{1}{2} + \\frac{1}{3} = \\frac{5}{6} \\implies$ время $1{,}2$ ч.",
+                        question: "Первая труба наполняет бассейн за 6 часов, а вторая — за 12 часов. За сколько часов они наполнят бассейн вместе?",
+                        options: ["За 3 часа", "За 4 часа", "За 5 часов", "За 4,5 часа"], correct: 1,
+                        explanation: "$\\frac{1}{6} + \\frac{1}{12} = \\frac{3}{12} = \\frac{1}{4} \\implies$ время 4 часа."
+                    },
+                    {
+                        topic: "Уравнения и логика",
+                        sample: "Пример: 2 красных и 3 синих шара. Чтобы гарантированно взять синий, берем $2 + 1 = 3$ шара.",
+                        question: "В коробке 3 синих, 4 зеленых и 5 красных шаров. Какое наименьшее количество шаров нужно взять, чтобы гарантированно достать красный?",
+                        options: ["5", "7", "8", "9"], correct: 2,
+                        explanation: "Худший случай: вытащили все синие и зеленые ($3 + 4 = 7$). 8-й шар точно красный."
+                    },
+                    {
+                        topic: "Уравнения и логика",
+                        sample: "Пример: Отцу 30, сыну 10. Через сколько лет отец старше в 2 раза? $30 + x = 2(10 + x) \\implies x = 10$.",
+                        question: "Отцу 40 лет, сыну 16 лет. Через сколько лет отец будет в 2 раза старше сына?",
+                        options: ["Через 4 года", "Через 6 лет", "Через 8 лет", "Через 10 лет"], correct: 2,
+                        explanation: "$40 + x = 2(16 + x) \\implies 40 + x = 32 + 2x \\implies x = 8$ лет."
+                    },
+                    {
+                        topic: "Геометрия и наглядность",
+                        sample: "Пример: Туда со скоростью 60 км/ч, обратно 40 км/ч. $v_{\\text{ср}} = \\frac{2 \\cdot 60 \\cdot 40}{60 + 40} = 48$ км/ч.",
+                        question: "Лыжник проехал туда со скоростью 15 км/ч, а вернулся со скоростью 10 км/ч. Найдите среднюю скорость.",
+                        options: ["12 км/ч", "12,5 км/ч", "13 км/ч", "11,5 км/ч"], correct: 0,
+                        explanation: "$v_{\\text{ср}} = \\frac{2 \\cdot 15 \\cdot 10}{15 + 10} = 12$ км/ч."
+                    },
+                    {
+                        topic: "Геометрия и наглядность",
+                        sample: "Пример: 10% числа на 5 меньше, чем 20%. $0{,}2x - 0{,}1x = 5 \\implies x = 50$.",
+                        question: "20% числа на 15 меньше, чем 30% этого же числа. Найдите это число.",
+                        options: ["100", "150", "200", "250"], correct: 1,
+                        explanation: "$0{,}3x - 0{,}2x = 15 \\implies 0{,}1x = 15 \\implies x = 150$."
+                    },
+                    {
+                        topic: "Теория чисел",
+                        sample: "Пример: Ряд 1, 3, 6, 10... Шаги +2, +3, +4. Следующий +5 $\\implies 15$.",
+                        question: "Найдите следующий член последовательности: 2, 6, 12, 20, 30, ...",
+                        options: ["38", "40", "42", "46"], correct: 2,
+                        explanation: "Шаги +4, +6, +8, +10. Следующий +12. $30 + 12 = 42$."
+                    },
+                    {
+                        topic: "Теория чисел",
+                        sample: "Пример: При делении на 3 остаток 1 — это числа 4, 7, 10, 13...",
+                        question: "При делении числа на 5 получается остаток 3, а при делении на 4 — остаток 2. Найдите наименьшее число.",
+                        options: ["8", "13", "18", "23"], correct: 2,
+                        explanation: "$18 / 5 = 3$ (ост 3), $18 / 4 = 4$ (ост 2). Число 18."
+                    }
+                ],
+                hard: [
+                    {
+                        topic: "Уравнения и логика",
+                        sample: "Пример: Если 3 члена геом. прогрессии дают произведение $b^3 = 27$, то средний $b = 3$.",
+                        question: "Три числа образуют геом. прогрессию. Их сумма равна 26, произведение 216. Найдите эти числа.",
+                        options: ["2, 6, 18", "3, 6, 12", "1, 6, 36", "4, 6, 9"], correct: 0,
+                        explanation: "Произведение $b^3 = 216 \\implies b = 6$. Сумма $2 + 6 + 18 = 26$."
+                    },
+                    {
+                        topic: "Уравнения и логика",
+                        sample: "Пример: Отношение 3:2 означает 5 частей. Одна часть = Сумма / 5.",
+                        question: "Сумма возрастов родителей 80 лет. 10 лет назад отношение возрастов было 7:5. Сколько лет отцу сейчас?",
+                        options: ["40 лет", "42 года", "45 лет", "48 лет"], correct: 2,
+                        explanation: "10 лет назад сумма $80 - 20 = 60$. Отношение 7:5 даёт 35 и 25 лет. Отцу сейчас: $35 + 10 = 45$."
+                    },
+                    {
+                        topic: "Движение и работа",
+                        sample: "Пример: Разница времён записывается как $\\frac{1}{x} - \\frac{1}{x+a} = ...$",
+                        question: "Первая труба наполняет бассейн на 5 часов быстрее второй. Вместе наполняют за 6 ч. За сколько заполнит первая?",
+                        options: ["8 часов", "10 часов", "12 часов", "15 часов"], correct: 1,
+                        explanation: "$\\frac{1}{x} + \\frac{1}{x+5} = \\frac{1}{6} \\implies x = 10$ часов."
+                    },
+                    {
+                        topic: "Теория чисел",
+                        sample: "Пример: Двузначное число $10a + b$. Перестановка $10b + a$. Разница $9(b - a)$.",
+                        question: "Сумма цифр двузначного числа равна 11. Перестановка цифр увеличивает число на 27. Найдите число.",
+                        options: ["47", "38", "56", "29"], correct: 0,
+                        explanation: "Число 47: $4+7=11$. Перестановка 74. $74 - 47 = 27$."
+                    },
+                    {
+                        topic: "Теория чисел",
+                        sample: "Пример: Выбор 2 объектов из $N$: $C_N^2 = \\frac{N(N-1)}{2}$.",
+                        question: "В урне 5 белых и 4 черных шара. Извлекают 2 шара. Найдите вероятность того, что оба белые.",
+                        options: ["5/18", "2/9", "4/9", "1/3"], correct: 0,
+                        explanation: "$P = \\frac{C_5^2}{C_9^2} = \\frac{10}{36} = \\frac{5}{18}$."
+                    },
+                    {
+                        topic: "Движение и работа",
+                        sample: "Пример: $n$-й член $a_n = n^2$. Чтобы найти номер $n$ для 16, решаем $n^2 = 16 \\implies n = 4$.",
+                        question: "Формула $n$-го члена: $a_n = n^2 - 3n + 2$. Найдите номер $n$ члена, равного 20.",
+                        options: ["4", "5", "6", "7"], correct: 2,
+                        explanation: "$n^2 - 3n + 2 = 20 \\implies n^2 - 3n - 18 = 0 \\implies n = 6$."
+                    },
+                    {
+                        topic: "Движение и работа",
+                        sample: "Пример: При увеличении нормы времени время сокращается: $v_1 \\cdot t_1 = v_2 \\cdot (t_1 - d)$.",
+                        question: "Делая по 25 деталей вместо 20 в день, бригада закончила на 2 дня раньше. Сколько всего деталей сделали?",
+                        options: ["160 деталей", "180 деталей", "200 деталей", "250 деталей"], correct: 2,
+                        explanation: "$20t = 25(t - 2) \\implies 5t = 50 \\implies t = 10$ дней. Всего $20 \\cdot 10 = 200$ деталей."
+                    },
+                    {
+                        topic: "Геометрия и наглядность",
+                        sample: "Пример: Высота $h = \\frac{2S}{a}$, где площадь $S$ можно найти по формуле Герона.",
+                        question: "Стороны треугольника равны 7, 8, 9. Найдите высоту, опущенную на большую сторону.",
+                        options: ["$\\frac{8\\sqrt{5}}{3}$", "$\\frac{4\\sqrt{5}}{3}$", "$3\\sqrt{5}$", "$\\frac{6\\sqrt{5}}{5}$"], correct: 0,
+                        explanation: "Герон: $S = 12\\sqrt{5}$. $h = \\frac{2 \\cdot 12\\sqrt{5}}{9} = \\frac{8\\sqrt{5}}{3}$."
+                    },
+                    {
+                        topic: "Проценты и растворы",
+                        sample: "Пример: Разбавление водой не меняет массу чистого растворенного вещества.",
+                        question: "Сколько воды нужно добавить к 40 л 30%-го раствора, чтобы получить 20%-й раствор?",
+                        options: ["10 литров", "15 литров", "20 литров", "25 литров"], correct: 2,
+                        explanation: "Спирт: $40 \\cdot 0{,}3 = 12$ л. Новый объем: $12 / 0{,}2 = 60$ л. Добавили $60 - 40 = 20$ л."
+                    },
+                    {
+                        topic: "Уравнения и логика",
+                        sample: "Пример: По правилу цепочки $\\log_a b \\cdot \\log_b c = \\log_a c$.",
+                        question: "Найдите значение выражения: $\\log_2 3 \\cdot \\log_3 4 \\cdot \\log_4 5 \\cdot \\log_5 8$",
+                        options: ["2", "3", "4", "5"], correct: 1,
+                        explanation: "Сворачивается до $\\log_2 8 = 3$."
+                    }
+                ]
+            },
+            profile_math: {
+                easy: [
+                    {
+                        topic: "Показательные и логарифмы",
+                        sample: "Пример: $3^x = 9 \\implies 3^x = 3^2 \\implies x = 2$.",
+                        question: "Решите показательное уравнение: $2^x = 32$",
+                        options: ["3", "4", "5", "6"], correct: 2,
+                        explanation: "$2^5 = 32 \\implies x = 5$."
+                    },
+                    {
+                        topic: "Показательные и логарифмы",
+                        sample: "Пример: $\\log_2 8 = 3$, так как $2^3 = 8$.",
+                        question: "Вычислите логарифм: $\\log_3 81$",
+                        options: ["2", "3", "4", "9"], correct: 2,
+                        explanation: "$3^4 = 81 \\implies \\log_3 81 = 4$."
+                    },
+                    {
+                        topic: "Производная и интеграл",
+                        sample: "Пример: $(x^3 - 2x)' = 3x^2 - 2$.",
+                        question: "Найдите производную функции: $f(x) = x^4 - 3x^2 + 5$",
+                        options: ["$4x^3 - 6x$", "$4x^3 - 3x + 5$", "$4x^3 - 6x + 5$", "$x^3 - 6x$"], correct: 0,
+                        explanation: "$(x^4)' = 4x^3$, $(-3x^2)' = -6x$, $(5)' = 0$."
+                    },
+                    {
+                        topic: "Производная и интеграл",
+                        sample: "Пример: $\\int 2x dx = x^2 + C$.",
+                        question: "Найдите первообразную функции: $f(x) = 3x^2$",
+                        options: ["$x^3 + C$", "$3x^3 + C$", "$6x + C$", "$\\frac{x^3}{3} + C$"], correct: 0,
+                        explanation: "$\\int 3x^2 dx = x^3 + C$."
+                    },
+                    {
+                        topic: "Тригонометрия",
+                        sample: "Пример: $\\cos(60^\\circ) = 1/2$.",
+                        question: "Найдите значение: $\\sin\\left(\\frac{\\pi}{6}\\right)$",
+                        options: ["$1/2$", "$\\sqrt{3}/2$", "$\\sqrt{2}/2$", "$1$"], correct: 0,
+                        explanation: "$\\sin(30^\\circ) = 1/2$."
+                    },
+                    {
+                        topic: "Тригонометрия",
+                        sample: "Пример: $\\sin^2 x + \\cos^2 x = 1$ для любого угла $x$.",
+                        question: "Упростите выражение: $\\sin^2\\alpha + \\cos^2\\alpha$",
+                        options: ["0", "1", "2", "-1"], correct: 1,
+                        explanation: "Основное тригонометрическое тождество равно 1."
+                    },
+                    {
+                        topic: "Геометрия и стереометрия",
+                        sample: "Пример: Катеты 6 и 8. Гипотенуза $c = \\sqrt{6^2 + 8^2} = 10$.",
+                        question: "Катеты прямоугольного треугольника равны 3 см и 4 см. Найдите гипотенузу.",
+                        options: ["5 см", "6 см", "7 см", "$\\sqrt{7}$ см"], correct: 0,
+                        explanation: "$c = \\sqrt{3^2 + 4^2} = 5$ см."
+                    },
+                    {
+                        topic: "Геометрия и стереометрия",
+                        sample: "Пример: $a_n = a_1 + (n-1)d$. При $a_1 = 2, d = 3 \\implies a_3 = 8$.",
+                        question: "Первый член ар. прогрессии равен 3, разность равна 2. Найдите 4-й член.",
+                        options: ["7", "9", "11", "13"], correct: 1,
+                        explanation: "$a_4 = 3 + 3 \\cdot 2 = 9$."
+                    },
+                    {
+                        topic: "Вероятность и комбинаторика",
+                        sample: "Пример: $\\log_2 x = 4 \\implies x = 2^4 = 16$.",
+                        question: "Решите уравнение: $\\log_2(x - 1) = 3$",
+                        options: ["7", "8", "9", "10"], correct: 2,
+                        explanation: "$x - 1 = 2^3 = 8 \\implies x = 9$."
+                    },
+                    {
+                        topic: "Вероятность и комбинаторика",
+                        sample: "Пример: Из 10 деталей 3 бракованные. Вероятность выбрать бракованную: $3/10$.",
+                        question: "В коробке 2 белых и 3 черных шара. Найдите вероятность вытащить белый шар.",
+                        options: ["2/5", "3/5", "1/2", "2/3"], correct: 0,
+                        explanation: "$P = 2 / (2 + 3) = 2/5$."
+                    }
+                ],
+                medium: [
+                    {
+                        topic: "Тригонометрия",
+                        sample: "Пример: $\\cos x = 0 \\implies x = \\frac{\\pi}{2} + \\pi n$.",
+                        question: "Решите тригонометрическое уравнение: $\\sin x = 0$",
+                        options: ["$x = \\pi n, n \\in \\mathbb{Z}$", "$x = \\frac{\\pi}{2} + \\pi n$", "$x = 2\\pi n$", "$x = \\frac{\\pi}{4} + \\pi n$"], correct: 0,
+                        explanation: "Синус равен нулю в точках $x = \\pi n$."
+                    },
+                    {
+                        topic: "Тригонометрия",
+                        sample: "Пример: Площадь параллелограмма $S = a \\cdot b \\cdot \\sin\\alpha$.",
+                        question: "Стороны параллелограмма 6 см и 8 см, угол $30^\\circ$. Найдите площадь.",
+                        options: ["24 см²", "12 см²", "48 см²", "20 см²"], correct: 0,
+                        explanation: "$S = 6 \\cdot 8 \\cdot \\sin(30^\\circ) = 48 \\cdot 0{,}5 = 24$ см²."
+                    },
+                    {
+                        topic: "Показательные и логарифмы",
+                        sample: "Пример: Выносите общий множитель: $2^{x+1} + 2^x = 2^x(2 + 1) = 3 \\cdot 2^x$.",
+                        question: "Решите показательное уравнение: $3^{x+1} + 3^x = 108$",
+                        options: ["2", "3", "4", "5"], correct: 1,
+                        explanation: "$3^x(3 + 1) = 108 \\implies 3^x = 27 \\implies x = 3$."
+                    },
+                    {
+                        topic: "Показательные и логарифмы",
+                        sample: "Пример: $\\lg a + \\lg b = \\lg(a \\cdot b)$. Учитывайте ОДЗ ($a > 0, b > 0$).",
+                        question: "Решите уравнение: $\\lg(x-2) + \\lg(x+1) = 1$",
+                        options: ["3", "4", "5", "6"], correct: 1,
+                        explanation: "$(x-2)(x+1) = 10 \\implies x^2 - x - 12 = 0 \\implies x = 4$ (корень $-3$ вне ОДЗ)."
+                    },
+                    {
+                        topic: "Производная и интеграл",
+                        sample: "Пример: Находим $f'(x) = 0$ и определяем нули производной.",
+                        question: "Найдите критические точки функции: $f(x) = x^3 - 3x^2$",
+                        options: ["$x = 0; x = 2$", "$x = 0; x = 3$", "$x = 1; x = 3$", "$x = -1; x = 1$"], correct: 0,
+                        explanation: "$f'(x) = 3x^2 - 6x = 0 \\implies 3x(x - 2) = 0 \\implies x = 0, x = 2$."
+                    },
+                    {
+                        topic: "Геометрия и стереометрия",
+                        sample: "Пример: Длина окружности $C = 2\\pi r$. При $r = 3 \\implies C = 6\\pi$.",
+                        question: "Найдите длину окружности радиуса 5 см (приняв $\\pi \\approx 3{,}14$).",
+                        options: ["31,4 см", "15,7 см", "62,8 см", "25 см"], correct: 0,
+                        explanation: "$C = 2\\pi r = 2 \\cdot 3{,}14 \\cdot 5 = 31{,}4$ см."
+                    },
+                    {
+                        topic: "Геометрия и стереометрия",
+                        sample: "Пример: В пирамиде апофема $l = \\sqrt{h^2 + r^2}$.",
+                        question: "В правильной четырехугольной пирамиде сторона основания 6, высота 4. Найдите апофему.",
+                        options: ["3", "4", "5", "6"], correct: 2,
+                        explanation: "$r = 6 / 2 = 3$. Апофема $l = \\sqrt{4^2 + 3^2} = 5$."
+                    },
+                    {
+                        topic: "Показательные и логарифмы",
+                        sample: "Пример: Складывайте и вычитайте показатели степени основания.",
+                        question: "Вычислите: $\\log_2 16 + \\log_3 27 - \\log_5 25$",
+                        options: ["2", "3", "4", "5"], correct: 3,
+                        explanation: "$4 + 3 - 2 = 5$."
+                    },
+                    {
+                        topic: "Геометрия и стереометрия",
+                        sample: "Пример: $\\vec{a}(x_1, y_1) \\cdot \\vec{b}(x_2, y_2) = x_1 x_2 + y_1 y_2$.",
+                        question: "Найдите скалярное произведение векторов $\\vec{a}(1; 2)$ и $\\vec{b}(3; 4)$.",
+                        options: ["10", "11", "12", "5"], correct: 1,
+                        explanation: "$1 \\cdot 3 + 2 \\cdot 4 = 3 + 8 = 11$."
+                    },
+                    {
+                        topic: "Вероятность и комбинаторика",
+                        sample: "Пример: Вероятность независимых событий: $P = P_1 \\cdot P_2$.",
+                        question: "При двух бросках игрального кубика найдите вероятность выпадения двух шестерок.",
+                        options: ["1/36", "1/6", "1/12", "1/18"], correct: 0,
+                        explanation: "$P = \\frac{1}{6} \\cdot \\frac{1}{6} = \\frac{1}{36}$."
+                    }
+                ],
+                hard: [
+                    {
+                        topic: "Производная и интеграл",
+                        sample: "Пример: $\\int_0^1 x dx = [\\frac{x^2}{2}]_0^1 = 0{,}5$.",
+                        question: "Вычислите определенный интеграл: $\\int_0^2 (3x^2 - 2x + 1) dx$",
+                        options: ["4", "6", "8", "10"], correct: 1,
+                        explanation: "$[x^3 - x^2 + x]_0^2 = (8 - 4 + 2) - 0 = 6$."
+                    },
+                    {
+                        topic: "Показательные и логарифмы",
+                        sample: "Пример: Из $\\log_y x = 2 \\implies x = y^2$. Подставьте во второе уравнение.",
+                        question: "Решите систему: $\\begin{cases} \\log_y x = 2 \\\\ x + y = 12 \\end{cases}$",
+                        options: ["(9; 3)", "(8; 4)", "(4; 2)", "(10; 2)"], correct: 0,
+                        explanation: "$y^2 + y - 12 = 0 \\implies y = 3 \\implies x = 9$."
+                    },
+                    {
+                        topic: "Тригонометрия",
+                        sample: "Пример: $a\\sin x + b\\cos x$ принимает значения от $-\\sqrt{a^2+b^2}$ до $\\sqrt{a^2+b^2}$.",
+                        question: "Найдите область значений функции: $f(x) = 3\\sin x - 4\\cos x + 5$",
+                        options: ["[-1; 11]", "[0; 10]", "[2; 8]", "[-5; 5]"], correct: 1,
+                        explanation: "Амплитуда $\\sqrt{3^2 + (-4)^2} = 5$. Диапазон: $[-5 + 5; 5 + 5] = [0; 10]$."
+                    },
+                    {
+                        topic: "Геометрия и стереометрия",
+                        sample: "Пример: Объем шара $V = \\frac{4}{3}\\pi R^3$. При $R=1 \\implies V = \\frac{4}{3}\\pi$.",
+                        question: "Радиус шара равен 3. Найдите объем шара.",
+                        options: ["$36\\pi$", "$24\\pi$", "$18\\pi$", "$12\\pi$"], correct: 0,
+                        explanation: "$V = \\frac{4}{3}\\pi \\cdot 3^3 = 36\\pi$."
+                    },
+                    {
+                        topic: "Производная и интеграл",
+                        sample: "Пример: Сравниваем значения функции в критических точках и на концах отрезка.",
+                        question: "Найдите наименьшее значение $f(x) = x^3 - 3x$ на отрезке $[-2; 2]$.",
+                        options: ["-2", "-3", "-4", "0"], correct: 0,
+                        explanation: "$f'(x) = 3x^2 - 3 = 0 \\implies x = \\pm 1$. $f(1) = -2, f(-2) = -2$. Ответ: $-2$."
+                    },
+                    {
+                        topic: "Геометрия и стереометрия",
+                        sample: "Пример: Площадь сферы $S = 4\\pi R^2$. Диаметр $D = 2R$.",
+                        question: "Площадь поверхности сферы равна $36\\pi$. Найдите диаметр сферы.",
+                        options: ["3", "6", "9", "12"], correct: 1,
+                        explanation: "$4\\pi R^2 = 36\\pi \\implies R = 3 \\implies D = 6$."
+                    },
+                    {
+                        topic: "Показательные и логарифмы",
+                        sample: "Пример: $S_n = \\frac{b_1(q^n - 1)}{q - 1}$.",
+                        question: "В геом. прогрессии $b_1 = 2, q = 2$. Найдите сумму первых 6 членов.",
+                        options: ["62", "63", "64", "126"], correct: 3,
+                        explanation: "$S_6 = \\frac{2(2^6 - 1)}{2 - 1} = 2(63) = 126$."
+                    },
+                    {
+                        topic: "Показательные и логарифмы",
+                        sample: "Пример: $N(t) = N_0 \\cdot k^t$.",
+                        question: "Количество бактерий каждый час удваивается. Вначале было 100. Сколько станет через 4 часа?",
+                        options: ["800", "1600", "3200", "6400"], correct: 1,
+                        explanation: "$100 \\cdot 2^4 = 100 \\cdot 16 = 1600$."
+                    },
+                    {
+                        topic: "Геометрия и стереометрия",
+                        sample: "Пример: Диагональ параллелепипеда $d = \\sqrt{a^2 + b^2 + c^2}$.",
+                        question: "Измерения прямоугольного параллелепипеда равны 2, 3 и 6. Найдите его диагональ.",
+                        options: ["7", "8", "9", "10"], correct: 0,
+                        explanation: "$d = \\sqrt{2^2 + 3^2 + 6^2} = \\sqrt{49} = 7$."
+                    },
+                    {
+                        topic: "Вероятность и комбинаторика",
+                        sample: "Пример: Выбор $k$ человек из $n$ без учета порядка: $C_n^k = \\frac{n!}{k!(n-k)!}$.",
+                        question: "Сколькими способами можно выбрать 3 человек из 10?",
+                        options: ["120", "140", "160", "200"], correct: 0,
+                        explanation: "$C_{10}^3 = \\frac{10 \\cdot 9 \\cdot 8}{3 \\cdot 2 \\cdot 1} = 120$."
+                    }
+                ]
+            }
+        };
+
+        let currentMode = 'math_literacy';
+        let currentDifficulty = 'easy';
+        let currentSelectedTopic = 'ALL';
+        let activeQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function triggerMathTypeset() {
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function populateTopics() {
+            const topicSelect = document.getElementById('topic-select');
+            topicSelect.innerHTML = '<option value="ALL">✨ Все темы по порядку</option>';
+
+            const rawQuestions = database[currentMode][currentDifficulty] || [];
+            const topicsSet = new Set(rawQuestions.map(q => q.topic));
+
+            topicsSet.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.innerText = t;
+                topicSelect.appendChild(opt);
+            });
+
+            currentSelectedTopic = 'ALL';
+            topicSelect.value = 'ALL';
+        }
+
+        function filterQuestions() {
+            const rawQuestions = database[currentMode][currentDifficulty] || [];
+            if (currentSelectedTopic === 'ALL') {
+                activeQuestions = rawQuestions;
+            } else {
+                activeQuestions = rawQuestions.filter(q => q.topic === currentSelectedTopic);
+            }
+            currentQuestionIndex = 0;
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            score = 0;
+
+            const controls = document.getElementById('controls-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const formulasContainer = document.getElementById('formulas-container');
+
+            ['math_literacy', 'profile_math', 'formulas'].forEach(m => {
+                const btn = document.getElementById(`btn-${m}`);
+                if (m === mode) {
+                    btn.className = "px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-blue-600 text-white transition shadow-md";
+                } else {
+                    btn.className = "px-3 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition";
+                }
+            });
+
+            if (mode === 'formulas') {
+                controls.classList.add('hidden');
+                quizContainer.classList.add('hidden');
+                document.getElementById('completion-card').classList.add('hidden');
+                formulasContainer.classList.remove('hidden');
+            } else {
+                formulasContainer.classList.add('hidden');
+                controls.classList.remove('hidden');
+                quizContainer.classList.remove('hidden');
+                document.getElementById('completion-card').classList.add('hidden');
+                
+                populateTopics();
+                filterQuestions();
+                loadQuestion();
+            }
+            triggerMathTypeset();
+        }
+
+        function setDifficulty(diff) {
+            currentDifficulty = diff;
+            score = 0;
+
+            ['easy', 'medium', 'hard'].forEach(d => {
+                const btn = document.getElementById(`btn-diff-${d}`);
+                if (d === diff) {
+                    btn.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white transition shadow";
+                } else {
+                    btn.className = "px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 transition";
+                }
+            });
+
+            populateTopics();
+            filterQuestions();
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('completion-card').classList.add('hidden');
+            loadQuestion();
+        }
+
+        function onTopicChange() {
+            const select = document.getElementById('topic-select');
+            currentSelectedTopic = select.value;
+            score = 0;
+            filterQuestions();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            
+            if (!activeQuestions || activeQuestions.length === 0) {
+                document.getElementById('question-text').innerText = "В этой теме пока нет вопросов данного уровня сложности.";
+                document.getElementById('options-container').innerHTML = '';
+                document.getElementById('sample-text').innerText = "—";
+                return;
+            }
+
+            const data = activeQuestions[currentQuestionIndex];
+            
+            document.getElementById('question-counter').innerText = `Вопрос ${currentQuestionIndex + 1} / ${activeQuestions.length}`;
+            document.getElementById('topic-badge').innerText = data.topic;
+            document.getElementById('score-display').innerText = `Баллы: ${score}`;
+            
+            // Вывод образца и вопроса
+            document.getElementById('sample-text').innerHTML = data.sample;
+            document.getElementById('question-text').innerHTML = data.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            data.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/50 text-slate-200 transition font-medium text-sm md:text-base";
+                btn.innerHTML = option;
+                btn.onclick = () => selectOption(index);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+
+            triggerMathTypeset();
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const data = activeQuestions[currentQuestionIndex];
+            const optionsContainer = document.getElementById('options-container');
+            const buttons = optionsContainer.children;
+            
+            const feedbackEl = document.getElementById('feedback');
+            feedbackEl.classList.remove('hidden');
+
+            if (selectedIndex === data.correct) {
+                buttons[selectedIndex].className = "w-full text-left p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 font-medium text-sm md:text-base transition";
+                score += 10;
+                feedbackEl.className = "p-4 rounded-xl mb-6 text-sm bg-emerald-950/50 border border-emerald-800/50 text-emerald-300";
+                feedbackEl.innerHTML = `Правильно! 💡 Разбор: ${data.explanation}`;
+            } else {
+                buttons[selectedIndex].className = "w-full text-left p-4 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 font-medium text-sm md:text-base transition";
+                buttons[data.correct].className = "w-full text-left p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 font-medium text-sm md:text-base transition";
+                feedbackEl.className = "p-4 rounded-xl mb-6 text-sm bg-rose-950/50 border border-rose-800/50 text-rose-300";
+                feedbackEl.innerHTML = `Неверно. 💡 Правильный разбор: ${data.explanation}`;
+            }
+
+            document.getElementById('score-display').innerText = `Баллы: ${score}`;
+            document.getElementById('next-btn').classList.remove('hidden');
+
+            triggerMathTypeset();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < activeQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('completion-card').classList.remove('hidden');
+                const maxPossible = activeQuestions.length * 10;
+                document.getElementById('final-score').innerText = `Вы набрали: ${score} из ${maxPossible} баллов`;
+            }
+        }
+
+        function restartLevel() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('completion-card').classList.add('hidden');
+            loadQuestion();
+        }
+
+        // Старт тренажера
+        populateTopics();
+        filterQuestions();
+        loadQuestion();
+    </script>
+</body>
+</html>
 
