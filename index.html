@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalSkill - ЕНТ Банк (50 задач с разбором)</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #090d16;
+            --card-bg: #131c31;
+            --border: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container { width: 100%; max-width: 480px; }
+        header { text-align: center; margin-bottom: 24px; }
+        h1 { font-size: 24px; margin: 0 0 4px 0; color: var(--primary); }
+        .subtitle { font-size: 13px; color: var(--text-secondary); }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .btn {
+            display: block; width: 100%; padding: 14px;
+            background-color: var(--primary); color: white;
+            border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+            cursor: pointer; text-align: center; margin-bottom: 12px;
+            transition: background 0.2s; box-sizing: border-box;
+        }
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { background-color: rgba(255,255,255,0.05); }
+        .btn-success { background-color: var(--accent); }
+        .btn-danger { background-color: var(--danger); }
+        .btn-warning { background-color: var(--warning); color: #000; }
+
+        .option-btn {
+            display: block; width: 100%; padding: 12px 16px;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 12px; color: var(--text); font-size: 14px;
+            cursor: pointer; text-align: left; margin-bottom: 10px;
+            transition: all 0.2s; box-sizing: border-box;
+        }
+        .option-btn:hover { background: rgba(255,255,255,0.08); border-color: var(--primary); }
+        .option-btn.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--accent); color: #6ee7b7; font-weight: bold; }
+        .option-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: #fca5a5; }
+
+        .section-block {
+            background: rgba(0,0,0,0.2); border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px; margin-bottom: 12px;
+            font-size: 13px; line-height: 1.6;
+        }
+        .cheat-sheet {
+            background: rgba(16, 185, 129, 0.1); border: 1px dashed var(--accent);
+            border-radius: 12px; padding: 14px; margin-bottom: 16px; font-size: 13px; line-height: 1.6;
+        }
+        .cheat-sheet h3 { margin: 0 0 6px 0; font-size: 14px; color: var(--accent); }
+        .solved-box {
+            background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning);
+            padding: 14px; border-radius: 0 12px 12px 0; font-size: 13px; margin-bottom: 12px; line-height: 1.6;
+        }
+        
+        .task-condition { font-size: 15px; line-height: 1.5; margin-bottom: 16px; font-weight: 500; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: bold; margin-bottom: 12px; }
+        .badge-sim { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .notebook-item {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 8px; padding: 10px; margin-bottom: 8px; font-size: 13px; line-height: 1.4;
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>GlobalSkill ⚡</h1>
+        <div class="subtitle">ЕНТ Банк: 50 задач с разбором похожих примеров</div>
+    </header>
+
+    <!-- Главная страница -->
+    <div id="screen-home" class="card">
+        <h2 style="margin-top:0; font-size:18px;">Главное меню</h2>
+        <button class="btn btn-warning" onclick="startTopicTest('all')">🔥 Мега-тест (55 случайных задач со всех тем)</button>
+        <button class="btn" onclick="showScreen('screen-physics-topics')">📚 Выбрать тему (по 50 задач)</button>
+        <button class="btn btn-secondary" onclick="openNotebook()">📓 Цифровой блокнот</button>
+    </div>
+
+    <!-- Список разделов физики -->
+    <div id="screen-physics-topics" class="card hidden">
+        <h2 style="margin-top:0; font-size:18px;">Темы ЕНТ (по 50 задач)</h2>
+        <button class="btn btn-warning" onclick="startTopicTest('all')">🔥 Все темы сразу</button>
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 16px 0;">
+        <div style="max-height: 320px; overflow-y: auto;">
+            <button class="btn btn-secondary" onclick="startTopicTest('kinematics')">1. Кинематика и Вращение (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('dynamics')">2. Динамика (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('conservation')">3. Законы сохранения (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('statics')">4. Статика и Гидростатика (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('mkt')">5. МКТ и Термодинамика (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('electrostatics')">6. Электростатика (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('electro')">7. Электродинамика (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('magnetism')">8. Магнетизм (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('waves')">9. Колебания и волны (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('optics')">10. Оптика (50)</button>
+            <button class="btn btn-secondary" onclick="startTopicTest('quantum')">11. Квантовая и ядерная физика (50)</button>
+        </div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-home')" style="border-color: var(--primary); margin-top: 16px;">← На главную</button>
+    </div>
+
+    <!-- Экран теста -->
+    <div id="screen-test" class="card hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span id="test-badge" class="badge badge-sim">🎯 ЕНТ Тренажер</span>
+            <span id="test-counter" style="font-size: 13px; color: var(--text-secondary); font-weight: bold;">Задача 1 из 50</span>
+        </div>
+
+        <div class="task-condition" id="test-text"></div>
+
+        <!-- Кнопки с вариантами ответов -->
+        <div id="options-container"></div>
+
+        <!-- Пояснение с похожим примером -->
+        <div id="test-explanation-box" class="solved-box hidden" style="margin-top: 14px;">
+            <h3 style="margin: 0 0 6px 0; color: var(--warning);">💡 Как это решается (Похожий пример)</h3>
+            <div id="test-explanation-text"></div>
+        </div>
+
+        <button class="btn btn-success hidden" id="test-next-btn" onclick="nextTestTask()" style="margin-top: 14px;">Следующая задача →</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-home')" style="margin-top: 12px;">← На главную</button>
+    </div>
+
+    <!-- Экран цифрового блокнота -->
+    <div id="screen-notebook" class="card hidden">
+        <h2 style="margin-top:0; font-size:18px; color: var(--accent);">📓 Цифровой блокнот</h2>
+        <div class="subtitle" style="margin-bottom: 14px;">Сохраненные решенные задачи.</div>
+        
+        <div id="notebook-list" style="max-height: 300px; overflow-y: auto; margin-bottom: 14px;">
+            <div style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">Блокнот пуст. Решай задачи!</div>
+        </div>
+
+        <button class="btn btn-success" onclick="copyNotebook()">📋 Скопировать всё в буфер</button>
+        <button class="btn btn-secondary" onclick="clearNotebook()" style="border-color: var(--danger); color: var(--danger);">🗑 Очистить блокнот</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-home')" style="margin-top: 12px;">← На главную</button>
+    </div>
+</div>
+
+<script>
+let testList = [];
+let testIndex = 0;
+let answeredCurrent = false;
+let solvedNotebook = JSON.parse(localStorage.getItem('globalSkillNotebook') || '[]');
+
+const topicTitles = {
+    kinematics: "1. Кинематика и Вращение",
+    dynamics: "2. Динамика",
+    conservation: "3. Законы сохранения",
+    statics: "4. Статика и Гидростатика",
+    mkt: "5. МКТ и Термодинамика",
+    electrostatics: "6. Электростатика",
+    electro: "7. Электродинамика",
+    magnetism: "8. Магнетизм",
+    waves: "9. Колебания и волны",
+    optics: "10. Оптика",
+    quantum: "11. Квантовая и ядерная физика"
+};
+
+function generate50TasksForTopic(topicKey) {
+    let tasks = [];
+    for (let i = 0; i < 50; i++) {
+        let t, ans, hint;
+        let title = topicTitles[topicKey];
+
+        if (topicKey === 'kinematics') {
+            let v0 = 10 + Math.floor(Math.random() * 25);
+            let S = 20 + Math.floor(Math.random() * 60);
+            ans = parseFloat(((v0 * v0) / (2 * S)).toFixed(2));
+            t = `Автомобиль тормозит со скорости ${v0} м/с до полной остановки на пути ${S} м. Модуль ускорения (в м/с²)?`;
+            hint = `<b>Как решать:</b> Используй формулу связи скорости и пути без времени: $v^2 - v_0^2 = -2aS$.<br>` +
+                   `<i>Пример похожего:</i> Если авто тормозит с 10 м/с на пути 25 м, то $a = \\frac{10^2}{2 \\cdot 25} = 2$ м/с².<br>` +
+                   `<b>Твой расчет:</b> $a = \\frac{${v0}^2}{2 \\cdot ${S}} = ${ans}$ м/с².`;
+        } else if (topicKey === 'dynamics') {
+            let m = 2 + Math.floor(Math.random() * 6);
+            let F = 15 + Math.floor(Math.random() * 25);
+            let fTr = parseFloat((0.3 * m * 10).toFixed(1));
+            ans = parseFloat(((F - fTr) / m).toFixed(2));
+            t = `Тело массой ${m} кг тянут с силой ${F} Н, коэффициент трения 0.3 (g = 10). Ускорение (в м/с²)?`;
+            hint = `<b>Как решать:</b> Второй закон Ньютона: $F - F_{тр} = ma$, где $F_{тр} = \\mu mg$.<br>` +
+                   `<i>Пример похожего:</i> Для массы 2 кг и силы 10 Н ($F_{тр} = 6$ Н): $a = \\frac{10 - 6}{2} = 2$ м/с².<br>` +
+                   `<b>Твой расчет:</b> $F_{тр} = ${fTr}$ Н $\\rightarrow$ $a = \\frac{${F} - ${fTr}}{${m}} = ${ans}$ м/с².`;
+        } else if (topicKey === 'conservation') {
+            let h = 15 + Math.floor(Math.random() * 30);
+            let h1 = 3 + Math.floor(Math.random() * 10);
+            let m = 2;
+            ans = m * 10 * (h - h1);
+            t = `Тело массой ${m} кг падает с высоты ${h} м (g = 10). Кинетическая энергия на высоте ${h1} м (в Дж)?`;
+            hint = `<b>Как решать:</b> Потеря потенциальной энергии переходит в кинетическую: $E_к = mg(h_{нач} - h_{конеч})$.<br>` +
+                   `<i>Пример похожего:</i> Падение с 15 до 5 м при массе 1 кг: $E_к = 100$ Дж.<br>` +
+                   `<b>Твой расчет:</b> $E_к = ${m} \\cdot 10 \\cdot (${h} - ${h1}) = ${ans}$ Дж.`;
+        } else if (topicKey === 'statics') {
+            let m1 = 4 + Math.floor(Math.random() * 10);
+            ans = parseFloat(((m1 * 20) / 60).toFixed(1));
+            t = `На рычаге с плечами 20 см и 60 см масса первого груза ${m1} кг. Масса второго груза для равновесия (в кг)?`;
+            hint = `<b>Как решать:</b> Правило моментов: $m_1 d_1 = m_2 d_2$.<br>` +
+                   `<i>Пример похожего:</i> При плечах 10 и 30 см и массе 3 кг: $m_2 = 1$ кг.<br>` +
+                   `<b>Твой расчет:</b> $m_2 = \\frac{${m1} \\cdot 20}{60} = ${ans}$ кг.`;
+        } else if (topicKey === 'mkt') {
+            let nu = 1 + Math.floor(Math.random() * 4);
+            let dT = 30 + Math.floor(Math.random() * 40);
+            ans = parseFloat((nu * 8.31 * dT).toFixed(1));
+            t = `При изобарном нагревании ${nu} моль газа на ${dT} К работа газа (R=8.31, в Дж)?`;
+            hint = `<b>Как решать:</b> Работа газа: $A = \\nu R \\Delta T$.<br>` +
+                   `<i>Пример похожего:</i> Для 1 моль при 100 К: $A = 831$ Дж.<br>` +
+                   `<b>Твой расчет:</b> $A = ${nu} \\cdot 8.31 \\cdot ${dT} = ${ans}$ Дж.`;
+        } else if (topicKey === 'electrostatics') {
+            let cVal = 2 + 2 * Math.floor(Math.random() * 5);
+            ans = cVal / 2;
+            t = `Два конденсатора по ${cVal} мкФ соединены последовательно. Общая емкость (в мкФ)?`;
+            hint = `<b>Как решать:</b> При последовательном соединении одинаковых емкость делится пополам.<br>` +
+                   `<i>Пример похожего:</i> Два по 10 мкФ дают 5 мкФ.<br>` +
+                   `<b>Твой расчет:</b> $C = \\frac{${cVal}}{2} = ${ans}$ мкФ.`;
+        } else if (topicKey === 'electro') {
+            let rRes = 2 + 2 * Math.floor(Math.random() * 3);
+            let rExt = rRes / 2;
+            ans = parseFloat((15 / (rExt + 1)).toFixed(2));
+            t = `Батарея ЭДС 15 В, r = 1 Ом питает два параллельных резистора по ${rRes} Ом. Ток (в А)?`;
+            hint = `<b>Как решать:</b> Внешнее сопротивление парал. резисторов плюс закон Ома $I = \\frac{E}{R+r}$.<br>` +
+                   `<i>Пример похожего:</i> При сопротивлении 1 Ом и ЭДС 12 В с $r=2$ Ом: $I = 4$ А.<br>` +
+                   `<b>Твой расчет:</b> $I = \\frac{15}{${rExt} + 1} = ${ans}$ А.`;
+        } else if (topicKey === 'magnetism') {
+            let L = 0.2 + 0.1 * Math.floor(Math.random() * 3);
+            let v = 10 + 5 * Math.floor(Math.random() * 3);
+            ans = parseFloat((0.5 * L * v).toFixed(1));
+            t = `Проводник ${L.toFixed(1)} м движется в поле 0.5 Тл со скоростью ${v} м/с перпендикулярно линиям (в В)?`;
+            hint = `<b>Как решать:</b> ЭДС индукции: $E = B L v$.<br>` +
+                   `<i>Пример похожего:</i> Для $B=1$ Тл, $L=0.1$ м, $v=20$ м/с: $E = 2$ В.<br>` +
+                   `<b>Твой расчет:</b> $E = 0.5 \\cdot ${L.toFixed(1)} \\cdot ${v} = ${ans}$ В.`;
+        } else if (topicKey === 'waves') {
+            let L = 1.0 + 0.5 * Math.floor(Math.random() * 6);
+            ans = parseFloat((2 * 3.14 * Math.sqrt(L / 10)).toFixed(2));
+            t = `Период нитяного маятника длиной ${L} м (g=10, pi=3.14, в с)?`;
+            hint = `<b>Как решать:</b> Формула Томсона: $T = 2\\pi \\sqrt{L/g}$.<br>` +
+                   `<i>Пример похожего:</i> Для длины 1 м: $T \\approx 1.99$ с.<br>` +
+                   `<b>Твой расчет:</b> $T = ${ans}$ с.`;
+        } else if (topicKey === 'optics') {
+            let h1 = 2 + Math.floor(Math.random() * 4);
+            let mult = 2 + Math.floor(Math.random() * 3);
+            let h2 = h1 * mult;
+            ans = mult;
+            t = `Предмет высотой ${h1} см дает изображение ${h2} см. Линейное увеличение линзы Г?`;
+            hint = `<b>Как решать:</b> $G = H_{изобр} / H_{предм}$.<br>` +
+                   `<i>Пример похожего:</i> Если предмет 2 см, а изображение 6 см, то $G = 3$.<br>` +
+                   `<b>Твой расчет:</b> $G = ${h2} / ${h1} = ${ans}$.`;
+        } else {
+            let days = 3 + Math.floor(Math.random() * 4);
+            ans = days * 3;
+            t = `Период полураспада ${days} суток. Через сколько суток останется 1/8 часть ядер?`;
+            hint = `<b>Как решать:</b> Остаток 1/8 — это 3 периода ($2^3 = 8$).<br>` +
+                   `<i>Пример похожего:</i> При периоде 2 суток для остатка 1/4: $t = 4$ суток.<br>` +
+                   `<b>Твой расчет:</b> $t = 3 \\cdot ${days} = ${ans}$ суток.`;
+        }
+
+        tasks.push({ topic: title, text: t, ans: ans, hint: hint });
+    }
+    return tasks;
+}
+
+function startTopicTest(topicKey) {
+    if (topicKey === 'all') {
+        testList = [];
+        Object.keys(topicTitles).forEach(key => {
+            let t5 = generate50TasksForTopic(key).slice(0, 5); // по 5 с каждой темы, чтобы тест был сбалансированным
+            testList = testList.concat(t5);
+        });
+        testList.sort(() => Math.random() - 0.5);
+    } else {
+        testList = generate50TasksForTopic(topicKey);
+    }
+    testIndex = 0;
+    showScreen('screen-test');
+    loadTestTask();
+}
+
+function loadTestTask() {
+    answeredCurrent = false;
+    const task = testList[testIndex];
+    document.getElementById('test-counter').innerText = `Задача ${testIndex + 1} из ${testList.length} [${task.topic}]`;
+    document.getElementById('test-text').innerText = task.text;
+    document.getElementById('test-explanation-box').classList.add('hidden');
+    document.getElementById('test-next-btn').classList.add('hidden');
+
+    const correct = task.ans;
+    let options = [correct];
+    
+    while(options.length < 4) {
+        let fake;
+        if(Number.isInteger(correct)) {
+            fake = correct + Math.floor(Math.random() * 5) - 2;
+        } else {
+            fake = parseFloat((correct + (Math.random() * 4 - 2)).toFixed(2));
+        }
+        if(fake !== correct && !options.includes(fake) && fake >= 0) {
+            options.push(fake);
+        }
+    }
+    options.sort(() => Math.random() - 0.5);
+
+    const optContainer = document.getElementById('options-container');
+    optContainer.innerHTML = '';
+
+    options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerText = opt;
+        btn.onclick = () => selectOption(btn, opt, correct, task);
+        optContainer.appendChild(btn);
+    });
+}
+
+function selectOption(btn, chosen, correct, task) {
+    if (answeredCurrent) return;
+    answeredCurrent = true;
+
+    const allBtns = document.querySelectorAll('.option-btn');
+    allBtns.forEach(b => {
+        b.style.pointerEvents = 'none';
+        if (parseFloat(b.innerText) === correct) {
+            b.classList.add('correct');
+        }
+    });
+
+    if (Math.abs(chosen - correct) < 0.001) {
+        const exists = solvedNotebook.some(t => t.text === task.text);
+        if (!exists) {
+            solvedNotebook.push({ topic: task.topic, text: task.text, ans: correct });
+            localStorage.setItem('globalSkillNotebook', JSON.stringify(solvedNotebook));
+        }
+    } else {
+        btn.classList.add('wrong');
+    }
+
+    document.getElementById('test-explanation-text').innerHTML = task.hint;
+    document.getElementById('test-explanation-box').classList.remove('hidden');
+    document.getElementById('test-next-btn').classList.remove('hidden');
+}
+
+function nextTestTask() {
+    testIndex++;
+    if (testIndex < testList.length) {
+        loadTestTask();
+    } else {
+        alert("🏆 Отличная работа! Все решенные задачи автоматически сохранены в блокнот.");
+        openNotebook();
+    }
+}
+
+function openNotebook() {
+    const listEl = document.getElementById('notebook-list');
+    if (solvedNotebook.length === 0) {
+        listEl.innerHTML = `<div style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">Блокнот пуст. Решай задачи!</div>`;
+    } else {
+        listEl.innerHTML = solvedNotebook.map((item, index) => `
+            <div class="notebook-item">
+                <b>#${index + 1} [${item.topic}]</b><br>
+                ${item.text}<br>
+                <span style="color: var(--accent);">Ответ: ${item.ans}</span>
+            </div>
+        `).join('');
+    }
+    showScreen('screen-notebook');
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+}
+
+function copyNotebook() {
+    if (solvedNotebook.length === 0) { alert("Блокнот пустой!"); return; }
+    const textToCopy = solvedNotebook.map((item, index) => `#${index + 1} [${item.topic}]\nУсловие: ${item.text}\nОтвет: ${item.ans}\n`).join('\n');
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        alert("📋 Скопировано в буфер обмена!");
+    });
+}
+
+function clearNotebook() {
+    if(confirm("Очистить блокнот?")) {
+        solvedNotebook = [];
+        localStorage.removeItem('globalSkillNotebook');
+        openNotebook();
+    }
+}
+</script>
+</body>
+</html>
