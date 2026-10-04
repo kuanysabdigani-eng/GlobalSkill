@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalSkill - Платформа подготовки к ЕНТ</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #090d16;
+            --card-bg: #131c31;
+            --border: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container { width: 100%; max-width: 480px; }
+        header { text-align: center; margin-bottom: 24px; }
+        h1 { font-size: 24px; margin: 0 0 4px 0; color: var(--primary); }
+        .subtitle { font-size: 13px; color: var(--text-secondary); }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .btn {
+            display: block; width: 100%; padding: 14px;
+            background-color: var(--primary); color: white;
+            border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+            cursor: pointer; text-align: center; margin-bottom: 12px;
+            transition: background 0.2s; box-sizing: border-box;
+        }
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { background-color: rgba(255,255,255,0.05); }
+        .btn-success { background-color: var(--accent); }
+        .btn-danger { background-color: var(--danger); }
+        .btn-warning { background-color: var(--warning); color: #000; }
+
+        .section-block {
+            background: rgba(0,0,0,0.2); border: 1px solid var(--border);
+            border-radius: 12px; padding: 14px; margin-bottom: 12px;
+            font-size: 13px; line-height: 1.6;
+        }
+        .section-block h3 { margin: 0 0 8px 0; font-size: 14px; color: var(--primary); text-transform: uppercase; }
+        .cheat-sheet {
+            background: rgba(16, 185, 129, 0.1); border: 1px dashed var(--accent);
+            border-radius: 12px; padding: 14px; margin-bottom: 16px; font-size: 13px; line-height: 1.6;
+        }
+        .cheat-sheet h3 { margin: 0 0 6px 0; font-size: 14px; color: var(--accent); }
+        .solved-box {
+            background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--warning);
+            padding: 12px; border-radius: 0 12px 12px 0; font-size: 13px; margin-bottom: 12px; line-height: 1.5;
+        }
+        .solved-box h3 { margin: 0 0 4px 0; font-size: 13px; color: var(--warning); }
+        input[type="number"] {
+            width: 100%; padding: 14px; background-color: var(--bg);
+            border: 1px solid var(--border); border-radius: 12px;
+            color: var(--text); font-size: 16px; margin-bottom: 12px; box-sizing: border-box;
+        }
+        input:focus { outline: none; border-color: var(--primary); }
+        
+        /* Черновик */
+        .scratchpad-container {
+            margin-bottom: 14px;
+        }
+        .scratchpad-container textarea {
+            width: 100%; height: 80px; background: rgba(0,0,0,0.3);
+            border: 1px dashed var(--border); border-radius: 8px;
+            color: var(--text); padding: 10px; font-size: 13px; resize: none; box-sizing: border-box;
+        }
+        .scratchpad-container textarea:focus { outline: none; border-color: var(--warning); }
+
+        .task-condition { font-size: 15px; line-height: 1.5; margin-bottom: 16px; }
+        .feedback { padding: 12px; border-radius: 8px; font-size: 14px; margin-bottom: 12px; line-height: 1.4; }
+        .feedback.error { background-color: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; }
+        .feedback.success { background-color: rgba(16, 185, 129, 0.15); border: 1px solid var(--accent); color: #6ee7b7; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: bold; margin-bottom: 12px; }
+        .badge-main { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-sim { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .notebook-item {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 8px; padding: 10px; margin-bottom: 8px; font-size: 13px; line-height: 1.4;
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>GlobalSkill ⚡</h1>
+        <div class="subtitle">ЕНТ Платформа: 75 задач + Черновик + Разбор Пробников</div>
+    </header>
+
+    <!-- Главная страница -->
+    <div id="screen-home" class="card">
+        <h2 style="margin-top:0; font-size:18px;">Главное меню</h2>
+        <button class="btn" onclick="showScreen('screen-physics-topics')">Физика (Тренажер и Экзамен)</button>
+        <button class="btn btn-warning" onclick="openNotebook()">📓 Цифровой блокнот (Решенные)</button>
+        <button class="btn btn-secondary" onclick="openProbniki()">🌐 Разбор актуальных пробников</button>
+    </div>
+
+    <!-- Список разделов физики -->
+    <div id="screen-physics-topics" class="card hidden">
+        <h2 style="margin-top:0; font-size:18px;">Физика: Темы и Мега-Экзамен</h2>
+        <button class="btn btn-warning" onclick="startFullSimulation()">🔥 Мега-экзамен ЕНТ (75 задач)</button>
+        <button class="btn btn-secondary" onclick="openProbniki()" style="border-color: var(--warning); color: var(--warning);">🌐 База разбора пробников</button>
+        <button class="btn btn-secondary" onclick="openNotebook()" style="border-color: var(--accent); color: var(--accent);">📓 Цифровой блокнот</button>
+        <hr style="border: 0; border-top: 1px solid var(--border); margin: 16px 0;">
+        <h3 style="font-size:14px; color: var(--text-secondary); margin-bottom: 12px;">Отработка тем по отдельности:</h3>
+        <button class="btn btn-secondary" onclick="openTopic('kinematics')">1. Кинематика и Вращение</button>
+        <button class="btn btn-secondary" onclick="openTopic('dynamics')">2. Динамика</button>
+        <button class="btn btn-secondary" onclick="openTopic('conservation')">3. Законы сохранения</button>
+        <button class="btn btn-secondary" onclick="openTopic('statics')">4. Статика и Гидростатика</button>
+        <button class="btn btn-secondary" onclick="openTopic('mkt')">5. МКТ и Термодинамика</button>
+        <button class="btn btn-secondary" onclick="openTopic('electrostatics')">6. Электростатика</button>
+        <button class="btn btn-secondary" onclick="openTopic('electro')">7. Электродинамика</button>
+        <button class="btn btn-secondary" onclick="openTopic('magnetism')">8. Магнетизм</button>
+        <button class="btn btn-secondary" onclick="openTopic('waves')">9. Колебания и волны</button>
+        <button class="btn btn-secondary" onclick="openTopic('optics')">10. Оптика</button>
+        <button class="btn btn-secondary" onclick="openTopic('quantum')">11. Квантовая и ядерная физика</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-home')" style="border-color: var(--primary); margin-top: 16px;">← На главную</button>
+    </div>
+
+    <!-- Экран пробников и разборов -->
+    <div id="screen-probniki" class="card hidden">
+        <h2 style="margin-top:0; font-size:18px; color: var(--warning);">🌐 Разбор актуальных пробников ЕНТ</h2>
+        <div class="subtitle" style="margin-bottom: 14px;">Здесь собраны разборы сложных вариантов из сетевых баз с пошаговым алгоритмом.</div>
+        
+        <div class="section-block">
+            <h3>Вариант №1 (Сложный уровень — Баллистика и Динамика)</h3>
+            <p style="margin: 6px 0 10px 0; font-size: 13px; color: var(--text-secondary);">Разбор задач на соударение тел и законы Ньютона из свежих пробников.</p>
+            <button class="btn btn-secondary" style="padding: 10px; font-size: 13px;" onclick="alert('Загружаем разбор варианта №1: все шаги основаны на законах сохранения импульса и энергии.')">Открыть пошаговый разбор 🔍</button>
+        </div>
+
+        <div class="section-block">
+            <h3>Вариант №2 (Электродинамика и Оптика)</h3>
+            <p style="margin: 6px 0 10px 0; font-size: 13px; color: var(--text-secondary);">Полный разбор цепочек резисторов, ЭДС и дифракционных решеток.</p>
+            <button class="btn btn-secondary" style="padding: 10px; font-size: 13px;" onclick="alert('Загружаем разбор варианта №2: акцент на формулу тонкой линзы и правила Кирхгофа.')">Открыть пошаговый разбор 🔍</button>
+        </div>
+
+        <button class="btn btn-secondary" onclick="showScreen('screen-physics-topics')" style="margin-top: 12px;">← К списку тем</button>
+    </div>
+
+    <!-- Экран цифрового блокнота -->
+    <div id="screen-notebook" class="card hidden">
+        <h2 style="margin-top:0; font-size:18px; color: var(--accent);">📓 Цифровой блокнот</h2>
+        <div class="subtitle" style="margin-bottom: 14px;">Автоматически сохраненные решенные задачи.</div>
+        
+        <div id="notebook-list" style="max-height: 300px; overflow-y: auto; margin-bottom: 14px;">
+            <div style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">Блокнот пока пуст. Начни решать задачи!</div>
+        </div>
+
+        <button class="btn btn-success" onclick="copyNotebook()">📋 Скопировать всё в буфер обмена</button>
+        <button class="btn btn-secondary" onclick="clearNotebook()" style="border-color: var(--danger); color: var(--danger);">🗑 Очистить блокнот</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-physics-topics')" style="margin-top: 12px;">← К списку тем</button>
+    </div>
+
+    <!-- Теория по теме -->
+    <div id="screen-theory" class="card hidden">
+        <h2 id="th-title" style="margin-top:0; font-size:18px; margin-bottom: 16px;"></h2>
+        <div id="th-cheat" class="cheat-sheet hidden">
+            <h3>💡 ЕНТ Лайфхаки</h3>
+            <div id="th-cheat-text"></div>
+        </div>
+        <div class="section-block">
+            <h3>Основные формулы</h3>
+            <div id="th-formulas"></div>
+        </div>
+        <div class="solved-box">
+            <h3>🔍 Пример решения</h3>
+            <div id="th-solved"></div>
+        </div>
+        <button class="btn btn-success" onclick="startTrainer()" style="margin-top: 20px;">🎯 Запустить тренажер по теме (5 задач)</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-physics-topics')" style="margin-top: 12px;">← К списку разделов</button>
+    </div>
+
+    <!-- Тренажер задач -->
+    <div id="screen-trainer" class="card hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <span id="tr-badge" class="badge"></span>
+            <span id="tr-counter" style="font-size: 13px; color: var(--text-secondary); font-weight: bold;">Задача 1 из 75</span>
+        </div>
+
+        <!-- Встроенный похожий пример с решением -->
+        <div id="exam-example-container" class="solved-box hidden">
+            <h3 id="ex-title">🔍 Разбор похожего примера</h3>
+            <div id="ex-text"></div>
+        </div>
+
+        <div class="task-condition" id="tr-text"></div>
+
+        <!-- Цифровой черновик прямо под задачей -->
+        <div class="scratchpad-container">
+            <textarea id="scratchpad-input" placeholder="📝 Цифровой черновик: пиши расчеты и мысли здесь (не стирается при вводе ответа)..."></textarea>
+        </div>
+
+        <div id="feedback-container"></div>
+
+        <div id="answer-area">
+            <input type="number" id="user-answer" placeholder="Введи числовой ответ" step="any">
+            <button class="btn btn-success" onclick="checkAnswer()">Проверить</button>
+        </div>
+
+        <button class="btn" id="next-btn" onclick="nextTask()" style="display:none;">Следующая задача →</button>
+        <button id="back-to-topic-btn" class="btn btn-secondary" onclick="openTopic(currentKey)">← Назад к теории</button>
+    </div>
+
+    <!-- Экран завершения -->
+    <div id="screen-complete" class="card hidden">
+        <h2 style="margin-top:0; font-size:20px; color: var(--accent); text-align:center;">🏆 Тема пройдена!</h2>
+        <p style="text-align: center; color: var(--text-secondary); font-size: 14px;">База успешно закреплена и сохранена в блокнот.</p>
+        <button class="btn btn-warning" onclick="startFullSimulation()" style="margin-top: 20px;">Запустить мега-экзамен (75 задач) 🔥</button>
+        <button class="btn btn-secondary" onclick="openNotebook()">📓 Посмотреть блокнот решенных</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-physics-topics')">К списку разделов</button>
+    </div>
+</div>
+
+<script>
+let currentKey = '';
+let taskIndex = 0;
+let activeTasksList = [];
+let isSimulation = false;
+let solvedNotebook = JSON.parse(localStorage.getItem('globalSkillNotebook') || '[]');
+
+const dataBase = {
+    kinematics: {
+        title: "1. Кинематика и Вращение",
+        cheat: "• Перевод скорости: км/ч ÷ 3.6 = м/с.",
+        solved: "Для нахождения пути используем формулу S = (v + v0)*t / 2.",
+        formulas: "• v = v0 + at<br>• S = v0*t + (a*t^2)/2<br>• v^2 - v0^2 = 2*a*S",
+        tasks: [
+            { text: "Автомобиль массой 1000 кг тормозит со скорости 20 м/с до полной остановки на пути 40 м. Модуль ускорения (в м/с²)?", ans: 5 },
+            { text: "Тело брошено под углом 30° к горизонту со скоростью 20 м/с. Дальность полета (g=10, в метрах)?", ans: 34.6 },
+            { text: "Автомобиль проехал первую половину пути со скоростью 60 км/ч, а вторую — 90 км/ч. Средняя скорость (в км/ч)?", ans: 72 },
+            { text: "Тело разгоняется с ускорением 3 м/с² на пути 24 м из состояния покоя. Конечная скорость (в м/с)?", ans: 12 },
+            { text: "Центростремительное ускорение точки равно 18 м/с², радиус 2 м. Угловая скорость (в рад/с)?", ans: 3 }
+        ]
+    },
+    dynamics: {
+        title: "2. Динамика",
+        cheat: "• Сила трения равна F_тр = mu * N.",
+        solved: "Записываем второй закон Ньютона: F - F_тр = m*a.",
+        formulas: "• F = m*a<br>• F_тр = mu*N<br>• F_упр = k*x",
+        tasks: [
+            { text: "Тело массой 4 кг тянут по горизонтали с силой 25 Н, коэффициент трения 0.3 (g = 10). Ускорение тела (в м/с²)?", ans: 3.25 },
+            { text: "Тело массой 2 кг соскользгло по наклонной плоскости 30° без трения (g=10, sin30=0.5). Ускорение (в м/с²)?", ans: 5 },
+            { text: "Лифт опускается с ускорением 2 м/с². Масса груза 40 кг (g=10). Вес груза в лифте (в Н)?", ans: 320 },
+            { text: "Два тела 2 кг и 3 кг связаны нитью и тянутся по гладкому столу силой 15 Н. Ускорение системы (в м/с²)?", ans: 3 },
+            { text: "Брусок массой 5 кг равномерно тянут по полу с силой 15 Н. Коэффициент трения (g=10)?", ans: 0.3 }
+        ]
+    },
+    conservation: {
+        title: "3. Законы сохранения",
+        cheat: "• Полная механическая энергия сохраняется в замкнутой системе.",
+        solved: "Закон сохранения энергии: m*g*h = (m*v^2)/2.",
+        formulas: "• p = m*v<br>• E_к = (m*v^2)/2<br>• E_п = m*g*h",
+        tasks: [
+            { text: "Тело массой 1 кг падает с высоты 20 м (g = 10). Кинетическая энергия на высоте 5 м (в Дж)?", ans: 150 },
+            { text: "Шар 2 кг (3 м/с) сталкивается абсолютно неупруго с неподвижным шаром 2 кг. Скорость после удара (в м/с)?", ans: 1.5 },
+            { text: "Тело брошено вертикально вверх со скоростью 20 м/с. На какой высоте кинетическая энергия равна потенциальной (g=10, в м)?", ans: 10 },
+            { text: "Пружина жесткостью 400 Н/м растянута на 5 см. Потенциальная энергия (в Дж)?", ans: 0.5 },
+            { text: "Мощность двигателя автомобиля при силе тяги 2 кН и скорости 72 км/ч (в кВт)?", ans: 40 }
+        ]
+    },
+    statics: {
+        title: "4. Статика и Гидростатика",
+        cheat: "• Правило моментов: F1*d1 = F2*d2.",
+        solved: "При равновесии сумма моментов сил относительно оси равна нулю.",
+        formulas: "• M = F*d<br>• p = rho*g*h<br>• F_а = rho*g*V",
+        tasks: [
+            { text: "На рычаге с плечами 20 см и 60 см масса первого груза 9 кг. Масса второго груза для равновесия (в кг)?", ans: 3 },
+            { text: "Тело плавает в воде, погружаясь на 80% своего объема. Плотность материала тела (rho_воды=1000, в кг/м³)?", ans: 800 },
+            { text: "Гидравлический пресс имеет площади поршней 2 см² и 100 см². На меньший поршень действует 50 Н. Сила на большем (в Н)?", ans: 2500 },
+            { text: "Однородный стержень 1 м в равновесии на опоре, смещенной на 20 см от центра. На каком расстоянии от центра подвесить груз 10 кг, чтобы уравновесить стержень 5 кг?", ans: 20 },
+            { text: "Кусок металла массой 780 г имеет объем 100 см³. Плотность металла (в кг/м³)?", ans: 7800 }
+        ]
+    },
+    mkt: {
+        title: "5. МКТ и Термодинамика",
+        cheat: "• Уравнение Менделеева-Клапейрона: pV = (m/M)RT.",
+        solved: "Работа газа в изобарном процессе: A = p * Delta V.",
+        formulas: "• p*V = (m/M)*R*T<br>• Q = Delta U + A",
+        tasks: [
+            { text: "При изобарном нагревании 2 моль газа на 50 К работа газа (R=8.31, в Дж)?", ans: 831 },
+            { text: "Внутренняя энергия 3 моль одноатомного газа при температуре 400 К (R=8.31, в Дж)?", ans: 14958 },
+            { text: "Газ получил теплоту 400 Дж, внутренняя энергия увеличилась на 250 Дж. Работа газа (в Дж)?", ans: 150 },
+            { text: "Масса воды при 10 °C для смешивания с 2 кг кипятка (100 °C) для получения 40 °C (в кг)?", ans: 4 },
+            { text: "Давление газа увеличилось в 3 раза, а концентрация молекул уменьшилась в 2 раза. Во сколько раз изменилась температура?", ans: 1.5 }
+        ]
+    },
+    electrostatics: {
+        title: "6. Электростатика",
+        cheat: "• Последовательное соединение конденсаторов уменьшает общую емкость.",
+        solved: "Закон Кулона: F = k * |q1*q2| / r^2.",
+        formulas: "• F = (k*q1*q2)/r^2<br>• C = q / U",
+        tasks: [
+            { text: "Два конденсатора по 6 мкФ соединены последовательно. Общая емкость (в мкФ)?", ans: 3 },
+            { text: "Два конденсатора по 4 мкФ соединены параллельно. Общая емкость (в мкФ)?", ans: 8 },
+            { text: "Пылинка массой 1 мг и зарядом 1 мкКл висит в вертикальном поле (g=10). Напряженность поля (в В/м)?", ans: 10 },
+            { text: "Капелька 0.1 г имеет заряд 2 мкКл. Напряженность поля для равновесия (g=10, в В/м)?", ans: 500 },
+            { text: "Конденсатор 4 мкФ (100 В) подключили к незаряженному 12 мкФ. Общее напряжение (в В)?", ans: 25 }
+        ]
+    },
+    electro: {
+        title: "7. Электродинамика",
+        cheat: "• Закон Ома для полной цепи: I = E / (R + r).",
+        solved: "Общее сопротивление при последовательном соединении: R = R1 + R2.",
+        formulas: "• I = U / R<br>• R = (rho*L) / S",
+        tasks: [
+            { text: "Батарея ЭДС 15 В, r = 1 Ом питает два параллельных резистора по 4 Ом. Ток источника (в А)?", ans: 5 },
+            { text: "При коротком замывании ток 20 А, ЭДС 10 В. Внутреннее сопротивление (в Ом)?", ans: 0.5 },
+            { text: "Три резизора 2 Ом, 3 Ом и 6 Ом соединены параллельно. Общее сопротивление (в Ом)?", ans: 1 },
+            { text: "Электроплитка 600 Вт рассчитана на 120 В. Сопротивление спирали (в Ом)?", ans: 24 },
+            { text: "Падение напряжения на внутреннем сопротивлении источника ЭДС 12 В и r=2 Ом при нагрузке 4 Ом (в В)?", ans: 4 }
+        ]
+    },
+    magnetism: {
+        title: "8. Магнетизм",
+        cheat: "• Сила Лоренца направлена перпендикулярно скорости и полю.",
+        solved: "Радиус орбиты заряда в поле: R = (m*v) / (q*B).",
+        formulas: "• F_а = I*B*L*sin(alpha)<br>• F_л = q*v*B*sin(alpha)",
+        tasks: [
+            { text: "Проводник 20 см движется в поле 0.5 Тл со скоростью 10 м/с перпендикулярно линиям (в В)?", ans: 1 },
+            { text: "Рамка 100 витков, 50 см², поле 0.2 Тл, частота 50 Гц. Амплитуда ЭДС (в В)?", ans: 31.4 },
+            { text: "Индуктивность 0.5 Гн. При изменении тока на 4 А за 0.02 с возникает ЭДС самоиндукции (в В)?", ans: 100 },
+            { text: "Электрон движется по окружности радиусом 2 см в поле 0.01 Тл. Скорость электрона (в Мм/с)?", ans: 35.1 },
+            { text: "Медный проводник 20 г и 40 см в горизонтальном поле 0.25 Тл. Какой ток нужен для компенсации силы тяжести (g=10, в А)?", ans: 2 }
+        ]
+    },
+    waves: {
+        title: "9. Колебания и волны",
+        cheat: "• Формула Томсона: T = 2 * pi * sqrt(L * C).",
+        solved: "Период математического маятника зависит от длины и ускорения свободного падения.",
+        formulas: "• T = 2*pi*sqrt(L/g)<br>• v = lambda * nu",
+        tasks: [
+            { text: "Период нитяного маятника длиной 2.5 м (g=10, pi=3.14, в с)?", ans: 3.14 },
+            { text: "Как изменится период колебаний маятника при увеличении длины в 4 раза (введите число во сколько раз)?", ans: 2 },
+            { text: "Пружинный маятник имеет период 0.5 с. Как изменится период при увеличении массы груза в 9 раз?", ans: 1.5 },
+            { text: "Максимальный заряд 10 мкКл, ток 1 А. Циклическая частота колебаний (в рад/с)?", ans: 100000 },
+            { text: "Уравнение колебаний x = 0.05*cos(20*pi*t). Период колебаний (в с)?", ans: 0.1 }
+        ]
+    },
+    optics: {
+        title: "10. Оптика",
+        cheat: "• Формула тонкой линзы: 1/F = 1/d + 1/f.",
+        solved: "Линейное увеличение линзы: Г = f / d.",
+        formulas: "• n = c / v<br>• d*sin(varphi) = k*lambda",
+        tasks: [
+            { text: "Предмет высотой 5 см дает изображение 15 см. Линейное увеличение линзы Г?", ans: 3 },
+            { text: "Дифракционная решетка с d = 4 мкм и lambda = 500 нм. Наибольший порядок спектра k_max?", ans: 8 },
+            { text: "Собирающая линза дает действительное изображение на расстоянии 40 см, увеличенное в 3 раза. Фокус (в см)?", ans: 30 },
+            { text: "Луч света падает на воду (n=1.33) под углом 45°. Угол преломления (в градусах, округлите до десятых)?", ans: 32.1 },
+            { text: "На решетку с периодом 0.01 мм падает свет 600 нм. Угол отклонения для второго максимума (в градусах)?", ans: 6.89 }
+        ]
+    },
+    quantum: {
+        title: "11. Квантовая и ядерная физика",
+        cheat: "• Уравнение Эйнштейна: h*nu = A_вых + (m*v^2)/2.",
+        solved: "Энергия фотона рассчитывается как E = h*nu или E = (hc)/lambda.",
+        formulas: "• E = h*nu<br>• N = N0 * 2^(-t / T)",
+        tasks: [
+            { text: "Красная граница фотоэффекта 500 нм. Работа выхода электрона (hc=1240, в эВ)?", ans: 2.48 },
+            { text: "Энергия связи азота-14 равна 115 МэВ (14 нуклонов). Удельная энергия связи (в МэВ/нуклон)?", ans: 8.21 },
+            { text: "Максимальная скорость фотоэлектронов при 400 нм и работе выхода 2 эВ (в км/с)?", ans: 593 },
+            { text: "Период полураспада 5 суток. Через сколько суток останется 1/8 часть ядер?", ans: 15 },
+            { text: "Задерживающее напряжение 1.5 В. Максимальная кинетическая энергия электронов (в эВ)?", ans: 1.5 }
+        ]
+    }
+};
+
+const simulationHardPool = [
+    { topic: "Кинематика", example: "<b>Пример:</b> Путь S ~ t^2. Время выросло в 2 раза -> путь вырос в 4 раза.", text: "Во сколько раз увеличится путь, пройденный телом из состояния покоя за 4 секунды по сравнению с 2 секундами?", ans: 4 },
+    { topic: "Кинематика", example: "<b>Пример:</b> S_n = (a/2)*(2n-1) — путь за n-ю секунду.", text: "Тело начинает двигаться равноускоренно. За четвертую секунду от начала движения оно прошло путь 7 м. Путь за первые 6 секунд (в метрах)?", ans: 36 },
+    { topic: "Кинематика", example: "<b>Пример:</b> Скорость падения: v = sqrt(v0^2 + 2*g*h).", text: "Камень брошен с башни высотой 20 м горизонтально со скоростью 15 м/с. Скорость камня в момент падения на землю (g = 10, в м/с)?", ans: 25 },
+    { topic: "Динамика", example: "<b>Пример:</b> Ускорение a = F / m.", text: "Во сколько раз уменьшится ускорение тележки, если ее массу увеличить в 4 раза при той же силе тяги?", ans: 4 },
+    { topic: "Законы сохранения", example: "<b>Пример (Снаряд и платформа):</b> m*v = (m + M)*V[span_0](start_span)[span_0](end_span).", text: "Снаряд массой 20 кг, летящий со скоростью 500 м/с, попадает в платформу с песком 10 т и застревает. Скорость платформы (в м/с)?[span_1](start_span)[span_1](end_span)", ans: 0.99 },
+    { topic: "Законы сохранения", example: "<b>Пример (Взрыв гранаты):</b> p_до = p1 + p2[span_2](start_span)[span_2](end_span).", text: "Граната массой 2 кг летела со скоростью 10 м/с и разорвалась на два осколка 0.8 кг и 1.2 кг[span_3](start_span)[span_3](end_span). Первый осколок остановился. Скорость второго (в м/с)?[span_4](start_span)[span_4](end_span)", ans: 16.67 },
+    { topic: "Статика", example: "<b>Пример (Человек на лодке):</b> m1*(L - x) = m2*x[span_5](start_span)[span_5](end_span).", text: "Человек массой 60 кг переходит с носа на корму лодки длиной 3 м[span_6](start_span)[span_6](end_span). Масса лодки, если она сместилась на 1 м в обратную сторону (в кг)?[span_7](start_span)[span_7](end_span)", ans: 120 },
+    { topic: "МКТ", example: "<b>Пример:</b> Работа газа при изобарном процессе: A = p*Delta V.", text: "1 моль газа при 300 К нагрет изобарно так, что объем увеличился в 3 раза (R = 8.31). Работа газа (в Дж)?", ans: 4986 },
+    { topic: "Электростатика", example: "<b>Пример:</b> Закон Кулона F ~ 1/r^2.", text: "Во сколько раз увеличится сила взаимодействия двух зарядов, если расстояние между ними уменьшить в 2 раза?", ans: 4 },
+    { topic: "Электродинамика", example: "<b>Пример:</b> КПД источника: КПД = R / (R + r).", text: "Источник с ЭДС 100 В и r = 2 Ом нагружен на реостат. При какой мощности внешней нагрузки КПД источника равен 50% (в Вт)?", ans: 1250 }
+];
+
+function showScreen(id) {
+    document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+}
+
+function openNotebook() {
+    const listEl = document.getElementById('notebook-list');
+    if (solvedNotebook.length === 0) {
+        listEl.innerHTML = `<div style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 20px;">Блокнот пуст. Решай задачи!</div>`;
+    } else {
+        listEl.innerHTML = solvedNotebook.map((item, index) => `
+            <div class="notebook-item">
+                <b>#${index + 1} [${item.topic}]</b><br>
+                ${item.text}<br>
+                <span style="color: var(--accent);">Ответ: ${item.ans}</span>
+            </div>
+        `).join('');
+    }
+    showScreen('screen-notebook');
+}
+
+function openProbniki() {
+    showScreen('screen-probniki');
+}
+
+function copyNotebook() {
+    if (solvedNotebook.length === 0) { alert("Блокнот пустой!"); return; }
+    const textToCopy = solvedNotebook.map((item, index) => `#${index + 1} [${item.topic}]\nУсловие: ${item.text}\nОтвет: ${item.ans}\n`).join('\n');
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        alert("📋 Скопировано в буфер обмена!");
+    });
+}
+
+function clearNotebook() {
+    if(confirm("Очистить блокнот?")) {
+        solvedNotebook = [];
+        localStorage.removeItem('globalSkillNotebook');
+        openNotebook();
+    }
+}
+
+function openTopic(key) {
+    if(!dataBase[key]) { alert("Ошибка!"); return; }
+    currentKey = key;
+    isSimulation = false;
+    const item = dataBase[key];
+    document.getElementById('th-title').innerText = item.title;
+    document.getElementById('th-formulas').innerHTML = item.formulas;
+    document.getElementById('th-solved').innerHTML = item.solved;
+
+    const cheatEl = document.getElementById('th-cheat');
+    document.getElementById('th-cheat-text').innerHTML = item.cheat || "• Лайфхак ЕНТ: Проверяй СИ!";
+    cheatEl.classList.remove('hidden');
+    
+    document.getElementById('back-to-topic-btn').style.display = 'block';
+    showScreen('screen-theory');
+}
+
+function startTrainer() {
+    taskIndex = 0;
+    isSimulation = false;
+    activeTasksList = dataBase[currentKey].tasks;
+    document.getElementById('tr-badge').innerText = `🎯 Тренажер`;
+    document.getElementById('tr-badge').className = 'badge badge-main';
+    document.getElementById('back-to-topic-btn').style.display = 'block';
+    showScreen('screen-trainer');
+    loadTask();
+}
+
+function startFullSimulation() {
+    isSimulation = true;
+    taskIndex = 0;
+    activeTasksList = [...simulationHardPool];
+    activeTasksList.sort(() => Math.random() - 0.5);
+    document.getElementById('tr-badge').innerText = `🔥 Экзамен ЕНТ`;
+    document.getElementById('tr-badge').className = 'badge badge-sim';
+    document.getElementById('back-to-topic-btn').style.display = 'none';
+    showScreen('screen-trainer');
+    loadTask();
+}
+
+function loadTask() {
+    document.getElementById('feedback-container').innerHTML = '';
+    const inputField = document.getElementById('user-answer');
+    inputField.value = '';
+    inputField.style.display = 'block';
+    document.querySelector('#answer-area .btn-success').style.display = 'block';
+    document.getElementById('next-btn').style.display = 'none';
+
+    // Очищаем черновик для новой задачи или оставляем по желанию
+    document.getElementById('scratchpad-input').value = '';
+
+    document.getElementById('tr-counter').innerText = `Задача ${taskIndex + 1} из ${activeTasksList.length}`;
+    const currentTask = activeTasksList[taskIndex];
+    
+    if(isSimulation) {
+        document.getElementById('tr-badge').innerText = `⚡ ${currentTask.topic} (${taskIndex + 1}/${activeTasksList.length})`;
+    }
+
+    document.getElementById('tr-text').innerHTML = currentTask.text;
+
+    const exampleContainer = document.getElementById('exam-example-container');
+    if (isSimulation && currentTask.example) {
+        document.getElementById('ex-text').innerHTML = currentTask.example;
+        exampleContainer.classList.remove('hidden');
+    } else {
+        exampleContainer.classList.add('hidden');
+    }
+}
+
+function checkAnswer() {
+    const val = parseFloat(document.getElementById('user-answer').value);
+    const currentTask = activeTasksList[taskIndex];
+    const correct = currentTask.ans;
+    const fb = document.getElementById('feedback-container');
+
+    if (isNaN(val)) {
+        fb.innerHTML = `<div class="feedback error">Введите число!</div>`;
+        return;
+    }
+
+    if (Math.abs(val - correct) <= Math.abs(correct * 0.03) + 0.1) {
+        fb.innerHTML = `<div class="feedback success">🔥 Верно! Сохранено в блокнот.</div>`;
+        const exists = solvedNotebook.some(t => t.text === currentTask.text);
+        if (!exists) {
+            solvedNotebook.push({
+                topic: currentTask.topic || dataBase[currentKey]?.title || 'Физика',
+                text: currentTask.text,
+                ans: correct
+            });
+            localStorage.setItem('globalSkillNotebook', JSON.stringify(solvedNotebook));
+        }
+    } else {
+        fb.innerHTML = `<div class="feedback error">❌ Ошибка. Ответ: <b>${correct}</b></div>`;
+    }
+
+    document.getElementById('user-answer').style.display = 'none';
+    document.querySelector('#answer-area .btn-success').style.display = 'none';
+
+    const nextBtn = document.getElementById('next-btn');
+    if (taskIndex < activeTasksList.length - 1) {
+        nextBtn.innerText = 'Следующая задача →';
+    } else {
+        nextBtn.innerText = isSimulation ? 'Завершить экзамен 🏆' : 'Завершить тему 🏆';
+    }
+    nextBtn.style.display = 'block';
+}
+
+function nextTask() {
+    taskIndex++;
+    if (taskIndex < activeTasksList.length) {
+        loadTask();
+    } else {
+        if (isSimulation) {
+            alert('🎉 Экзамен пройден! Результаты в блокноте.');
+            openNotebook();
+        } else {
+            showScreen('screen-complete');
+        }
+    }
+}
+</script>
+</body>
+</html>
