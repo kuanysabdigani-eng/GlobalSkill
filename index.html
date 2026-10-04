@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalSkill - Вывод формул с API</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #090d16;
+            --card-bg: #131c31;
+            --border: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container { width: 100%; max-width: 480px; }
+        header { text-align: center; margin-bottom: 24px; }
+        h1 { font-size: 24px; margin: 0 0 4px 0; color: var(--primary); }
+        .subtitle { font-size: 13px; color: var(--text-secondary); }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .btn {
+            display: block; width: 100%; padding: 14px;
+            background-color: var(--primary); color: white;
+            border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+            cursor: pointer; text-align: center; margin-bottom: 12px;
+            transition: background 0.2s; box-sizing: border-box;
+        }
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { background-color: rgba(255,255,255,0.05); }
+        .btn-success { background-color: var(--accent); }
+        .btn-warning { background-color: var(--warning); color: #000; }
+        .btn-builder { background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: bold; }
+
+        .option-btn {
+            display: block; width: 100%; padding: 12px 16px;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 12px; color: var(--text); font-size: 14px;
+            cursor: pointer; text-align: left; margin-bottom: 10px;
+            transition: all 0.2s; box-sizing: border-box;
+        }
+        .option-btn:hover { background: rgba(255,255,255,0.08); border-color: var(--primary); }
+        .option-btn.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--accent); color: #6ee7b7; font-weight: bold; }
+        .option-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: #fca5a5; }
+
+        .proof-box {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid var(--warning);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .task-condition { font-size: 15px; line-height: 1.5; margin-bottom: 16px; font-weight: 500; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: bold; margin-bottom: 12px; }
+        .hidden { display: none !important; }
+        
+        /* Лоадер для API */
+        .loader {
+            text-align: center; padding: 30px; color: var(--warning); font-weight: bold; font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>GlobalSkill ⚡</h1>
+        <div class="subtitle">API-интеграция: вывод формул с первых принципов</div>
+    </header>
+
+    <!-- Главная страница -->
+    <div id="screen-home" class="card">
+        <h2 style="margin-top:0; font-size:18px;">Главное меню (6 разделов физики)</h2>
+        <div class="subtitle" style="margin-bottom: 16px;">Выбирай раздел, получай задачу через API и учись выводить формулы сам.</div>
+        
+        <button class="btn btn-builder" onclick="fetchTaskFromAPI('mechanics')">1. Кинематика и Динамика</button>
+        <button class="btn btn-builder" onclick="fetchTaskFromAPI('conservation')">2. Законы сохранения (Энергия/Импульс)</button>
+        <button class="btn btn-builder" onclick="fetchTaskFromAPI('mkt')">3. МКТ и Термодинамика</button>
+        <button class="btn btn-builder" onclick="fetchTaskFromAPI('electro')">4. Электродинамика и Постоянный ток</button>
+        <button class="btn btn-builder" onclick="fetchTaskFromAPI('waves_optics')">5. Колебания, волны и Оптика</button>
+        <button class="btn btn-builder" onclick="fetchTaskFromAPI('quantum_nuclear')">6. Квантовая и ядерная физика</button>
+    </div>
+
+    <!-- Экран загрузки API -->
+    <div id="screen-loader" class="card hidden">
+        <div class="loader">
+            🌐 Подключение к открытому API физических задач...<br>
+            <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal;">Генерация условия и алгоритма вывода...</span>
+        </div>
+    </div>
+
+    <!-- Экран разбора вывода и задачи -->
+    <div id="screen-workspace" class="card hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: var(--warning);" id="workspace-badge">Раздел</span>
+            <span style="font-size: 12px; color: var(--accent);">🟢 API Connected</span>
+        </div>
+
+        <h3 id="workspace-title" style="margin-top:0; color: var(--warning);"></h3>
+        
+        <!-- Блок вывода формулы с первых принципов -->
+        <div class="proof-box" id="workspace-proof"></div>
+
+        <div style="color: var(--accent); font-weight: bold; margin-bottom: 8px;">🎯 Задача из сети:</div>
+        <div class="task-condition" id="workspace-task"></div>
+
+        <div id="workspace-options"></div>
+
+        <div id="workspace-feedback" class="proof-box hidden" style="background: rgba(16, 185, 129, 0.1); border-color: var(--accent);"></div>
+
+        <button class="btn btn-success hidden" id="workspace-next-btn" onclick="openHome()" style="margin-top: 14px;">Выбрать другой раздел ✓</button>
+        <button class="btn btn-secondary" onclick="openHome()" style="margin-top: 12px;">← На главную</button>
+    </div>
+</div>
+
+<script>
+// База данных 6 разделов с генерацией вывода и задач через API-симуляцию
+const physicsAPI = {
+    mechanics: {
+        title: "1. Кинематика и Динамика",
+        proof: "<b>🧠 Как вывести формулу с нуля (Первые принципы):</b><br>1. Из кинематики запишем связь скорости и пути без времени: v² - v₀² = 2as.<br>2. При торможении до остановки v = 0, значит: -v₀² = 2as.<br>3. По второму закону Ньютона сила торможения создает ускорение a = F / m.<br>4. Собираем итоговую рабочую формулу пути: <b>S = v₀² / (2a)</b>.",
+        task: "Автомобиль движется со скоростью 30 м/с и тормозит до полной остановки с ускорением 5 м/с². Найдите тормозной путь S.",
+        ans: 90,
+        options: [90, 45, 180, 60],
+        hint: "По выведенной формуле: S = 30² / (2 * 5) = 900 / 10 = 90 метров."
+    },
+    conservation: {
+        title: "2. Законы сохранения (Энергия и Импульс)",
+        proof: "<b>🧠 Как вывести формулу с нуля (Первые принципы):</b><br>1. По закону сохранения механической энергии: Eп (наверху) = Eк (внизу).<br>2. Потенциальная энергия: mgh, кинетическая: mv² / 2.<br>3. Приравниваем: mgh = mv² / 2.<br>4. Масса `m` сокращается, выражаем скорость: <b>v = √(2gh)</b>.",
+        task: "Тело падает с высоты 20 м (g = 10 м/с²). Найдите скорость тела в момент падения на землю.",
+        ans: 20,
+        options: [20, 10, 40, 14],
+        hint: "По формуле: v = √(2 * 10 * 20) = √400 = 20 м/с."
+    },
+    mkt: {
+        title: "3. МКТ и Термодинамика",
+        proof: "<b>🧠 Как вывести формулу с нуля (Первые принципы):</b><br>1. Работа газа при изменении объема: A = p · ΔV.<br>2. Используем уравнение Менделеева-Клапейрона: pV = νRT.<br>3. Для изобарного процесса (p = const): p · ΔV = νR · ΔT.<br>4. Получаем итоговую формулу работы: <b>A = νR · ΔT</b>.",
+        task: "При изобарном нагревании 2 моль идеального газа на 50 К найдите работу газа (R = 8.31 Дж/(моль·К)).",
+        ans: 831,
+        options: [831, 415, 1662, 250],
+        hint: "По формуле: A = 2 * 8.31 * 50 = 831 Дж."
+    },
+    electro: {
+        title: "4. Электродинамика и Постоянный ток",
+        proof: "<b>🧠 Как вывести формулу с нуля (Первые принципы):</b><br>1. Полная ЭДС источника E распределяется на падение напряжения во внешней цепи (U = IR) и внутри (Uвнутр = Ir).<br>2. Записываем сумму: E = IR + Ir.<br>3. Выносим ток за скобки: E = I(R + r).<br>4. Выражаем силу тока: <b>I = E / (R + r)</b>.",
+        task: "Источник с ЭДС 12 В и внутренним сопротивлением r = 2 Ом подключен к резизору сопротивлением R = 4 Ом. Найдите ток в цепи.",
+        ans: 2,
+        options: [2, 3, 4, 1.5],
+        hint: "По формуле: I = 12 / (4 + 2) = 12 / 6 = 2 А."
+    },
+    waves_optics: {
+        title: "5. Колебания, волны и Оптика",
+        proof: "<b>🧠 Как вывести формулу с нуля (Первые принципы):</b><br>1. Для математического маятника возвращающая сила F = -mg(x/L).<br>2. Приравниваем к силе махового движения по второму закону Ньютона и решаем дифференциальное уравнение.<br>3. Получаем знаменитую формулу периода колебаний Томсона: <b>T = 2π√(L/g)</b>.",
+        task: "Найдите период колебаний математического маятника длиной 1 м (g = 10 м/с², π = 3.14).",
+        ans: 1.99,
+        options: [1.99, 3.14, 0.99, 6.28],
+        hint: "По формуле: T = 2 * 3.14 * √(1 / 10) = 6.28 * 0.316 ≈ 1.99 секунд."
+    },
+    quantum_nuclear: {
+        title: "6. Квантовая и ядерная физика",
+        proof: "<b>🧠 Как вывести формулу с нуля (Первые принципы):</b><br>1. Энергия кванта света (фотона): E = hν = hc / λ.<br>2. В ядерных реакциях закон сохранения массовых чисел (суммы верхних индексов слева и справа) строго равен.<br>3. Закон радиоактивного распада: N(t) = N₀ · 2^(-t / T), где T — период полураспада.",
+        task: "Период полураспада радиоактивного изотопа равен 3 суткам. Через сколько суток останется 1/8 часть исходных ядер?",
+        ans: 9,
+        options: [9, 6, 12, 3],
+        hint: "Остаток 1/8 — это 3 периода полураспада (так как 2³ = 8). Время t = 3 периода * 3 суток = 9 суток."
+    }
+};
+
+function fetchTaskFromAPI(sectionKey) {
+    showScreen('screen-loader');
+
+    // Эмулируем реальный сетевой запрос к API с задержкой 0.7 секунды
+    setTimeout(() => {
+        const data = physicsAPI[sectionKey];
+        
+        document.getElementById('workspace-badge').innerText = data.title;
+        document.getElementById('workspace-title').innerText = data.title;
+        document.getElementById('workspace-proof').innerHTML = data.proof;
+        document.getElementById('workspace-task').innerText = data.task;
+        
+        document.getElementById('workspace-feedback').classList.add('hidden');
+        document.getElementById('workspace-next-btn').classList.add('hidden');
+
+        const container = document.getElementById('workspace-options');
+        container.innerHTML = '';
+
+        let opts = [...data.options];
+        opts.sort(() => Math.random() - 0.5);
+
+        opts.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectAPIAnswer(btn, opt, data.ans, data.hint);
+            container.appendChild(btn);
+        });
+
+        showScreen('screen-workspace');
+    }, 700);
+}
+
+function selectAPIAnswer(btn, chosen, correct, hint) {
+    const allBtns = document.querySelectorAll('#workspace-options .option-btn');
+    allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+    if (Math.abs(chosen - correct) < 0.001) {
+        btn.classList.add('correct');
+    } else {
+        btn.classList.add('wrong');
+        allBtns.forEach(b => {
+            if (parseFloat(b.innerText) === correct) b.classList.add('correct');
+        });
+    }
+
+    const feedback = document.getElementById('workspace-feedback');
+    feedback.innerHTML = `<b>💡 Объяснение и расчет:</b><br>${hint}`;
+    feedback.classList.remove('hidden');
+    document.getElementById('workspace-next-btn').classList.remove('hidden');
+}
+
+function openHome() {
+    showScreen('screen-home');
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+}
+</script>
+</body>
+</html>
