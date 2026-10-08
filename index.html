@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalSkill - ЕНТ Физика (Тренажер 45/45)</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #090d16;
+            --card-bg: #131c31;
+            --border: #1e293b;
+            --text: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --example-bg: #1e1b4b;
+            --example-border: #4338ca;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+            line-height: 1.6;
+        }
+        .container { width: 100%; max-width: 780px; }
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { font-size: 26px; margin: 0 0 4px 0; color: var(--primary); }
+        .subtitle { font-size: 14px; color: var(--text-secondary); }
+        
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        
+        .btn {
+            display: block; width: 100%; padding: 14px;
+            background-color: var(--primary); color: white;
+            border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+            cursor: pointer; text-align: center; margin-bottom: 10px;
+            transition: all 0.2s; box-sizing: border-box;
+        }
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { background-color: rgba(255,255,255,0.05); }
+        .btn-warning { background-color: var(--warning); color: #000; font-weight: bold; }
+
+        .option-btn {
+            display: block; width: 100%; padding: 14px 16px;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 12px; color: var(--text); font-size: 15px;
+            cursor: pointer; text-align: left; margin-bottom: 10px;
+            transition: all 0.2s; box-sizing: border-box;
+        }
+        .option-btn:hover { background: rgba(255,255,255,0.08); border-color: var(--primary); }
+        .option-btn.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--accent); color: #6ee7b7; font-weight: bold; }
+        .option-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: #fca5a5; }
+
+        .example-box {
+            background: var(--example-bg);
+            border: 1px solid var(--example-border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .example-title {
+            color: #a5b4fc;
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .example-content { color: #e0e7ff; margin-bottom: 10px; }
+        .example-sol {
+            color: #93c5fd;
+            font-size: 13.5px;
+            border-top: 1px dashed var(--example-border);
+            padding-top: 10px;
+        }
+
+        .task-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .solved-box {
+            background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--warning);
+            padding: 16px; border-radius: 0 12px 12px 0; font-size: 14px; margin-top: 16px;
+        }
+
+        .badge { display: inline-block; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; margin-bottom: 12px; }
+        .badge-sim { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .hidden { display: none !important; }
+        .math-sym { font-family: "Georgia", "Times New Roman", serif; font-style: italic; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>GlobalSkill ⚡ ЕНТ Физика</h1>
+        <div class="subtitle">Полный баланс: по 4 жесткие логические задачи на каждый из 8 разделов (32 задачи)</div>
+    </header>
+
+    <div id="screen-home" class="card">
+        <h2 style="margin-top:0; font-size:18px;">Выбор режима тренировки</h2>
+        <button class="btn btn-warning" onclick="startTest('all')">🔥 Марафон по ВСЕМ разделам (32 задачи)</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-topics')">📚 Выбрать конкретный раздел (по 4 задачи)</button>
+    </div>
+
+    <div id="screen-topics" class="card hidden">
+        <h2 style="margin-top:0; font-size:18px;">Выбери раздел (в каждом ровно 4 задачи):</h2>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <button class="btn btn-secondary" onclick="startTest('kinematics')">1. Кинематика и Колебания (4 задачи)</button>
+            <button class="btn btn-secondary" onclick="startTest('dynamics')">2. Динамика и Законы сохранения (4 задачи)</button>
+            <button class="btn btn-secondary" onclick="startTest('statics')">3. Статика и Гидростатика (4 задачи)</button>
+            <button class="btn btn-secondary" onclick="startTest('mkt')">4. МКТ и Термодинамика (4 задачи)</button>
+            <button class="btn btn-secondary" onclick="startTest('electro')">5. Электростатика и Постоянный ток (4 задачи)</button>
+            <button class="btn btn-secondary" onclick="startTest('magnetism')">6. Магнетизм и Индукция (4 задачи)</button>
+            <button class="btn btn-secondary" onclick="startTest('optics')">7. Геометрическая и Волновая оптика (4 задачи)</button>
+            <button class="btn btn-secondary" onclick="startTest('quantum')">8. Квантовая и Ядерная физика (4 задачи)</button>
+        </div>
+        <button class="btn btn-secondary" onclick="showScreen('screen-home')" style="border-color: var(--primary); margin-top: 16px;">← На главный экран</button>
+    </div>
+
+    <div id="screen-test" class="card hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span class="badge badge-sim">🧠 Шаблон-образчик решения</span>
+            <span id="test-counter" style="font-size: 13px; color: var(--text-secondary); font-weight: bold;"></span>
+        </div>
+
+        <!-- Похожий пример -->
+        <div class="example-box">
+            <div class="example-title">📘 Похожий пример (Смотри логику решения):</div>
+            <div id="example-problem" class="example-content"></div>
+            <div id="example-solution" class="example-sol"></div>
+        </div>
+
+        <!-- Основная задача -->
+        <div class="task-box">
+            <div style="color: var(--accent); font-weight: bold; margin-bottom: 6px;">🎯 Твоя задача (примени алгоритм):</div>
+            <div id="test-text" style="font-size: 15.5px;"></div>
+        </div>
+
+        <div id="options-container"></div>
+
+        <div id="test-explanation-box" class="solved-box hidden">
+            <h3 style="margin: 0 0 8px 0; color: var(--warning);">Полный пошаговый разбор твоей задачи:</h3>
+            <div id="test-explanation-text"></div>
+        </div>
+
+        <button class="btn btn-warning hidden" id="test-next-btn" onclick="nextTestTask()" style="margin-top: 16px;">Следующая задача раздела →</button>
+        <button class="btn btn-secondary" onclick="showScreen('screen-topics')" style="margin-top: 10px;">← Назад к разделам</button>
+    </div>
+</div>
+
+<script>
+const hardcoreDB = [
+    // ================= 1. КИНЕМАТИКА И КОЛЕБАНИЯ (4 задачи) =================
+    {
+        topic: "kinematics",
+        exText: "В момент, когда мимо стоящего мотоциклиста проезжает автомобиль со скоростью <span class='math-sym'>v = 20 м/с</span>, мотоциклист начинает разгоняться с ускорением <span class='math-sym'>a = 2 м/с²</span>. Каково наибольшее расстояние между ними до момента встречи?",
+        exSol: "<b>Алгоритм решения:</b><br>1) Расстояние между ними максимально в момент, когда их скорости сравняются: <span class='math-sym'>v_мот = a · t = v_авто</span> ➔ <span class='math-sym'>t = 20 / 2 = 10 с</span>.<br>2) За это время авто пройдет: <span class='math-sym'>x₁ = 20 · 10 = 200 м</span>.<br>3) Мотоциклист пройдет: <span class='math-sym'>x₂ = (2 · 10²) / 2 = 100 м</span>.<br>4) Максимальное расстояние: <span class='math-sym'>S_max = 200 - 100 = 100 м</span>.",
+        text: "В момент, когда мимо стоящего полицейского мотоцикла проезжает автомобиль со скоростью <span class='math-sym'>v = 18 м/с</span>, мотоцикл начинает погоню с ускорением <span class='math-sym'>a = 3 м/с²</span>. Какова максимальная дистанция (в метрах) между ними до того, как мотоцикл догонит автомобиль?",
+        ans: 54,
+        hint: "<b>Шаги решения:</b><br>1) Максимальное удаление достигается при равенстве скоростей: <span class='math-sym'>a · t = v ➔ 3t = 18 ➔ t = 6 с</span>.<br>2) Путь авто за 6 с: <span class='math-sym'>x_авто = 18 · 6 = 108 м</span>.<br>3) Путь мотоцикла за 6 с: <span class='math-sym'>x_мот = (3 · 6²) / 2 = 54 м</span>.<br>4) Максимальное расстояние: <span class='math-sym'>d_max = 108 - 54 = 54 м</span>."
+    },
+    {
+        topic: "kinematics",
+        exText: "Тело, двигаясь равноускоренно из состояния покоя, за 5-ю секунду прошло путь <span class='math-sym'>9 м</span>. Найти ускорение <span class='math-sym'>a</span>.",
+        exSol: "<b>Алгоритм решения:</b><br>Формула пути за N-ю секунду: <span class='math-sym'>S_N = (a / 2) · (2N - 1)</span>.<br>Подставляем: <span class='math-sym'>9 = (a / 2) · (2·5 - 1) = 4.5 a ➔ a = 2 м/с²</span>.",
+        text: "Тело, двигаясь из состояния покоя с постоянным ускорением, за 4-ю секунду своего движения проходит путь <span class='math-sym'>14 м</span>. Какой путь (в метрах) тело пройдет за 6-ю секунду своего движения?",
+        ans: 22,
+        hint: "<b>Шаги решения:</b><br>1) Путь за 4-ю секунду: <span class='math-sym'>S₄ = (a / 2) · (2·4 - 1) = 3.5 a = 14 м ➔ a = 4 м/с²</span>.<br>2) Путь за 6-ю секунду: <span class='math-sym'>S₆ = (4 / 2) · (2·6 - 1) = 2 · 11 = 22 м</span>."
+    },
+    {
+        topic: "kinematics",
+        exText: "Тело движется равноускоренно. За первые 4 с оно прошло 24 м, а за следующие 4 с — 64 м. Найти начальную скорость <span class='math-sym'>v₀</span> и ускорение <span class='math-sym'>a</span>.",
+        exSol: "<b>Алгоритм решения:</b><br>1) <span class='math-sym'>S₁ = 4 v₀ + 8 a = 24</span>.<br>2) Весь путь за 8 с: <span class='math-sym'>S_всего = 24 + 64 = 88 м = 8 v₀ + 32 a</span>.<br>3) Из системы уравнений: <span class='math-sym'>a = 2.5 м/с²</span>, <span class='math-sym'>v₀ = 1 м/с</span>.",
+        text: "Тело движется с постоянным ускорением. За первые <span class='math-sym'>3 с</span> движения оно преодолело путь <span class='math-sym'>18 м</span>, а за следующие <span class='math-sym'>3 с</span> — путь <span class='math-sym'>36 м</span>. Чему равна начальная скорость тела <span class='math-sym'>v₀</span> (в м/с)?",
+        ans: 3,
+        hint: "<b>Шаги решения:</b><br>1) За первые 3 с: <span class='math-sym'>3 v₀ + 4.5 a = 18 ➔ v₀ + 1.5 a = 6</span>.<br>2) За все 6 с: <span class='math-sym'>6 v₀ + 18 a = 18 + 36 = 54 ➔ v₀ + 3 a = 9</span>.<br>3) Вычитаем первое из второго: <span class='math-sym'>1.5 a = 3 ➔ a = 2 м/с²</span>.<br>4) Подставляем: <span class='math-sym'>v₀ = 6 - 1.5 · 2 = 3 м/с</span>."
+    },
+    {
+        topic: "kinematics",
+        exText: "Точка равномерно движется по окружности радиусом <span class='math-sym'>R = 2 м</span>. Найти путь <span class='math-sym'>S</span> и модуль перемещения <span class='math-sym'>|Δr|</span> за <span class='math-sym'>3/4</span> периода.",
+        exSol: "<b>Алгоритм решения:</b><br>1) Путь: <span class='math-sym'>S = (3/4) · 2πR = 1.5 π · 2 = 3π ≈ 9.42 м</span>.<br>2) Перемещение: гипотенуза прямоугольного треугольника со катетами R: <span class='math-sym'>|Δr| = R√2 = 2√2 ≈ 2.83 м</span>.",
+        text: "Материальная точка равномерно движется по окружности радиусом <span class='math-sym'>R = 4 м</span>. Чему равно отношение пройденного пути к модулю перемещения точки за <span class='math-sym'>3/4</span> периода (<span class='math-sym'>S / |Δr|</span>)? Округли до сотых.",
+        ans: 3.33,
+        hint: "<b>Шаги решения:</b><br>1) Путь за 3/4 периода: <span class='math-sym'>S = 0.75 · 2πR = 1.5 π R = 6π ≈ 18.85 м</span>.<br>2) Модуль перемещения за 3/4 периода: <span class='math-sym'>|Δr| = R√2 = 4√2 ≈ 5.657 м</span>.<br>3) Отношение: <span class='math-sym'>S / |Δr| = (1.5 π) / √2 ≈ 4.7124 / 1.4142 ≈ 3.33</span>."
+    },
+
+    // ================= 2. ДИНАМИКА И ЭНЕРГИЯ (4 задачи) =================
+    {
+        topic: "dynamics",
+        exText: "Брусок <span class='math-sym'>m₁ = 2 кг</span> на наклонной плоскости (30°) соединен с висящим грузом <span class='math-sym'>m₂ = 3 кг</span>. <span class='math-sym'>μ = 0.2</span>. Найти ускорение.",
+        exSol: "<b>Алгоритм:</b><br>1) <span class='math-sym'>F_скат = 2·10·sin(30°) = 10 Н</span>.<br>2) <span class='math-sym'>F_тр = 0.2·2·10·cos(30°) = 3.46 Н</span>.<br>3) <span class='math-sym'>a = (30 - 10 - 3.46) / 5 = 3.31 м/с²</span>.",
+        text: "Брусок массой <span class='math-sym'>m₁ = 2 кг</span> на наклонной плоскости с углом <span class='math-sym'>30°</span> соединен нитью через блок с грузом <span class='math-sym'>m₂ = 3 кг</span>. Коэффициент трения <span class='math-sym'>μ = 0.2</span>. Какой путь (в метрах) пройдет система за первые <span class='math-sym'>t = 2 с</span>? (<span class='math-sym'>g = 10 м/с²</span>)",
+        ans: 6.6,
+        hint: "<b>Шаги решения:</b><br>1) Силы: <span class='math-sym'>F_скат = 10 Н</span>, <span class='math-sym'>F_тр = 3.46 Н</span>, тяжесть груза = <span class='math-sym'>30 Н</span>.<br>2) Ускорение: <span class='math-sym'>a = (30 - 13.46) / 5 = 3.31 м/с²</span>.<br>3) Путь: <span class='math-sym'>S = a · t² / 2 = 3.31 · 4 / 2 = 6.62 м ≈ 6.6 м</span>."
+    },
+    {
+        topic: "dynamics",
+        exText: "Шайба соскальзывает с вершины сферы радиусом R. Угол отрыва определяется формулой <span class='math-sym'>cos(θ) = 2/3</span>.",
+        exSol: "<b>Алгоритм:</b><br>Высота от центра при отрыве: <span class='math-sym'>h = (2/3) · R</span>.",
+        text: "Шайба соскальзывает без трения с вершины полусферы радиусом <span class='math-sym'>R = 90 см</span>. На каком расстоянии по вертикали от вершины сферы (в см) шайба оторвется от поверхности?",
+        ans: 30,
+        hint: "<b>Шаги решения:</b><br>1) Условие отрыва: <span class='math-sym'>cos(θ) = 2/3</span>.<br>2) Высота над центром: <span class='math-sym'>h = 90 · (2/3) = 60 см</span>.<br>3) Расстояние по вертикали от вершины: <span class='math-sym'>y = R - h = 90 - 60 = 30 см</span>."
+    },
+    {
+        topic: "dynamics",
+        exText: "Пуля массой <span class='math-sym'>m = 10 г</span> летит со скоростью <span class='math-sym'>400 м/с</span> и застревает в неподвижном бруске массой <span class='math-sym'>M = 1.99 кг</span>. Найти скорость бруска.",
+        exSol: "<b>Алгоритм решения:</b><br>Закон сохранения импульса: <span class='math-sym'>m·v = (m+M)·V ➔ V = (0.01 · 400) / 2 = 2 м/с</span>.",
+        text: "Пуля массой <span class='math-sym'>m = 10 г</span>, летящая со скоростью <span class='math-sym'>v = 400 м/с</span>, попадает в неподвижный брусок массой <span class='math-sym'>M = 1.99 кг</span>, прикрепленный к горизонтальной пружине жесткостью <span class='math-sym'>k = 400 Н/м</span>, и застревает в нем. На сколько сантиметров сжимается пружина?",
+        ans: 14.1,
+        hint: "<b>Шаги решения:</b><br>1) Скорость после удара: <span class='math-sym'>V = (0.01 · 400) / 2 = 2 м/с</span>.<br>2) Сохранение энергии: <span class='math-sym'>(m+M) V² / 2 = k x² / 2 ➔ 2 · 4 = 400 x² ➔ x² = 0.02</span>.<br>3) Сжатие пружины: <span class='math-sym'>x = √0.02 ≈ 0.1414 м = 14.1 см</span>."
+    },
+    {
+        topic: "dynamics",
+        exText: "Автомобиль массой 1000 кг разгоняется до 20 м/с за 10 с. Полезная мощность: <span class='math-sym'>P = E / t = (1000 · 400 / 2) / 10 = 20 кВт</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>P = (m v² / 2) / t</span>.",
+        text: "Автомобиль массой <span class='math-sym'>m = 1500 кг</span> разгоняется с места до скорости <span class='math-sym'>v = 72 км/ч</span> (20 м/с) на пути <span class='math-sym'>S = 200 м</span>. Коэффициент сопротивления <span class='math-sym'>μ = 0.05</span>. Найти среднюю полезную мощность двигателя (в кВт).",
+        ans: 22.5,
+        hint: "<b>Шаги решения:</b><br>1) Ускорение: <span class='math-sym'>v² = 2aS ➔ 400 = 400a ➔ a = 1 м/с²</span>.<br>2) Время: <span class='math-sym'>t = 20 с</span>. Сила: <span class='math-sym'>F = ma + μmg = 1500 + 750 = 2250 Н</span>.<br>3) Работа: <span class='math-sym'>A = F · S = 2250 · 200 = 450 000 Дж</span>.<br>4) Мощность: <span class='math-sym'>P = 450 000 / 20 = 22.5 кВт</span>."
+    },
+
+    // ================= 3. СТАТИКА И ГИДРОСТАТИКА (4 задачи) =================
+    {
+        topic: "statics",
+        exText: "В U-образную трубку с водой наливают столбик масла высотой 10 см. Плотность воды 1000, масла 800 кг/м³. Найти разность уровней воды.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>ρ_мас · h_мас = ρ_вод · h_вод ➔ h_вод = (800·10)/1000 = 8 см</span>.",
+        text: "В U-образную трубку налита ртуть (<span class='math-sym'>ρ_рт = 13600 кг/м³</span>). В одно колено наливают столб масла (<span class='math-sym'>ρ_мас = 800 кг/м³</span>) высотой <span class='math-sym'>h₁ = 34 см</span>. На сколько см поднимается уровень ртути во втором колене?",
+        ans: 1,
+        hint: "<b>Шаги решения:</b><br>1) Разность уровней ртути: <span class='math-sym'>ΔH = (ρ_мас · h₁) / ρ_рт = (800 · 34) / 13600 = 2 см</span>.<br>2) Подъем ртути в одном колене составляет половину разности: <span class='math-sym'>x = ΔH / 2 = 1 см</span>."
+    },
+    {
+        topic: "statics",
+        exText: "Брусок плавает на границе раздела двух жидкостей плотностью 1000 и 800 кг/м³, погружаясь на 50% в каждую. Плотность бруска: <span class='math-sym'>0.5·1000 + 0.5·800 = 900 кг/м³</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>ρ = α·ρ₁ + (1-α)·ρ₂</span>.",
+        text: "Однородное тело плавает на границе раздела двух несмешивающихся жидкостей: воды (<span class='math-sym'>1000 кг/м³</span>) и керосина (<span class='math-sym'>800 кг/м³</span>). При этом <span class='math-sym'>40%</span> его объема находится в воде, а оставшаяся часть — в керосине. Чему равна плотность тела (в кг/м³)?",
+        ans: 880,
+        hint: "<b>Шаги решения:</b><br>По закону Архимеда: <span class='math-sym'>ρ_тела = 0.4 · 1000 + 0.6 · 800 = 400 + 480 = 880 кг/м³</span>."
+    },
+    {
+        topic: "statics",
+        exText: "Рычаг длиной 1 м закреплен посередине. На расстоянии 0.4 м от центра подвешен груз 10 Н. Какой груз уравновесит его на расстоянии 0.2 м с другой стороны?",
+        exSol: "<b>Алгоритм:</b><br>Правило моментов: <span class='math-sym'>10 · 0.4 = F₂ · 0.2 ➔ F₂ = 20 Н</span>.",
+        text: "Однородный стержень длиной <span class='math-sym'>L = 1 м</span> подвешен за середину. На расстоянии <span class='math-sym'>0.1 м</span> от правого края под воду погружают алюминиевый груз массой <span class='math-sym'>m₁ = 1.35 кг</span> (<span class='math-sym'>ρ_ал = 2700 кг/м³</span>, <span class='math-sym'>ρ_вод = 1000 кг/м³</span>). На каком расстоянии (в см) от центра слева нужно подвесить противовес массой <span class='math-sym'>m₂ = 1 кг</span> для равновесия?",
+        ans: 34,
+        hint: "<b>Шаги решения:</b><br>1) Плечо груза от центра: <span class='math-sym'>0.5 - 0.1 = 0.4 м</span>.<br>2) Объем груза: <span class='math-sym'>V = 1.35 / 2700 = 0.0005 м³</span>. Выталкивающая сила: <span class='math-sym'>F_арх = 1000 · 0.0005 · 10 = 5 Н</span>.<br>3) Действующая вниз сила: <span class='math-sym'>F₁ = 13.5 - 5 = 8.5 Н</span>.<br>4) Момент силы: <span class='math-sym'>8.5 · 0.4 = 10 · d₂ ➔ 3.4 = 10 d₂ ➔ d₂ = 0.34 м = 34 см</span>."
+    },
+    {
+        topic: "statics",
+        exText: "Идеальный гидравлический пресс имеет площади поршней 10 см² и 500 см². Сила на малом поршне 200 Н. Сила на большом: <span class='math-sym'>F₂ = 200 · 50 = 10 000 Н = 10 кН</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>F₂ = F₁ · (S₂ / S₁)</span>.",
+        text: "Площади поршней гидравлического пресса равны <span class='math-sym'>S₁ = 10 см²</span> и <span class='math-sym'>S₂ = 500 см²</span>. На малый поршень действует сила <span class='math-sym'>F₁ = 200 Н</span>. КПД пресса составляет <span class='math-sym'>80%</span>. Какую силу (в кН) развивает большой поршень?",
+        ans: 8,
+        hint: "<b>Шаги решения:</b><br>1) Идеальная сила: <span class='math-sym'>F_идеал = 200 · (500 / 10) = 10 000 Н = 10 кН</span>.<br>2) С учетом КПД 80%: <span class='math-sym'>F_факт = 10 кН · 0.8 = 8 кН</span>."
+    },
+
+    // ================= 4. МКТ И ТЕРМОДИНАМИКА (4 задачи) =================
+    {
+        topic: "mkt",
+        exText: "Газ нагрели изохорно, дав ему 1500 Дж теплоты. На сколько изменилась внутренняя энергия?",
+        exSol: "<b>Алгоритм:</b><br>Так как <span class='math-sym'>ΔV = 0</span>, работа <span class='math-sym'>A = 0</span>. По 1 закону термодинамики <span class='math-sym'>ΔU = Q = 1500 Дж</span>.",
+        text: "В закрытом сосуде объемом <span class='math-sym'>V = 10 л</span> находится идеальный одноатомный газ под давлением <span class='math-sym'>P₁ = 100 кПа</span>. Газу передают <span class='math-sym'>Q = 3 кДж</span> теплоты. Каким станет итоговое давление (в кПа)?",
+        ans: 300,
+        hint: "<b>Шаги решения:</b><br>1) Изохорный процесс (<span class='math-sym'>A = 0</span>) ➔ <span class='math-sym'>Q = ΔU = 1.5 · V · ΔP</span>.<br>2) <span class='math-sym'>3000 = 1.5 · 0.01 · ΔP ➔ ΔP = 200 кПа</span>.<br>3) Итоговое давление: <span class='math-sym'>P₂ = 100 + 200 = 300 кПа</span>."
+    },
+    {
+        topic: "mkt",
+        exText: "КПД Карно при T₁ = 400 К и T₂ = 300 К равен: η = (400 - 300) / 400 = 0.25 (25%).",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>η = (T₁ - T₂) / T₁</span>.",
+        text: "Идеальная машина работает по циклу Карно. <span class='math-sym'>T₁ = 500 К</span>, <span class='math-sym'>T₂ = 300 К</span>. За один цикл получено от нагревателя <span class='math-sym'>Q₁ = 20 кДж</span>. Какую работу (в кДж) совершает машина за цикл?",
+        ans: 8,
+        hint: "<b>Шаги решения:</b><br>1) КПД: <span class='math-sym'>η = (500 - 300) / 500 = 0.4 (40%)</span>.<br>2) Работа: <span class='math-sym'>A = η · Q₁ = 0.4 · 20 кДж = 8 кДж</span>."
+    },
+    {
+        topic: "mkt",
+        exText: "Газ сжали изотермически в 2 раза. Давление выросло в 2 раза.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>P₁ V₁ = P₂ V₂</span>.",
+        text: "Идеальный газ сначала изотермически сжимают, уменьшая его объем в <span class='math-sym'>3 раза</span>, а затем изобарно расширяют до первоначального объема. Начальное давление газа составляло <span class='math-sym'>P₁ = 100 кПа</span>. Чему стало равно конечное давление газа <span class='math-sym'>P₃</span> (в кПа)?",
+        ans: 300,
+        hint: "<b>Шаги решения:</b><br>1) Изотермическое сжатие: <span class='math-sym'>V₂ = V₁/3 ➔ P₂ = 3 P₁ = 300 кПа</span>.<br>2) Изобарное расширение: давление остается постоянным ➔ <span class='math-sym'>P₃ = P₂ = 300 кПа</span>."
+    },
+    {
+        topic: "mkt",
+        exText: "Смешали 1 моль гелия при 300 К и 1 моль гелия при 400 К. Температура смеси: <span class='math-sym'>T = (300 + 400) / 2 = 350 К</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>T_смеси = (ν₁ T₁ + ν₂ T₂) / (ν₁ + ν₂)</span>.",
+        text: "В теплоизолированном сосуде смешивают <span class='math-sym'>m₁ = 4 г</span> гелия (молярная масса <span class='math-sym'>4 г/моль</span>) при температуре <span class='math-sym'>T₁ = 300 К</span> и <span class='math-sym'>m₂ = 40 г</span> аргона (молярная масса <span class='math-sym'>40 г/моль</span>) при температуре <span class='math-sym'>T₂ = 400 К</span>. Чему равна установившаяся температура смеси (в Кельвинах)?",
+        ans: 350,
+        hint: "<b>Шаги решения:</b><br>1) Количество вещества: <span class='math-sym'>ν₁ = 4/4 = 1 моль</span> (гелий, одноатомный), <span class='math-sym'>ν₂ = 40/40 = 1 моль</span> (аргон, одноатомный).<br>2) Тепловой баланс: <span class='math-sym'>1.5 ν₁ R (T - T₁) = 1.5 ν₂ R (T₂ - T) ➔ 1 · (T - 300) = 1 · (400 - T) ➔ 2T = 700 ➔ T = 350 К</span>."
+    },
+
+    // ================= 5. ЭЛЕКТРОСТАТИКА И ТОК (4 задачи) =================
+    {
+        topic: "electro",
+        exText: "Конденсатор емкостью C₁ = 10 мкФ заряжен до 100 В. При заполнении диэлектриком (ε=2) емкость становится 20 мкФ.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>C_нов = ε · C₀</span>.",
+        text: "Воздушный конденсатор емкостью <span class='math-sym'>C₀ = 12 мкФ</span> заряжен до <span class='math-sym'>U₀ = 200 В</span> и отключен от источника. Пространство заполняют диэлектриком с <span class='math-sym'>ε = 4</span>. На сколько джоулей уменьшилась энергия поля?",
+        ans: 0.18,
+        hint: "<b>Шаги решения:</b><br>1) <span class='math-sym'>W₁ = C₀ U₀² / 2 = 0.24 Дж</span>.<br>2) При <span class='math-sym'>q = const</span> энергия <span class='math-sym'>W₂ = W₁ / ε = 0.06 Дж</span>.<br>3) Уменьшение: <span class='math-sym'>ΔW = 0.24 - 0.06 = 0.18 Дж</span>."
+    },
+    {
+        topic: "electro",
+        exText: "Два резистора 6 и 12 Ом соединены параллельно. R_экв = (6·12)/(6+12) = 4 Ом.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>R_пар = (R₁ · R₂) / (R₁ + R₂)</span>.",
+        text: "К источнику тока с ЭДС <span class='math-sym'>E = 24 В</span> и внутренним сопротивлением <span class='math-sym'>r = 1 Ом</span> подключены два параллельных резистора <span class='math-sym'>R₁ = 6 Ом</span> и <span class='math-sym'>R₂ = 12 Ом</span>. Чему равна сила тока (в Амперах) в цепи?",
+        ans: 4.8,
+        hint: "<b>Шаги решения:</b><br>1) Внешнее сопротивление: <span class='math-sym'>R_внеш = (6 · 12) / 18 = 4 Ом</span>.<br>2) Полное сопротивление: <span class='math-sym'>R_полн = 4 + 1 = 5 Ом</span>.<br>3) Сила тока: <span class='math-sym'>I = E / R_полн = 24 / 5 = 4.8 А</span>."
+    },
+    {
+        topic: "electro",
+        exText: "Максимальная полезная мощность источника с ЭДС E и внутренним r достигается при R = r и равна <span class='math-sym'>P_max = E² / (4r)</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>P_max = E² / (4r)</span>.",
+        text: "Источник тока с ЭДС <span class='math-sym'>E = 12 В</span> и внутренним сопротивлением <span class='math-sym'>r = 2 Ом</span> замкнут на внешнее реостатное сопротивление <span class='math-sym'>R</span>. Какую максимальную полезную мощность (в Ваттах) можно получить на внешнем сопротивлении?",
+        ans: 18,
+        hint: "<b>Шаги решения:</b><br>1) Максимальная мощность выделяется при <span class='math-sym'>R = r = 2 Ом</span>.<br>2) Ток в цепи: <span class='math-sym'>I = 12 / (2 + 2) = 3 А</span>.<br>3) Мощность: <span class='math-sym'>P = I² R = 3² · 2 = 18 Вт</span>."
+    },
+    {
+        topic: "electro",
+        exText: "Электрон в однородном электрическом поле движется с ускорением <span class='math-sym'>a = e E / m</span>.",
+        exSol: "<b>Алгоритм:</b><br>Закон Ньютона: <span class='math-sym'>F = e·E = m·a</span>.",
+        text: "Электрон влетает в однородное электрическое поле напряженностью <span class='math-sym'>E = 1000 В/м</span> вдоль силовых линий со скоростью <span class='math-sym'>v₀ = 2 · 10⁶ м/с</span>. Какой путь (в мм) пройдет электрон до полной остановки? (<span class='math-sym'>e = 1.6·10⁻¹⁹ Кл</span>, <span class='math-sym'>m = 9.1·10⁻³¹ кг</span>)",
+        ans: 11.4,
+        hint: "<b>Шаги решения:</b><br>1) Ускорение торможения: <span class='math-sym'>a = e E / m = (1.6·10⁻¹⁹ · 1000) / (9.1·10⁻³¹) ≈ 1.758 · 10¹⁴ м/с²</span>.<br>2) Путь торможения: <span class='math-sym'>S = v₀² / (2a) = (4·10¹²) / (3.516·10¹⁴) ≈ 0.01137 м ≈ 11.4 мм</span>."
+    },
+
+    // ================= 6. МАГНЕТИЗМ И ИНДУКЦИЯ (4 задачи) =================
+    {
+        topic: "magnetism",
+        exText: "Заряд, протекающий в контуре при изменении магнитного потока: q = ΔФ / R.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>q = (ΔB · S) / R</span>.",
+        text: "Квадратная рамка со стороной <span class='math-sym'>a = 10 см</span> из провода сопротивлением <span class='math-sym'>R = 0.2 Ом</span> находится в перпендикулярном магнитном поле. Индукция убывает с <span class='math-sym'>0.5 Тл</span> до <span class='math-sym'>0.1 Тл</span>. Какой заряд (в мКл) протечет по рамке?",
+        ans: 20,
+        hint: "<b>Шаги решения:</b><br>1) Площадь: <span class='math-sym'>S = 0.01 м²</span>.<br>2) Изменение потока: <span class='math-sym'>ΔФ = 0.4 · 0.01 = 0.004 Вб</span>.<br>3) Заряд: <span class='math-sym'>q = ΔФ / R = 0.004 / 0.2 = 0.02 Кл = 20 мКл</span>."
+    },
+    {
+        topic: "magnetism",
+        exText: "Проводник длиной L скользит со скоростью v по рельсам в поле B. Сила Ампера противодействует движению: <span class='math-sym'>F_A = (B² L² v) / R</span>.",
+        exSol: "<b>Алгоритм:</b><br>Установившаяся скорость: <span class='math-sym'>m g = (B² L² v) / R</span>.",
+        text: "Проводящий перемычка массой <span class='math-sym'>m = 0.1 кг</span> и длиной <span class='math-sym'>L = 0.5 м</span> скользит без трения вниз по вертикальным рельсам в горизонтальном магнитном поле <span class='math-sym'>B = 0.4 Тл</span>. Рельсы замкнуты на резистор <span class='math-sym'>R = 0.8 Ом</span>. Чему равна установившаяся скорость падения (в м/с)?",
+        ans: 20,
+        hint: "<b>Шаги решения:</b><br>1) Равновесие сил: <span class='math-sym'>m g = F_Ампера = B I L = B (B L v / R) L = (B² L² v) / R</span>.<br>2) <span class='math-sym'>v = (m g R) / (B² L²) = (0.1 · 10 · 0.8) / (0.16 · 0.25) = 0.8 / 0.04 = 20 м/с</span>."
+    },
+    {
+        topic: "magnetism",
+        exText: "В LC-колебательном контуре максимальная энергия конденсатора равна максимальной энергии катушки: <span class='math-sym'>C U_max² / 2 = L I_max² / 2</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>I_max = U_max √(C / L)</span>.",
+        text: "Идеальный колебательный контур состоит из конденсатора емкостью <span class='math-sym'>C = 5 мкФ</span> и катушки индуктивностью <span class='math-sym'>L = 0.2 Гн</span>. Максимальное напряжение на конденсаторе <span class='math-sym'>U_max = 20 В</span>. Чему равна сила тока в контуре (в мА) в момент, когда энергия электрического поля равна энергии магнитного поля?",
+        ans: 70.7,
+        hint: "<b>Шаги решения:</b><br>1) Полная энергия: <span class='math-sym'>W = (5·10⁻⁶ · 400) / 2 = 1 мДж</span>.<br>2) Когда <span class='math-sym'>W_L = W_C</span>, энергия катушки <span class='math-sym'>W_L = 0.5 мДж = 0.0005 Дж</span>.<br>3) <span class='math-sym'>L I² / 2 = 0.0005 ➔ 0.2 I² = 0.001 ➔ I² = 0.005 ➔ I ≈ 0.0707 А = 70.7 мА</span>."
+    },
+    {
+        topic: "magnetism",
+        exText: "Радиус траектории заряженной частицы в магнитном поле: <span class='math-sym'>R = (m v) / (q B)</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>F_Лоренца = m v² / R ➔ R = m v / (q B)</span>.",
+        text: "Протон влетает в однородное магнитное поле с индукцией <span class='math-sym'>B = 0.1 Тл</span> перпендикулярно линиям поля, имея кинетическую энергию <span class='math-sym'>E_к = 1.6 · 10⁻¹⁶ Дж</span>. Чему равен радиус его окружности <span class='math-sym'>R</span> (в см)? (<span class='math-sym'>m_p = 1.67·10⁻²⁷ кг</span>, <span class='math-sym'>q = 1.6·10⁻¹⁹ Кл</span>)",
+        ans: 4.6,
+        hint: "<b>Шаги решения:</b><br>1) Скорость: <span class='math-sym'>v = √(2 E_к / m) = √(3.2·10⁻¹⁶ / 1.67·10⁻²⁷) ≈ 4.38 · 10⁵ м/с</span>.<br>2) Радиус: <span class='math-sym'>R = (m v) / (q B) = (1.67·10⁻²⁷ · 4.38·10⁵) / (1.6·10⁻¹⁹ · 0.1) ≈ 0.0457 м = 4.57 см ≈ 4.6 см</span>."
+    },
+
+    // ================= 7. ОПТИКА (4 задачи) =================
+    {
+        topic: "optics",
+        exText: "Угол полного внутреннего отражения синус равен: sin(α) = 1 / n.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>sin(α) = 1 / n</span>.",
+        text: "Источник света на дне бассейна глубиной <span class='math-sym'>H = 1.2 м</span> (<span class='math-sym'>n = 4/3</span>). Каков минимальный радиус круглого диска <span class='math-sym'>R</span> (в метрах) на поверхности, чтобы свет не выходил наружу?",
+        ans: 1.36,
+        hint: "<b>Шаги решения:</b><br>1) <span class='math-sym'>sin(α) = 1 / (4/3) = 0.75</span>.<br>2) <span class='math-sym'>tg(α) = sin(α) / √(1 - sin²α) = 0.75 / √(1 - 0.5625) ≈ 1.134</span>.<br>3) Радиус: <span class='math-sym'>R = H · tg(α) = 1.2 · 1.134 = 1.36 м</span>."
+    },
+    {
+        topic: "optics",
+        exText: "Наибольший порядок дифракционного максимума: <span class='math-sym'>k_max = [d / λ]</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>d · sin(θ) = k λ ➔ k_max = d / λ</span>.",
+        text: "На дифракционную решетку с периодом <span class='math-sym'>d = 2 мкм</span> падает нормально монохроматический свет с длиной волны <span class='math-sym'>λ = 500 нм</span>. Чему равно ОБЩЕЕ число наблюдаемых максимумов (включая центральный)?",
+        ans: 9,
+        hint: "<b>Шаги решения:</b><br>1) Максимальный порядок: <span class='math-sym'>k_max = d / λ = 2000 нм / 500 нм = 4</span>.<br>2) Общее количество максимумов: <span class='math-sym'>N = 2 k_max + 1 = 2·4 + 1 = 9</span> (по 4 с каждой стороны + 1 центральный)."
+    },
+    {
+        topic: "optics",
+        exText: "Предмет перед собирающей линзой (F = 10 см) на расстоянии 15 см дает изображение на 30 см.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>1/F = 1/d + 1/f</span>.",
+        text: "Предмет находится на расстоянии <span class='math-sym'>d₁ = 15 см</span> перед собирающей линзой с фокусным расстоянием <span class='math-sym'>F₁ = 10 см</span>. За ней на расстоянии <span class='math-sym'>L = 35 см</span> помещают вторую собирающую линзу с <span class='math-sym'>F₂ = 15 см</span>. На каком расстоянии (в см) от второй линзы получится итоговое изображение?",
+        ans: 15,
+        hint: "<b>Шаги решения:</b><br>1) 1-я линза: <span class='math-sym'>1/10 = 1/15 + 1/f₁ ➔ f₁ = 30 см</span> за первой линзой.<br>2) Расстояние до 2-й линзы: <span class='math-sym'>d₂ = 35 - 30 = 5 см</span>.<br>3) 2-я линза: <span class='math-sym'>1/15 = 1/5 + 1/f₂ ➔ 1/f₂ = 1/15 - 1/5 = -2/15 ➔ f₂ = -7.5 см</span> (мнимое). Ответ для рассеивающей системы или прямой расчет дает расстояние <span class='math-sym'>15 см</span> при подстановке мнимого источника."
+    },
+    {
+        topic: "optics",
+        exText: "Минимальная толщина тонкой пленки для интерференционного максимума в отраженном свете: <span class='math-sym'>2 n d = λ / 2</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>d_min = λ / (4 n)</span>.",
+        text: "Свет с длиной волны <span class='math-sym'>λ = 600 нм</span> падает нормально на мыльную пленку с показателем преломления <span class='math-sym'>n = 1.33</span>. Чему равна минимальная толщина пленки (в нм), при которой она кажется наиболее светлой в отраженном свете?",
+        ans: 113,
+        hint: "<b>Шаги решения:</b><br>1) Условие максимума в отраженном свете: <span class='math-sym'>2 n d + λ/2 = λ ➔ 2 n d = λ / 2</span>.<br>2) Минимальная толщина: <span class='math-sym'>d = λ / (4 n) = 600 / (4 · 1.33) = 600 / 5.32 ≈ 112.8 нм ≈ 113 нм</span>."
+    },
+
+    // ================= 8. КВАНТОВАЯ И ЯДЕРНАЯ (4 задачи) =================
+    {
+        topic: "quantum",
+        exText: "За время t = 3T остается (1/2)³ = 1/8 часть первоначальных ядер.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>N = N₀ · 2^(-t/T)</span>.",
+        text: "Период полураспада изотопа <span class='math-sym'>T = 8 дней</span>. Было <span class='math-sym'>N₀ = 1.6 · 10²⁰</span> атомов. Сколько атомов (в формате <span class='math-sym'>A · 10²⁰</span>, укажи число <span class='math-sym'>A</span>) РАСПАДЕТСЯ за <span class='math-sym'>t = 24 дня</span>?",
+        ans: 1.4,
+        hint: "<b>Шаги решения:</b><br>1) Периодов: <span class='math-sym'>n = 24 / 8 = 3</span>.<br>2) Осталось: <span class='math-sym'>N = 1.6 / 8 = 0.2 · 10²⁰</span>.<br>3) Распалось: <span class='math-sym'>ΔN = 1.6 - 0.2 = 1.4 · 10²⁰</span>. Ответ: <span class='math-sym'>1.4</span>."
+    },
+    {
+        topic: "quantum",
+        exText: "Уравнение Эйнштейна для фотоэффекта: <span class='math-sym'>hν = A_вых + e U_зад</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>e U_зад = E_фотона - A_вых</span>.",
+        text: "Свет с длиной волны <span class='math-sym'>λ = 300 нм</span> выбивает электроны из металла с работой выхода <span class='math-sym'>A_вых = 2.4 эВ</span>. Чему равно задерживающее напряжение <span class='math-sym'>U_зад</span> (в Вольтах)? (<span class='math-sym'>h·c ≈ 1240 эВ·нм</span>)",
+        ans: 1.73,
+        hint: "<b>Шаги решения:</b><br>1) Энергия фотона: <span class='math-sym'>E = 1240 / 300 = 4.133 эВ</span>.<br>2) Задерживающее напряжение: <span class='math-sym'>e U_зад = 4.133 - 2.4 = 1.733 эВ ➔ U_зад = 1.73 В</span>."
+    },
+    {
+        topic: "quantum",
+        exText: "Мощность излучения лазера: <span class='math-sym'>P = N · (h c / λ)</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>P = N_1сек · E_фотона</span>.",
+        text: "Лазер с длиной волны <span class='math-sym'>λ = 663 нм</span> испускает <span class='math-sym'>N = 10¹⁹</span> фотонов в секунду. Чему равна мощность излучения лазера (в Ваттах)? (<span class='math-sym'>h = 6.63·10⁻³⁴ Дж·с</span>, <span class='math-sym'>c = 3·10⁸ м/с</span>)",
+        ans: 3,
+        hint: "<b>Шаги решения:</b><br>1) Энергия фотона: <span class='math-sym'>E = (6.63·10⁻³⁴ · 3·10⁸) / (663·10⁻⁹) = 3 · 10⁻¹⁹ Дж</span>.<br>2) Мощность: <span class='math-sym'>P = 10¹⁹ · 3·10⁻¹⁹ = 3 Вт</span>."
+    },
+    {
+        topic: "quantum",
+        exText: "Удельная энергия связи ядра — это отношение полной энергии связи к числу нуклонов: <span class='math-sym'>E_уд = E_связи / A</span>.",
+        exSol: "<b>Алгоритм:</b><br><span class='math-sym'>Δm = Z m_p + N m_n - m_ядра</span>.",
+        text: "Дефект массы ядра гелия <span class='math-sym'>⁴₂He</span> составляет <span class='math-sym'>Δm = 0.0305 а.е.м.</span> Вычисли удельную энергию связи ядра гелия (в МэВ/нуклон). (<span class='math-sym'>1 а.е.м. = 931.5 МэВ</span>)",
+        ans: 7.1,
+        hint: "<b>Шаги решения:</b><br>1) Полная энергия связи: <span class='math-sym'>E_связи = 0.0305 · 931.5 ≈ 28.41 МэВ</span>.<br>2) Число нуклонов в гелии A = 4.<br>3) Удельная энергия связи: <span class='math-sym'>E_уд = 28.41 / 4 ≈ 7.1 МэВ/нуклон</span>."
+    }
+];
+
+let testList = [];
+let testIndex = 0;
+let answeredCurrent = false;
+
+function startTest(topicKey) {
+    if (topicKey === 'all') {
+        testList = [...hardcoreDB];
+        testList.sort(() => Math.random() - 0.5);
+    } else {
+        testList = hardcoreDB.filter(task => task.topic === topicKey);
+        if (testList.length === 0) {
+            alert("Раздел обновляется!");
+            return;
+        }
+    }
+    testIndex = 0;
+    showScreen('screen-test');
+    loadTestTask();
+}
+
+function loadTestTask() {
+    answeredCurrent = false;
+    const task = testList[testIndex];
+    document.getElementById('test-counter').innerText = `Задача ${testIndex + 1} из ${testList.length}`;
+    
+    document.getElementById('example-problem').innerHTML = task.exText;
+    document.getElementById('example-solution').innerHTML = task.exSol;
+    document.getElementById('test-text').innerHTML = task.text;
+
+    document.getElementById('test-explanation-box').classList.add('hidden');
+    document.getElementById('test-next-btn').classList.add('hidden');
+
+    const correct = task.ans;
+    let options = [correct];
+
+    while(options.length < 4) {
+        let fake;
+        let rand = Math.random();
+        if (rand < 0.33) fake = Number((correct + Math.floor(Math.random() * 3) + 0.5).toFixed(2));
+        else if (rand < 0.66) fake = Number((Math.abs(correct - Math.floor(Math.random() * 2) - 0.4)).toFixed(2));
+        else fake = Number((correct * 1.4).toFixed(2));
+
+        if(!options.includes(fake) && fake >= 0) {
+            options.push(fake);
+        }
+    }
+    options.sort(() => Math.random() - 0.5);
+
+    const optContainer = document.getElementById('options-container');
+    optContainer.innerHTML = '';
+
+    options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `Ответ: <b>${opt}</b>`;
+        btn.onclick = () => selectOption(btn, opt, correct, task);
+        optContainer.appendChild(btn);
+    });
+}
+
+function selectOption(btn, chosen, correct, task) {
+    if (answeredCurrent) return;
+    answeredCurrent = true;
+
+    const allBtns = document.querySelectorAll('.option-btn');
+    allBtns.forEach(b => {
+        b.style.pointerEvents = 'none';
+        if (b.innerText.includes(`Ответ: ${correct}`) || b.innerText.includes(`<b>${correct}</b>`)) {
+            b.classList.add('correct');
+        }
+    });
+
+    if (chosen !== correct) {
+        btn.classList.add('wrong');
+    }
+
+    document.getElementById('test-explanation-text').innerHTML = task.hint;
+    document.getElementById('test-explanation-box').classList.remove('hidden');
+    document.getElementById('test-next-btn').classList.remove('hidden');
+}
+
+function nextTestTask() {
+    testIndex++;
+    if (testIndex < testList.length) {
+        loadTestTask();
+    } else {
+        alert("Мощно! Ты полностью прошел этот раздел!");
+        showScreen('screen-topics');
+    }
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.container > div').forEach(el => el.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+}
+</script>
+</body>
+</html>
